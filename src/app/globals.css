@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+@theme {
+  /* Background */
+  --color-cream-50: #FAF8F5;
+  --color-cream-100: #F3F0EB;
+  --color-cream-200: #E8E3DB;
+
+  /* Text */
+  --color-charcoal-900: #1C1917;
+  --color-charcoal-700: #44403C;
+  --color-charcoal-500: #78716C;
+  --color-charcoal-300: #D6D3D1;
+
+  /* Analytical Accent */
+  --color-teal-700: #1A5C52;
+  --color-teal-500: #2D8A7A;
+  --color-teal-200: #B8DDD5;
+  --color-teal-100: #E0F2EE;
+
+  /* Epistemic / Caution */
+  --color-amber-700: #A16207;
+  --color-amber-500: #D4A017;
+  --color-amber-200: #F5E6B8;
+  --color-amber-100: #FDF6E3;
+
+  /* Governance */
+  --color-slate-600: #52525B;
+  --color-slate-200: #E4E4E7;
+  --color-slate-100: #F4F4F5;
+}
+
+html {
+  background-color: var(--color-cream-50);
+}
+
+body {
+  font-family: Georgia, 'Times New Roman', serif;
+  color: var(--color-charcoal-900);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Interface font utility */
+.font-interface {
+  font-family: Arial, Helvetica, sans-serif;
+  letter-spacing: 0.02em;
+}
+
+/* Prose reading column */
+.reading-column {
+  max-width: 38rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.wide-column {
+  max-width: 60rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.content-column {
+  max-width: 70rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Slow transitions */
+* {
+  transition-timing-function: ease-out;
+}
