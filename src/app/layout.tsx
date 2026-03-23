@@ -15,7 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="bg-cream-50 text-charcoal-900 min-h-screen">
         <DataProvider>
           <TopNav />
-          <main className="mt-14">
+          <main className="mt-12">
             {children}
           </main>
           <Footer />

@@ -10,16 +10,16 @@ export function HowToRead({ children }: HowToReadProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="bg-cream-100 border border-cream-200 rounded-sm my-6">
+    <div className="my-8 border-b border-cream-200 pb-1">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full text-left px-5 py-3 font-interface text-[13px] text-charcoal-500 hover:text-charcoal-700 transition-colors duration-150 flex items-center justify-between"
+        className="w-full text-left py-2 font-interface text-[11px] text-charcoal-400 hover:text-charcoal-500 transition-colors duration-200 flex items-center justify-between tracking-wide"
       >
         <span>How to read this page</span>
-        <span className="text-charcoal-300">{isOpen ? '−' : '+'}</span>
+        <span className="text-charcoal-300 text-[10px]">{isOpen ? '—' : '+'}</span>
       </button>
       {isOpen && (
-        <div className="px-5 pb-4 text-[14px] leading-relaxed text-charcoal-700 border-t border-cream-200 pt-3">
+        <div className="pb-5 text-[14px] leading-relaxed text-charcoal-500">
           {children}
         </div>
       )}

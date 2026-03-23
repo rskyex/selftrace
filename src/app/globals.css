@@ -1,34 +1,39 @@
 @import "tailwindcss";
 
 @theme {
-  /* Background */
+  /* Background — warm, archival, paper-like */
   --color-cream-50: #FAF8F5;
   --color-cream-100: #F3F0EB;
   --color-cream-200: #E8E3DB;
+  --color-cream-300: #D8D0C4;
 
-  /* Text */
+  /* Text — deep charcoal hierarchy */
   --color-charcoal-900: #1C1917;
   --color-charcoal-700: #44403C;
   --color-charcoal-500: #78716C;
+  --color-charcoal-400: #948D85;
   --color-charcoal-300: #D6D3D1;
 
-  /* Analytical Accent */
+  /* Analytical Accent — forest teal, never celebratory */
   --color-teal-700: #1A5C52;
   --color-teal-500: #2D8A7A;
   --color-teal-200: #B8DDD5;
   --color-teal-100: #E0F2EE;
 
-  /* Epistemic / Caution */
+  /* Epistemic / Caution — amber, appears only with uncertainty */
   --color-amber-700: #A16207;
   --color-amber-500: #D4A017;
   --color-amber-200: #F5E6B8;
   --color-amber-100: #FDF6E3;
 
-  /* Governance */
+  /* Governance — cool slate, structurally distinct from user-data claims */
   --color-slate-600: #52525B;
+  --color-slate-300: #D4D4D8;
   --color-slate-200: #E4E4E7;
   --color-slate-100: #F4F4F5;
 }
+
+/* ── Base ────────────────────────────────────────────── */
 
 html {
   background-color: var(--color-cream-50);
@@ -37,26 +42,34 @@ html {
 body {
   font-family: Georgia, 'Times New Roman', serif;
   color: var(--color-charcoal-900);
-  line-height: 1.7;
+  line-height: 1.75;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Interface font utility */
+/* ── Font Utilities ──────────────────────────────────── */
+
 .font-interface {
   font-family: Arial, Helvetica, sans-serif;
   letter-spacing: 0.02em;
 }
 
-/* Prose reading column */
+/* ── Layout Columns ──────────────────────────────────── */
+
 .reading-column {
-  max-width: 38rem;
+  max-width: 36rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.prose-column {
+  max-width: 40rem;
   margin-left: auto;
   margin-right: auto;
 }
 
 .wide-column {
-  max-width: 60rem;
+  max-width: 56rem;
   margin-left: auto;
   margin-right: auto;
 }
@@ -67,7 +80,25 @@ body {
   margin-right: auto;
 }
 
-/* Slow transitions */
+/* ── Prose Styling ───────────────────────────────────── */
+
+.prose-body p {
+  margin-bottom: 1.25em;
+}
+
+.prose-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Slow Transitions ────────────────────────────────── */
+
 * {
   transition-timing-function: ease-out;
+}
+
+/* ── Selection ───────────────────────────────────────── */
+
+::selection {
+  background-color: var(--color-teal-100);
+  color: var(--color-charcoal-900);
 }

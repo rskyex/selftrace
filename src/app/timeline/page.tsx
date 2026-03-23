@@ -2,7 +2,6 @@
 
 import { PageHeader } from '@/components/shared/PageHeader';
 import { HowToRead } from '@/components/shared/HowToRead';
-import { EmptyState } from '@/components/shared/EmptyState';
 import { AreaChart } from '@/components/shared/AreaChart';
 import { SparkLine } from '@/components/shared/SparkLine';
 import { EpistemicBadge } from '@/components/shared/EpistemicBadge';
@@ -24,8 +23,9 @@ export default function TimelinePage() {
           subtitle="How posting patterns shift over time."
         />
         <div className="reading-column px-6 pb-24">
-          <p className="text-[14px] text-charcoal-500 mb-6">
-            Select a demo profile to begin analysis.
+          <p className="text-[15px] text-charcoal-500 leading-relaxed mb-8">
+            This page examines how your posting patterns, topics, and language
+            change over time. To begin, select a demo profile below.
           </p>
           <ProfileSwitcher />
         </div>
@@ -39,39 +39,64 @@ export default function TimelinePage() {
     <div>
       <PageHeader
         title="Temporal Self-Presentation"
-        subtitle={`Examining posting patterns for: ${activeProfile!.label}`}
+        subtitle={`Examining: ${activeProfile!.label}`}
       />
 
       <div className="reading-column px-6">
         <HowToRead>
-          This page maps how your posting patterns change over time. Shifts in
-          topic concentration or vocabulary do not necessarily indicate platform
+          This page maps how posting patterns change over time. Shifts in topic
+          concentration or vocabulary do not necessarily indicate platform
           influence — they may reflect life changes, evolving interests, or
           deliberate choices. The tool surfaces patterns. You interpret them.
         </HowToRead>
       </div>
 
-      {/* Timeline Band — full width */}
+      {/* Timeline Band */}
       <TimelineBand data={analysis.postingFrequency.value} />
 
-      <div className="wide-column px-6 pb-24">
-        {/* Topic Concentration */}
-        <h2 className="text-[22px] text-charcoal-900 mt-8 mb-2">
-          Topic Concentration Over Time
-        </h2>
-        <TopicStreamChart data={analysis.topicDistribution.value} />
+      <div className="wide-column px-6">
+        <p className="text-[13px] text-charcoal-400 font-interface mt-2">
+          Posting density over time. Each point represents one month.
+        </p>
+      </div>
 
+      <div className="reading-column px-6 pb-24">
+        {/* ── Topic Concentration ──────────────────────────── */}
+        <div className="mt-16">
+          <h2 className="text-[22px] text-charcoal-900 mb-3">
+            Topic Concentration Over Time
+          </h2>
+          <p className="text-[14px] text-charcoal-500 leading-relaxed mb-2">
+            How the distribution of topics in your posts shifts across the
+            observed period. Converging streams may indicate narrowing focus —
+            which can reflect deepening expertise, intentional specialization,
+            or adaptation to audience expectations.
+          </p>
+          <EpistemicBadge status="inferred" />
+        </div>
+      </div>
+
+      <div className="wide-column px-6">
+        <TopicStreamChart data={analysis.topicDistribution.value} />
+      </div>
+
+      <div className="reading-column px-6">
         <SectionDivider />
 
-        {/* Topic Entropy */}
-        <h2 className="text-[22px] text-charcoal-900 mb-2">
-          Topic Diversity (Entropy)
+        {/* ── Topic Entropy ────────────────────────────────── */}
+        <h2 className="text-[22px] text-charcoal-900 mb-3">
+          Topic Diversity
         </h2>
-        <p className="text-[14px] text-charcoal-500 leading-relaxed mb-4">
-          Shannon entropy measures how evenly distributed your topics are.
-          Declining entropy suggests concentration around fewer topics.
-          This is observed, not judged — specialization can be intentional.
+        <p className="text-[14px] text-charcoal-500 leading-relaxed mb-1">
+          Shannon entropy measures how evenly distributed your topics are per
+          quarter. Higher values indicate more diverse topics; declining values
+          suggest concentration around fewer subjects. This pattern is common
+          in sustained activity of any kind — it is noted here, not judged.
         </p>
+        <div className="mb-4">
+          <EpistemicBadge status={topicEntropy.status} />
+        </div>
+
         <AreaChart
           data={topicEntropy.value}
           caption={topicEntropy.caveat}
@@ -80,35 +105,31 @@ export default function TimelinePage() {
 
         <SectionDivider />
 
-        {/* Vocabulary Drift */}
-        <h2 className="text-[22px] text-charcoal-900 mb-4">
+        {/* ── Vocabulary Drift ─────────────────────────────── */}
+        <h2 className="text-[22px] text-charcoal-900 mb-3">
           Vocabulary Shift
         </h2>
         <p className="text-[14px] text-charcoal-500 leading-relaxed mb-6">
-          Terms that changed in frequency between the first and second halves
-          of the posting history.
+          Terms that changed in frequency between the first and second halves of
+          the posting history. Vocabulary change is a normal feature of sustained
+          writing and may reflect evolving interests, audience adaptation,
+          professional development, or many other factors.
         </p>
 
-        <div className="space-y-2">
+        <div className="space-y-1">
           {vocabularyDrift.value.map((term) => (
-            <div key={term.term} className="flex items-center gap-4 py-2 border-b border-cream-200">
-              <span className="font-mono text-[13px] text-charcoal-900 w-32 truncate">
+            <div key={term.term} className="flex items-center gap-4 py-2.5 border-b border-cream-200">
+              <span className="font-mono text-[13px] text-charcoal-900 w-36 truncate">
                 {term.term}
               </span>
-              <span className={`font-interface text-[11px] px-2 py-0.5 rounded-sm ${
-                term.direction === 'emerging'
-                  ? 'text-teal-700 bg-teal-100'
-                  : term.direction === 'fading'
-                  ? 'text-charcoal-500 bg-cream-100'
-                  : 'text-charcoal-300'
-              }`}>
+              <span className="font-interface text-[10px] text-charcoal-400 w-16 text-center uppercase tracking-wide">
                 {term.direction}
               </span>
-              <span className="font-mono text-[11px] text-charcoal-300">
+              <span className="font-mono text-[11px] text-charcoal-400 w-8 text-right">
                 {term.earlierFrequency}
               </span>
-              <span className="text-charcoal-300">→</span>
-              <span className="font-mono text-[11px] text-charcoal-700">
+              <span className="text-charcoal-300 text-[11px]">→</span>
+              <span className="font-mono text-[11px] text-charcoal-700 w-8">
                 {term.laterFrequency}
               </span>
               <span className="font-interface text-[10px] text-charcoal-300">
@@ -117,52 +138,72 @@ export default function TimelinePage() {
             </div>
           ))}
         </div>
-        <div className="mt-2">
+        <div className="mt-3">
           <EpistemicBadge status={vocabularyDrift.status} />
         </div>
 
         <SectionDivider />
 
-        {/* Tone Trends */}
-        <h2 className="text-[22px] text-charcoal-900 mb-4">
+        {/* ── Tone Trends ──────────────────────────────────── */}
+        <h2 className="text-[22px] text-charcoal-900 mb-3">
           Tone Markers Over Time
         </h2>
-        <p className="text-[14px] text-charcoal-500 leading-relaxed mb-6">
-          Approximate linguistic markers, averaged per quarter. These are
-          heuristic measures based on word patterns, not sentiment analysis.
+        <p className="text-[14px] text-charcoal-500 leading-relaxed mb-2">
+          Approximate linguistic indicators, averaged per quarter. These are
+          heuristic measures based on word patterns — exclamation density,
+          hedge words, intensifiers, sentence length — and are culturally
+          dependent and imprecise. They provide a directional signal, not a
+          measurement.
+        </p>
+        <div className="mb-6">
+          <EpistemicBadge status={toneTrends.status} />
+        </div>
+
+        <div className="space-y-4">
+          {(['assertiveness', 'emotionality', 'formality', 'urgency'] as const).map((marker) => {
+            const series = toneTrends.value[marker];
+            const first = series[0]?.value ?? 0;
+            const last = series[series.length - 1]?.value ?? 0;
+            const direction = last > first + 0.05 ? '↑' : last < first - 0.05 ? '↓' : '—';
+
+            return (
+              <div key={marker} className="flex items-center gap-4 py-3 border-b border-cream-200">
+                <span className="font-interface text-[11px] text-charcoal-500 uppercase tracking-wide w-28">
+                  {marker}
+                </span>
+                <SparkLine
+                  data={series}
+                  width={160}
+                  height={28}
+                  color="#78716C"
+                />
+                <span className="font-mono text-[11px] text-charcoal-400 w-20 text-right">
+                  {first.toFixed(2)} → {last.toFixed(2)}
+                </span>
+                <span className="font-mono text-[12px] text-charcoal-300 w-4">
+                  {direction}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+
+        <p className="mt-4 text-[13px] italic text-charcoal-400 leading-relaxed">
+          Changes in linguistic tone may reflect life circumstances, audience
+          shifts, world events, personal growth, or platform dynamics.
+          These heuristics cannot distinguish between these explanations.
         </p>
 
-        <div className="grid grid-cols-2 gap-6">
-          {(['assertiveness', 'emotionality', 'formality', 'urgency'] as const).map((marker) => (
-            <div key={marker} className="bg-cream-100 border border-cream-200 rounded-sm p-4">
-              <p className="font-interface text-[11px] text-charcoal-500 uppercase tracking-wide mb-2">
-                {marker}
-              </p>
-              <SparkLine
-                data={toneTrends.value[marker]}
-                width={200}
-                height={40}
-                color={marker === 'urgency' ? '#A16207' : '#1A5C52'}
-              />
-              <div className="mt-1 font-mono text-[11px] text-charcoal-300">
-                {toneTrends.value[marker][0]?.value.toFixed(2)} → {toneTrends.value[marker][toneTrends.value[marker].length - 1]?.value.toFixed(2)}
-              </div>
-            </div>
-          ))}
+        <div className="mt-12">
+          <GovernanceBlock>
+            Algorithmic feeds on most major platforms rank content by predicted
+            engagement rather than chronology. This creates a feedback environment
+            where some posting patterns receive more visibility than others.
+            Whether this structural condition influences how users compose
+            subsequent posts is a question this tool helps examine — but cannot
+            answer definitively.
+          </GovernanceBlock>
         </div>
-        <div className="mt-3">
-          <EpistemicBadge status={toneTrends.status} />
-          <p className="text-[12px] text-charcoal-500 mt-1">{toneTrends.caveat}</p>
-        </div>
-
-        <GovernanceBlock>
-          Algorithmic feeds on most major platforms determine the order and
-          visibility of content based on engagement signals. This creates a
-          feedback environment where some posting patterns receive more visibility
-          than others. Whether this structural condition influences how users
-          compose subsequent posts is a question this tool helps examine — but
-          cannot answer definitively.
-        </GovernanceBlock>
       </div>
     </div>
   );

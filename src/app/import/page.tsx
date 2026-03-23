@@ -6,47 +6,57 @@ import { ProfileSwitcher } from '@/components/shared/ProfileSwitcher';
 import { useData } from '@/lib/data/context';
 
 export default function ImportPage() {
-  const { isLoaded } = useData();
+  const { isLoaded, activeProfile } = useData();
   const router = useRouter();
 
   return (
     <div>
       <PageHeader
         title="Data Import"
-        subtitle="Load a demo profile to explore how self-presentation patterns can be examined. In a future version, you will be able to import your own posting archive."
+        subtitle="Load a demo profile to explore the analytical framework."
       />
 
       <div className="reading-column px-6 pb-24">
+        <div className="prose-body text-[15px] text-charcoal-700 leading-[1.8] mt-4 mb-10">
+          <p>
+            In this prototype, analysis runs on synthetic demo data. In a
+            future version, you will be able to import your own posting
+            archive. Select a profile below to begin.
+          </p>
+        </div>
+
         {/* Privacy assurance */}
-        <div className="border-l-[3px] border-teal-200 bg-teal-100 pl-6 pr-6 py-4 mb-8">
-          <p className="text-[14px] text-charcoal-700 leading-relaxed">
-            Your data stays in your browser. Nothing is uploaded to any server.
-            Nothing is stored after you close this tab. This tool performs all
-            analysis locally using client-side JavaScript. There is no backend,
-            no database, and no analytics telemetry.
+        <div className="border-l border-teal-200 pl-5 mb-12">
+          <p className="text-[14px] text-charcoal-500 leading-relaxed">
+            All processing happens in your browser. Nothing is uploaded to
+            any server. Nothing persists after you close this tab. There is
+            no backend, no database, no analytics telemetry.
           </p>
         </div>
 
         <ProfileSwitcher />
 
-        {isLoaded && (
-          <div className="mt-8 space-y-3">
+        {isLoaded && activeProfile && (
+          <div className="mt-10 pt-8 border-t border-cream-200 space-y-4">
+            <p className="font-interface text-[11px] text-charcoal-400 tracking-widest uppercase mb-4">
+              Continue with: {activeProfile.label}
+            </p>
             <button
               onClick={() => router.push('/baseline')}
-              className="block w-full text-left p-4 border border-teal-700 rounded-sm bg-cream-50 hover:bg-teal-100 transition-colors duration-300"
+              className="block w-full text-left py-3 border-b border-cream-200 hover:border-charcoal-300 transition-colors duration-300"
             >
               <span className="text-[15px] text-teal-700">View baseline summary</span>
-              <span className="block font-interface text-[12px] text-charcoal-500 mt-1">
-                See a factual overview of the loaded dataset before analysis.
+              <span className="block text-[13px] text-charcoal-400 mt-0.5">
+                Factual overview of the dataset before analysis.
               </span>
             </button>
             <button
               onClick={() => router.push('/timeline')}
-              className="block w-full text-left p-4 border border-cream-200 rounded-sm bg-cream-50 hover:bg-cream-100 transition-colors duration-300"
+              className="block w-full text-left py-3 border-b border-cream-200 hover:border-charcoal-300 transition-colors duration-300"
             >
-              <span className="text-[15px] text-charcoal-700">Go directly to timeline analysis</span>
-              <span className="block font-interface text-[12px] text-charcoal-500 mt-1">
-                Begin examining temporal self-presentation patterns.
+              <span className="text-[15px] text-charcoal-700">Go to timeline analysis</span>
+              <span className="block text-[13px] text-charcoal-400 mt-0.5">
+                Examine temporal self-presentation patterns.
               </span>
             </button>
           </div>

@@ -6,37 +6,38 @@ export function ProfileSwitcher() {
   const { profiles, activeProfile, loadProfile } = useData();
 
   return (
-    <div className="bg-cream-100 border border-cream-200 rounded-sm p-6">
-      <h3 className="font-interface text-[13px] text-charcoal-500 tracking-wide uppercase mb-4">
+    <div>
+      <p className="font-interface text-[11px] text-charcoal-400 tracking-widest uppercase mb-5">
         Demo Profiles
-      </h3>
-      <p className="text-[14px] text-charcoal-500 leading-relaxed mb-6">
-        These profiles are entirely synthetic. They represent plausible posting
-        histories, not real people. Each illustrates a different pattern of
-        self-presentation over time.
       </p>
-      <div className="space-y-3">
+      <p className="text-[14px] text-charcoal-500 leading-relaxed mb-8">
+        These profiles are entirely synthetic — fictional posting histories
+        designed to illustrate different patterns of self-presentation over
+        time. No real person is represented. Each profile exercises a different
+        set of analytical features.
+      </p>
+      <div className="space-y-4">
         {profiles.map((profile) => {
           const isActive = activeProfile?.id === profile.id;
           return (
             <button
               key={profile.id}
               onClick={() => loadProfile(profile.id)}
-              className={`w-full text-left p-4 border rounded-sm transition-colors duration-300 ${
+              className={`w-full text-left p-5 border rounded-sm transition-colors duration-300 ${
                 isActive
-                  ? 'border-teal-700 bg-teal-100'
+                  ? 'border-teal-700 bg-teal-100/40'
                   : 'border-cream-200 hover:border-charcoal-300 bg-cream-50'
               }`}
             >
-              <p className={`text-[15px] mb-1 ${isActive ? 'text-teal-700' : 'text-charcoal-900'}`}>
+              <p className={`text-[16px] leading-snug ${isActive ? 'text-teal-700' : 'text-charcoal-900'}`}>
                 {profile.label}
               </p>
-              <p className="text-[13px] text-charcoal-500 leading-relaxed">
+              <p className="text-[13px] text-charcoal-500 leading-relaxed mt-2">
                 {profile.description}
               </p>
-              <div className="mt-2 font-interface text-[11px] text-charcoal-300">
+              <p className="font-interface text-[10px] text-charcoal-300 mt-3 tracking-wide">
                 {profile.dataQuality.totalPosts} posts · {profile.platform} · {profile.dataQuality.dateRange.start.slice(0, 7)} to {profile.dataQuality.dateRange.end.slice(0, 7)}
-              </div>
+              </p>
             </button>
           );
         })}
