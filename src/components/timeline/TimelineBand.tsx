@@ -30,7 +30,8 @@ export function TimelineBand({ data }: TimelineBandProps) {
 
   return (
     <div className="w-full bg-cream-100 border-y border-cream-200 my-6">
-      <svg viewBox={`0 0 ${width} ${height}`} className="w-full" preserveAspectRatio="none" style={{ height: '100px' }}>
+      <svg viewBox={`0 0 ${width} ${height}`} className="w-full" preserveAspectRatio="none" style={{ height: '100px' }} role="img" aria-label={`Timeline showing posting density across ${data.length} months. Taller areas indicate more posts.`}>
+        <title>Posting density over time</title>
         <path d={areaPath} fill="#E0F2EE" opacity={0.6} />
         <path d={linePath} fill="none" stroke="#1A5C52" strokeWidth={2} />
         {data.map((d, i) => {

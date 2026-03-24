@@ -44,16 +44,25 @@ export function AreaChart({
     charcoal: { stroke: '#44403C', fill: '#E8E3DB' },
   };
 
-  // Show ~5 date labels
   const labelStep = Math.max(1, Math.floor(data.length / 5));
 
+  // Screen reader description
+  const firstDate = new Date(data[0].date).toLocaleDateString('en', { month: 'short', year: 'numeric' });
+  const lastDate = new Date(data[data.length - 1].date).toLocaleDateString('en', { month: 'short', year: 'numeric' });
+  const firstVal = data[0].value;
+  const lastVal = data[data.length - 1].value;
+  const srDesc = `Chart showing ${data.length} data points from ${firstDate} to ${lastDate}. Values range from ${Math.round(minVal * 10) / 10} to ${Math.round(maxVal * 10) / 10}. First value: ${Math.round(firstVal * 10) / 10}, last value: ${Math.round(lastVal * 10) / 10}.`;
+
   return (
-    <div className="my-6">
+    <div className="my-6" role="figure" aria-label={caption}>
       <svg
         viewBox={`0 0 ${width} ${height}`}
         className="w-full"
         style={{ maxHeight: `${height}px` }}
+        role="img"
+        aria-label={srDesc}
       >
+        <title>{srDesc}</title>
         {/* Grid lines */}
         {[0, 0.25, 0.5, 0.75, 1].map(frac => {
           const y = padding.top + chartH * (1 - frac);
@@ -61,7 +70,7 @@ export function AreaChart({
           return (
             <g key={frac}>
               <line x1={padding.left} x2={width - padding.right} y1={y} y2={y} stroke="#E8E3DB" strokeWidth={1} />
-              <text x={padding.left - 8} y={y + 4} textAnchor="end" className="font-interface" fill="#78716C" fontSize={10}>
+              <text x={padding.left - 8} y={y + 4} textAnchor="end" className="font-interface" fill="#78716C" fontSize={10} aria-hidden="true">
                 {Math.round(val * 10) / 10}
               </text>
             </g>
@@ -83,7 +92,7 @@ export function AreaChart({
           const date = new Date(d.date);
           const label = `${date.toLocaleString('en', { month: 'short' })} ${date.getFullYear().toString().slice(2)}`;
           return (
-            <text key={i} x={xScale(i)} y={height - 8} textAnchor="middle" className="font-interface" fill="#78716C" fontSize={10}>
+            <text key={i} x={xScale(i)} y={height - 8} textAnchor="middle" className="font-interface" fill="#78716C" fontSize={10} aria-hidden="true">
               {label}
             </text>
           );

@@ -1,31 +1,24 @@
 // ── Demo Profile Definitions ─────────────────────────────────────────────────
 // Three fictional profiles that exercise different analytical patterns.
 // All data is synthetic. No real person is represented.
+// Uses a seeded PRNG so profiles are identical across page reloads.
 
 import type {
   DatasetProfile,
   Post,
   EngagementMetrics,
   ToneMarkers,
-  TopicAssignment,
   SelfDescriptionMarker,
   CivicMarker,
   MemoryReference,
   TimePeriod,
 } from '@/lib/data/types';
+import { createSeededRandom } from '@/lib/util/random';
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
+// ── Constants ────────────────────────────────────────────────────────────────
 
 function makeDate(year: number, month: number, day: number): string {
   return new Date(year, month - 1, day).toISOString();
-}
-
-function randomBetween(min: number, max: number): number {
-  return Math.round(min + Math.random() * (max - min));
-}
-
-function pick<T>(arr: T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)];
 }
 
 function generateId(prefix: string, i: number): string {
@@ -218,6 +211,7 @@ const EXPERTISE_TEXTS: Record<string, string[]> = {
 // ── Post Generator ───────────────────────────────────────────────────────────
 
 function generatePostsForProfile(
+  rng: ReturnType<typeof createSeededRandom>,
   profileId: string,
   platform: string,
   topicPhases: Record<string, string[]>,
@@ -241,13 +235,13 @@ function generatePostsForProfile(
     const availableTopics = topicPhases[phase];
 
     for (let p = 0; p < postsThisMonth; p++) {
-      const topic = pick(availableTopics);
-      const day = randomBetween(1, 28);
+      const topic = rng.pick(availableTopics);
+      const day = rng.between(1, 28);
       const year = startYear + Math.floor((startMonth - 1 + m) / 12);
       const month = ((startMonth - 1 + m) % 12) + 1;
 
       const textsForTopic = textTemplates[topic] || [`Thinking about ${topic} today.`];
-      const text = pick(textsForTopic);
+      const text = rng.pick(textsForTopic);
 
       const id = generateId(profileId, postIndex);
       postIndex++;
@@ -267,7 +261,7 @@ function generatePostsForProfile(
         },
         engagement: engagementCurve(m, topic),
         derived: {
-          topics: [{ topic, confidence: 0.8 + Math.random() * 0.2 }],
+          topics: [{ topic, confidence: 0.8 + rng.random() * 0.2 }],
           tone: toneCurve(m),
           selfDescriptions: selfDescCurve(m).map(sd => ({ ...sd, postId: id })),
           civicMarkers: civicCurve(m, topic),
@@ -285,21 +279,21 @@ function generatePostsForProfile(
 // ── Profile 1: The Emerging Public Intellectual ──────────────────────────────
 
 function buildIntellectualProfile(): DatasetProfile {
+  const rng = createSeededRandom(42_001);
+
   const posts = generatePostsForProfile(
-    'intellectual',
-    'twitter',
-    INTELLECTUAL_TOPICS,
-    INTELLECTUAL_TEXTS,
-    30,
-    2021, 6,
+    rng,
+    'intellectual', 'twitter',
+    INTELLECTUAL_TOPICS, INTELLECTUAL_TEXTS,
+    30, 2021, 6,
     (m) => {
-      if (m < 8) return randomBetween(8, 12);
-      if (m < 16) return randomBetween(15, 22);
-      if (m < 24) return randomBetween(22, 30);
-      return randomBetween(18, 28);
+      if (m < 8) return rng.between(8, 12);
+      if (m < 16) return rng.between(15, 22);
+      if (m < 24) return rng.between(22, 30);
+      return rng.between(18, 28);
     },
     (m, topic) => {
-      const base = randomBetween(5, 25);
+      const base = rng.between(5, 25);
       const topicBoost = ['tech-ethics', 'AI-governance', 'platform-accountability'].includes(topic) ? 3.5 : 1;
       const timeBoost = 1 + m * 0.08;
       return {
@@ -318,54 +312,39 @@ function buildIntellectualProfile(): DatasetProfile {
     }),
     (m) => {
       if (m < 8) return [];
-      if (m < 16) return Math.random() > 0.6 ? [{ phrase: 'as a researcher', pattern: 'role_claim' as const, postId: '' }] : [];
-      if (m < 24) return Math.random() > 0.4 ? [{ phrase: 'as a researcher', pattern: 'role_claim' as const, postId: '' }] : [];
-      return Math.random() > 0.3
+      if (m < 16) return rng.random() > 0.6 ? [{ phrase: 'as a researcher', pattern: 'role_claim' as const, postId: '' }] : [];
+      if (m < 24) return rng.random() > 0.4 ? [{ phrase: 'as a researcher', pattern: 'role_claim' as const, postId: '' }] : [];
+      return rng.random() > 0.3
         ? [{ phrase: 'as someone who has been saying this for years', pattern: 'expertise_signal' as const, postId: '' }]
         : [{ phrase: 'as a researcher', pattern: 'role_claim' as const, postId: '' }];
     },
     () => [],
-    (m) => m > 18 && Math.random() > 0.7 ? [{ type: 'narrative_callback' as const, referencedPostId: null, temporalDistance: randomBetween(90, 300) }] : [],
+    (m) => m > 18 && rng.random() > 0.7 ? [{ type: 'narrative_callback' as const, referencedPostId: null, temporalDistance: rng.between(90, 300) }] : [],
   );
 
-  return {
-    id: 'demo-intellectual',
-    label: 'The Emerging Public Intellectual',
-    description: 'A graduate researcher who begins posting about diverse academic interests and gradually concentrates on technology ethics, developing a recognizable voice and recurring rhetorical patterns.',
-    platform: 'twitter',
-    dataQuality: {
-      totalPosts: posts.length,
-      dateRange: {
-        start: posts[0]?.createdAt ?? '',
-        end: posts[posts.length - 1]?.createdAt ?? '',
-      },
-      hasEngagementData: true,
-      missingFields: [],
-      averagePostsPerMonth: Math.round(posts.length / 30),
-    },
-    posts,
-    timePeriods: buildQuarterlyPeriods(posts),
-  };
+  return buildProfileShell('demo-intellectual', 'The Emerging Public Intellectual',
+    'A graduate researcher who begins posting about diverse academic interests and gradually concentrates on technology ethics, developing a recognizable voice and recurring rhetorical patterns.',
+    'twitter', posts, 30);
 }
 
 // ── Profile 2: The Politically Reactive Voice ────────────────────────────────
 
 function buildPoliticalProfile(): DatasetProfile {
+  const rng = createSeededRandom(42_002);
+
   const posts = generatePostsForProfile(
-    'political',
-    'twitter',
-    POLITICAL_TOPICS,
-    POLITICAL_TEXTS,
-    36,
-    2021, 1,
+    rng,
+    'political', 'twitter',
+    POLITICAL_TOPICS, POLITICAL_TEXTS,
+    36, 2021, 1,
     (m) => {
-      if (m < 10) return randomBetween(10, 16);
-      if (m < 18) return randomBetween(14, 22);
-      if (m < 28) return randomBetween(18, 28);
-      return randomBetween(20, 32);
+      if (m < 10) return rng.between(10, 16);
+      if (m < 18) return rng.between(14, 22);
+      if (m < 28) return rng.between(18, 28);
+      return rng.between(20, 32);
     },
     (m, topic) => {
-      const base = randomBetween(8, 30);
+      const base = rng.between(8, 30);
       const politicalTopics = ['national-politics', 'institutional-critique', 'electoral', 'rights-claims', 'local-politics'];
       const isPolitical = politicalTopics.includes(topic);
       const topicBoost = isPolitical ? (m > 10 ? 3.5 : 1.5) : 1;
@@ -384,9 +363,9 @@ function buildPoliticalProfile(): DatasetProfile {
       vulnerability: Math.max(0.35 - m * 0.008, 0.08),
     }),
     (m) => {
-      if (m < 10) return Math.random() > 0.7 ? [{ phrase: 'as a community member', pattern: 'role_claim' as const, postId: '' }] : [];
-      if (m < 22) return Math.random() > 0.5 ? [{ phrase: 'we need to', pattern: 'identity_statement' as const, postId: '' }] : [];
-      return Math.random() > 0.4
+      if (m < 10) return rng.random() > 0.7 ? [{ phrase: 'as a community member', pattern: 'role_claim' as const, postId: '' }] : [];
+      if (m < 22) return rng.random() > 0.5 ? [{ phrase: 'we need to', pattern: 'identity_statement' as const, postId: '' }] : [];
+      return rng.random() > 0.4
         ? [{ phrase: 'someone who won\'t stay silent', pattern: 'identity_statement' as const, postId: '' }]
         : [];
     },
@@ -396,46 +375,31 @@ function buildPoliticalProfile(): DatasetProfile {
       const intensity: CivicMarker['intensity'] = m > 22 ? 'primary_topic' : m > 10 ? 'substantive' : 'passing';
       return [{ type: 'political_opinion' as const, intensity }];
     },
-    (m) => m > 20 && Math.random() > 0.6 ? [{ type: 'self_quote' as const, referencedPostId: null, temporalDistance: randomBetween(60, 200) }] : [],
+    (m) => m > 20 && rng.random() > 0.6 ? [{ type: 'self_quote' as const, referencedPostId: null, temporalDistance: rng.between(60, 200) }] : [],
   );
 
-  return {
-    id: 'demo-political',
-    label: 'The Politically Reactive Voice',
-    description: 'A community organizer whose posting begins with local events and personal reflections, gradually becoming dominated by national political commentary with increasing emotional intensity.',
-    platform: 'twitter',
-    dataQuality: {
-      totalPosts: posts.length,
-      dateRange: {
-        start: posts[0]?.createdAt ?? '',
-        end: posts[posts.length - 1]?.createdAt ?? '',
-      },
-      hasEngagementData: true,
-      missingFields: [],
-      averagePostsPerMonth: Math.round(posts.length / 36),
-    },
-    posts,
-    timePeriods: buildQuarterlyPeriods(posts),
-  };
+  return buildProfileShell('demo-political', 'The Politically Reactive Voice',
+    'A community organizer whose posting begins with local events and personal reflections, gradually becoming dominated by national political commentary with increasing emotional intensity.',
+    'twitter', posts, 36);
 }
 
 // ── Profile 3: The Expertise Brand-Builder ───────────────────────────────────
 
 function buildExpertiseProfile(): DatasetProfile {
+  const rng = createSeededRandom(42_003);
+
   const posts = generatePostsForProfile(
-    'expertise',
-    'linkedin',
-    EXPERTISE_TOPICS,
-    EXPERTISE_TEXTS,
-    24,
-    2022, 3,
+    rng,
+    'expertise', 'linkedin',
+    EXPERTISE_TOPICS, EXPERTISE_TEXTS,
+    24, 2022, 3,
     (m) => {
-      if (m < 6) return randomBetween(8, 14);
-      if (m < 12) return randomBetween(10, 16);
-      return randomBetween(9, 12); // More consistent, scheduled
+      if (m < 6) return rng.between(8, 14);
+      if (m < 12) return rng.between(10, 16);
+      return rng.between(9, 12);
     },
     (m, topic) => {
-      const base = randomBetween(10, 40);
+      const base = rng.between(10, 40);
       const brandTopics = ['marketing-strategy', 'leadership', 'thought-leadership', 'personal-brand'];
       const isBrand = brandTopics.includes(topic);
       const topicBoost = isBrand ? (m > 12 ? 4 : 2) : 1;
@@ -448,27 +412,35 @@ function buildExpertiseProfile(): DatasetProfile {
     },
     (m) => ({
       assertiveness: Math.min(0.3 + m * 0.025, 0.9),
-      emotionality: 0.2 + Math.random() * 0.1,
+      emotionality: 0.2 + rng.random() * 0.1,
       formality: Math.min(0.4 + m * 0.02, 0.85),
-      urgency: 0.15 + Math.random() * 0.1,
+      urgency: 0.15 + rng.random() * 0.1,
       vulnerability: Math.max(0.25 - m * 0.01, 0.05),
     }),
     (m) => {
       if (m < 6) return [];
-      if (m < 12) return Math.random() > 0.5 ? [{ phrase: 'in my experience', pattern: 'expertise_signal' as const, postId: '' }] : [];
-      return Math.random() > 0.3
+      if (m < 12) return rng.random() > 0.5 ? [{ phrase: 'in my experience', pattern: 'expertise_signal' as const, postId: '' }] : [];
+      return rng.random() > 0.3
         ? [{ phrase: 'in my 10 years of marketing', pattern: 'expertise_signal' as const, postId: '' }]
         : [{ phrase: 'here\'s what most people get wrong', pattern: 'expertise_signal' as const, postId: '' }];
     },
     () => [],
-    (m) => m > 16 && Math.random() > 0.5 ? [{ type: 'repost_own' as const, referencedPostId: null, temporalDistance: randomBetween(30, 150) }] : [],
+    (m) => m > 16 && rng.random() > 0.5 ? [{ type: 'repost_own' as const, referencedPostId: null, temporalDistance: rng.between(30, 150) }] : [],
   );
 
+  return buildProfileShell('demo-expertise', 'The Expertise Brand-Builder',
+    'A marketing professional who begins posting casually and gradually develops a highly structured, expertise-signaling content strategy with recognizable formatting patterns.',
+    'linkedin', posts, 24);
+}
+
+// ── Shared Helpers ───────────────────────────────────────────────────────────
+
+function buildProfileShell(
+  id: string, label: string, description: string,
+  platform: string, posts: Post[], months: number,
+): DatasetProfile {
   return {
-    id: 'demo-expertise',
-    label: 'The Expertise Brand-Builder',
-    description: 'A marketing professional who begins posting casually and gradually develops a highly structured, expertise-signaling content strategy with recognizable formatting patterns.',
-    platform: 'linkedin',
+    id, label, description, platform,
     dataQuality: {
       totalPosts: posts.length,
       dateRange: {
@@ -477,22 +449,18 @@ function buildExpertiseProfile(): DatasetProfile {
       },
       hasEngagementData: true,
       missingFields: [],
-      averagePostsPerMonth: Math.round(posts.length / 24),
+      averagePostsPerMonth: Math.round(posts.length / months),
     },
     posts,
     timePeriods: buildQuarterlyPeriods(posts),
   };
 }
 
-// ── Period Builder ───────────────────────────────────────────────────────────
-
 function buildQuarterlyPeriods(posts: Post[]): TimePeriod[] {
   if (posts.length === 0) return [];
-
   const periods: TimePeriod[] = [];
   const startDate = new Date(posts[0].createdAt);
   const endDate = new Date(posts[posts.length - 1].createdAt);
-
   let current = new Date(startDate.getFullYear(), Math.floor(startDate.getMonth() / 3) * 3, 1);
   let periodIndex = 0;
 
@@ -502,7 +470,6 @@ function buildQuarterlyPeriods(posts: Post[]): TimePeriod[] {
       const d = new Date(p.createdAt);
       return d >= current && d <= periodEnd;
     });
-
     const qNum = Math.floor(current.getMonth() / 3) + 1;
     periods.push({
       id: `period-${periodIndex}`,
@@ -511,11 +478,9 @@ function buildQuarterlyPeriods(posts: Post[]): TimePeriod[] {
       end: periodEnd.toISOString(),
       postCount: periodPosts.length,
     });
-
     current = new Date(current.getFullYear(), current.getMonth() + 3, 1);
     periodIndex++;
   }
-
   return periods;
 }
 

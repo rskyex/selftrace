@@ -57,7 +57,8 @@ export function TopicStreamChart({ data }: TopicStreamChartProps) {
 
   return (
     <div className="my-6">
-      <svg viewBox={`0 0 ${width} ${height}`} className="w-full" style={{ maxHeight: `${height}px` }}>
+      <svg viewBox={`0 0 ${width} ${height}`} className="w-full" style={{ maxHeight: `${height}px` }} role="img" aria-label={`Stacked area chart showing topic distribution over ${months.length} months across ${data.length} topics: ${data.map(d => d.topic).join(', ')}.`}>
+        <title>Topic distribution over time showing how topic proportions change across the observed period.</title>
         {areas.map((path, i) => (
           <path
             key={i}

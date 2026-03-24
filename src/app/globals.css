@@ -102,3 +102,52 @@ body {
   background-color: var(--color-teal-100);
   color: var(--color-charcoal-900);
 }
+
+/* ── Focus States (Accessibility) ────────────────────── */
+
+:focus-visible {
+  outline: 2px solid var(--color-teal-500);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ── Presentation Mode ───────────────────────────────── */
+/* Activated via ?present=true URL parameter.             */
+/* Larger type, wider spacing, hidden nav for projectors. */
+
+.presentation-mode body {
+  font-size: 1.15rem;
+  line-height: 1.85;
+}
+
+.presentation-mode nav {
+  display: none;
+}
+
+.presentation-mode main {
+  margin-top: 0;
+}
+
+.presentation-mode footer {
+  display: none;
+}
+
+.presentation-mode .reading-column {
+  max-width: 44rem;
+}
+
+.presentation-mode .wide-column {
+  max-width: 64rem;
+}
+
+.presentation-mode h1 {
+  font-size: 2.2rem;
+}
+
+.presentation-mode h2 {
+  font-size: 1.6rem;
+}
+
+.presentation-mode .font-interface {
+  font-size: 0.8rem;
+}

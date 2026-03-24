@@ -10,6 +10,7 @@ import { SectionDivider } from '@/components/shared/SectionDivider';
 import { TimelineBand } from '@/components/timeline/TimelineBand';
 import { TopicStreamChart } from '@/components/timeline/TopicStreamChart';
 import { ProfileSwitcher } from '@/components/shared/ProfileSwitcher';
+import { PeriodComparisonPanel } from '@/components/timeline/PeriodComparisonPanel';
 import { useData } from '@/lib/data/context';
 
 export default function TimelinePage() {
@@ -193,6 +194,14 @@ export default function TimelinePage() {
           shifts, world events, personal growth, or platform dynamics.
           These heuristics cannot distinguish between these explanations.
         </p>
+
+        <SectionDivider />
+
+        {/* ── Period Comparison ─────────────────────────────── */}
+        <PeriodComparisonPanel
+          posts={activeProfile!.posts}
+          periods={activeProfile!.timePeriods}
+        />
 
         <div className="mt-12">
           <GovernanceBlock>

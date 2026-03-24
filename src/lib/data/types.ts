@@ -167,6 +167,35 @@ export interface TopicEngagement {
   frequencyTrend: 'increasing' | 'stable' | 'decreasing';
 }
 
+export interface PeriodComparison {
+  periodA: { label: string; start: string; end: string };
+  periodB: { label: string; start: string; end: string };
+  topicDiversity: FramedInsight<{ a: number; b: number }>;
+  postingFrequency: FramedInsight<{ a: number; b: number }>;
+  topTopics: FramedInsight<{ a: string[]; b: string[] }>;
+  toneShift: FramedInsight<{
+    a: { assertiveness: number; emotionality: number; formality: number; urgency: number };
+    b: { assertiveness: number; emotionality: number; formality: number; urgency: number };
+  }>;
+}
+
+export interface MemoryEvent {
+  laterPostId: string;
+  laterDate: string;
+  earlierPostId: string;
+  earlierDate: string;
+  sharedPhrase: string;
+  similarity: number;
+  daysBetween: number;
+}
+
+export interface CivicQuestion {
+  question: string;
+  context: string;
+  dataConnection: string | null;
+  status: EpistemicStatus;
+}
+
 export interface AnalysisResult {
   profile: DatasetProfile;
   postingFrequency: FramedTimeSeries;
@@ -186,4 +215,6 @@ export interface AnalysisResult {
   }>;
   engagementSensitivity: FramedInsight<TopicEngagement[]> | null;
   reinforcementCorrelation: FramedTimeSeries | null;
+  memoryEvents: FramedInsight<MemoryEvent[]>;
+  civicQuestions: FramedInsight<CivicQuestion[]>;
 }
