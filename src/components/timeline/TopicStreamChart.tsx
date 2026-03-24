@@ -2,7 +2,7 @@
 
 import type { TopicOverTime } from '@/lib/data/types';
 
-const COLORS = ['#E07A5F', '#7BAE8B', '#D4A87C', '#6B635B', '#C45A3C', '#C1DEC9', '#C4BEB6', '#4A4541'];
+const COLORS = ['#B5704D', '#6B8F71', '#C8B8A8', '#5C534A', '#8F5A35', '#D2E4D5', '#DDD5CA', '#8A8179'];
 
 export function TopicStreamChart({ data }: { data: TopicOverTime[] }) {
   if (data.length === 0) return null;
@@ -24,18 +24,18 @@ export function TopicStreamChart({ data }: { data: TopicOverTime[] }) {
   const step = Math.max(1, Math.floor(months.length / 6));
 
   return (
-    <div className="my-4 surface-quiet">
+    <div className="my-6 surface-quiet">
       <svg viewBox={`0 0 ${w} ${h}`} className="w-full" style={{ maxHeight: `${h}px` }} role="img" aria-label="Topic distribution">
-        {areas.map((d, i) => <path key={i} d={d} fill={COLORS[i % COLORS.length]} opacity={0.4} />)}
+        {areas.map((d, i) => <path key={i} d={d} fill={COLORS[i % COLORS.length]} opacity={0.35} />)}
         {months.map((date, i) => {
           if (i % step !== 0 && i !== months.length - 1) return null;
           const d = new Date(date);
-          return <text key={i} x={x(i)} y={h - 5} textAnchor="middle" fill="#9B958E" fontSize={10} aria-hidden="true">{`${d.toLocaleString('en', { month: 'short' })} '${d.getFullYear().toString().slice(2)}`}</text>;
+          return <text key={i} x={x(i)} y={h - 5} textAnchor="middle" fill="#B5AEA5" fontSize={10}>{`${d.toLocaleString('en', { month: 'short' })} '${d.getFullYear().toString().slice(2)}`}</text>;
         })}
         {data.slice(0, 6).map((topic, i) => (
           <g key={topic.topic} transform={`translate(${w - pad.r + 10}, ${pad.t + i * 20})`}>
-            <rect width={12} height={12} rx={6} fill={COLORS[i % COLORS.length]} opacity={0.5} />
-            <text x={18} y={10} fill="#6B635B" fontSize={11}>{topic.topic}</text>
+            <rect width={12} height={12} rx={6} fill={COLORS[i % COLORS.length]} opacity={0.45} />
+            <text x={18} y={10} fill="#5C534A" fontSize={11}>{topic.topic}</text>
           </g>
         ))}
       </svg>

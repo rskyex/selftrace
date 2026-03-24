@@ -77,7 +77,7 @@ export default function PatternsPage() {
               </p>
             </div>
           ))}
-          <div className="mb-8"><ConfidenceDot level="low" /></div>
+          <div className="mb-8"><ConfidenceDot level="interpretive" /></div>
         </>
       )}
 
@@ -100,7 +100,7 @@ export default function PatternsPage() {
               </p>
             </div>
           ))}
-          <div className="mb-8"><ConfidenceDot level="high" /></div>
+          <div className="mb-8"><ConfidenceDot level="counted" /></div>
         </>
       )}
 
@@ -125,7 +125,7 @@ export default function PatternsPage() {
               </div>
             ))}
           </div>
-          <div className="mt-4"><ConfidenceDot level="medium" /></div>
+          <div className="mt-4"><ConfidenceDot level="patterned" /></div>
         </>
       )}
 
@@ -150,7 +150,7 @@ export default function PatternsPage() {
               </div>
             ))}
           </div>
-          <div className="mt-4"><ConfidenceDot level="medium" /></div>
+          <div className="mt-4"><ConfidenceDot level="patterned" /></div>
         </>
       )}
 
@@ -166,7 +166,7 @@ export default function PatternsPage() {
             a feedback loop — but many other things could explain it too.
             This is the most uncertain analysis we show.
           </p>
-          <AreaChart data={reinforcementCorrelation.value} confidence="low" color="coral" caption="Engagement-frequency correlation by quarter" />
+          <AreaChart data={reinforcementCorrelation.value} confidence="interpretive" color="umber" caption="Engagement-frequency correlation by quarter" />
         </>
       )}
 

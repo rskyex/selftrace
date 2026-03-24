@@ -1,60 +1,65 @@
 @import "tailwindcss";
 
 @theme {
-  /* ── SelfTrace — Final Visual System ────────────────── */
+  /* ── SelfTrace — Sediment, Trace, Reconstruction ────── */
 
-  /* Background — warm linen, never cold white */
-  --color-linen-50: #FAF9F6;
-  --color-linen-100: #F4F2ED;
-  --color-linen-200: #EDEAE4;
-  --color-linen-300: #E2DCD2;
+  /* Ground — warm linen, the color of good paper */
+  --color-linen-50: #FAF8F4;
+  --color-linen-100: #F0EDE6;
+  --color-linen-200: #E4DFD7;
+  --color-linen-300: #D4CFC5;
 
-  /* Text — warm ink, never pure black */
-  --color-ink-900: #2A2521;
-  --color-ink-700: #4A4541;
-  --color-ink-500: #6B635B;
-  --color-ink-400: #9B958E;
-  --color-ink-300: #C4BEB6;
-  --color-ink-200: #DBD6CF;
+  /* Ink — warm dark, never pure black */
+  --color-ink-900: #2A2420;
+  --color-ink-700: #5C534A;
+  --color-ink-500: #8A8179;
+  --color-ink-400: #B5AEA5;
+  --color-ink-300: #CCC6BD;
 
-  /* Primary accent — soft coral, friendly and warm */
-  --color-coral-700: #C45A3C;
-  --color-coral-600: #E07A5F;
-  --color-coral-500: #E8926F;
-  --color-coral-200: #FECDB8;
-  --color-coral-100: #FEE8DB;
-  --color-coral-50: #FFF7F2;
+  /* Umber — primary accent, earth pigment, archival warmth */
+  --color-umber-700: #8F5A35;
+  --color-umber-600: #B5704D;
+  --color-umber-500: #D4956F;
+  --color-umber-200: #F5E6D8;
+  --color-umber-100: #FAF0E8;
+  --color-umber-50: #FDF8F4;
 
-  /* Secondary — sage green, calm and reassuring */
-  --color-sage-700: #3D7A56;
-  --color-sage-600: #4D8B65;
-  --color-sage-500: #7BAE8B;
-  --color-sage-200: #C1DEC9;
-  --color-sage-100: #E8F3EC;
+  /* Sage — self-governance, agency, what the user kept */
+  --color-sage-700: #4A7352;
+  --color-sage-600: #6B8F71;
+  --color-sage-500: #8BAA8F;
+  --color-sage-200: #D2E4D5;
+  --color-sage-100: #E3EDE5;
 
-  /* Warm gold — for medium-confidence signals */
-  --color-gold-500: #D4A87C;
-  --color-gold-200: #F0DCC8;
-  --color-gold-100: #FAF0E6;
+  /* Trace — the color of impressions left on paper below */
+  --color-trace-600: #9E9385;
+  --color-trace-500: #C8B8A8;
+  --color-trace-400: #DDD5CA;
+  --color-trace-300: #EAE5DD;
 
-  /* Compat aliases for legacy pages */
-  --color-warm-50: #FAF9F6;
-  --color-warm-100: #F4F2ED;
-  --color-warm-200: #EDEAE4;
-  --color-warm-300: #E2DCD2;
-  --color-cream-50: #FAF9F6;
-  --color-cream-100: #F4F2ED;
-  --color-cream-200: #EDEAE4;
-  --color-cream-300: #E2DCD2;
-  --color-charcoal-900: #2A2521;
-  --color-charcoal-700: #4A4541;
-  --color-charcoal-500: #6B635B;
-  --color-charcoal-400: #9B958E;
-  --color-charcoal-300: #C4BEB6;
-  --color-accent-600: #E07A5F;
-  --color-accent-500: #E8926F;
-  --color-accent-100: #FEE8DB;
-  --color-accent-50: #FFF7F2;
+  /* Compat aliases for existing component references */
+  --color-warm-50: #FAF8F4;
+  --color-warm-100: #F0EDE6;
+  --color-warm-200: #E4DFD7;
+  --color-warm-300: #D4CFC5;
+  --color-cream-50: #FAF8F4;
+  --color-cream-100: #F0EDE6;
+  --color-cream-200: #E4DFD7;
+  --color-cream-300: #D4CFC5;
+  --color-charcoal-900: #2A2420;
+  --color-charcoal-700: #5C534A;
+  --color-charcoal-500: #8A8179;
+  --color-charcoal-400: #B5AEA5;
+  --color-charcoal-300: #CCC6BD;
+  --color-coral-600: #B5704D;
+  --color-coral-700: #8F5A35;
+  --color-coral-50: #FDF8F4;
+  --color-coral-100: #FAF0E8;
+  --color-coral-200: #F5E6D8;
+  --color-accent-600: #B5704D;
+  --color-accent-500: #D4956F;
+  --color-accent-100: #FAF0E8;
+  --color-accent-50: #FDF8F4;
   --color-violet-700: #6D28D9;
   --color-violet-600: #7C3AED;
   --color-violet-500: #8B5CF6;
@@ -74,47 +79,69 @@
   --color-slate-300: #D4D4D8;
   --color-slate-200: #E4E4E7;
   --color-slate-100: #F4F4F5;
-  --color-sage-700: #3D7A56;
+  --color-sage-700: #4A7352;
 }
 
 /* ── Typography ──────────────────────────────────────── */
 
-html { background-color: var(--color-linen-50); }
+html {
+  background-color: var(--color-linen-50);
+}
 
 body {
   font-family: Georgia, 'Times New Roman', serif;
   color: var(--color-ink-900);
   font-size: 17px;
-  line-height: 1.75;
+  line-height: 1.8;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Subtle paper texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.018;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
 h1, h2, h3, h4 {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   line-height: 1.2;
   color: var(--color-ink-900);
 }
 
-.font-sans { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; }
-.font-serif { font-family: Georgia, 'Times New Roman', serif; }
-.font-interface { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; }
-.font-mono { font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; }
+h1 { font-weight: 700; letter-spacing: -0.02em; }
+
+.font-sans {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+}
+
+.font-serif {
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+.font-mono {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+}
 
 /* ── Layout Columns ──────────────────────────────────── */
 
 .narrow-column { max-width: 30rem; margin-inline: auto; }
 .reading-column { max-width: 38rem; margin-inline: auto; }
 .prose-column { max-width: 42rem; margin-inline: auto; }
-.content-column { max-width: 64rem; margin-inline: auto; }
+.content-column { max-width: 52rem; margin-inline: auto; }
 .wide-column { max-width: 60rem; margin-inline: auto; }
-.hero-column { max-width: 44rem; margin-inline: auto; }
 
 /* ── Prose ───────────────────────────────────────────── */
 
-.prose-body p { margin-bottom: 1.4em; }
+.prose-body p { margin-bottom: 1.5em; }
 .prose-body p:last-child { margin-bottom: 0; }
 
 /* ── Transitions ─────────────────────────────────────── */
@@ -123,117 +150,104 @@ a, button { transition: all 0.15s ease; }
 
 /* ── Selection ───────────────────────────────────────── */
 
-::selection { background-color: var(--color-coral-200); color: var(--color-ink-900); }
+::selection {
+  background-color: var(--color-umber-200);
+  color: var(--color-ink-900);
+}
 
 /* ── Focus ───────────────────────────────────────────── */
 
-:focus-visible { outline: 2px solid var(--color-coral-600); outline-offset: 2px; border-radius: 8px; }
-
-/* ── Card surfaces ───────────────────────────────────── */
-
-.card {
-  background: white;
-  border-radius: 20px;
-  border: 1px solid var(--color-linen-200);
-  box-shadow: 0 2px 8px rgba(42, 37, 33, 0.03);
-}
-
-.card-hover:hover {
-  box-shadow: 0 8px 32px rgba(42, 37, 33, 0.07);
-  transform: translateY(-1px);
+:focus-visible {
+  outline: 2px solid var(--color-umber-600);
+  outline-offset: 2px;
+  border-radius: 8px;
 }
 
 /* ── Observation — the primary content block ─────────── */
 
 .observation {
   background: white;
-  border-radius: 20px;
+  border-radius: 16px;
   border: 1px solid var(--color-linen-200);
-  padding: 1.75rem 2rem;
-  box-shadow: 0 2px 8px rgba(42, 37, 33, 0.03);
+  padding: 28px 32px;
+  box-shadow: 0 2px 8px rgba(42, 36, 32, 0.03);
 }
 
 .observation h3 {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 1.05rem;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 500;
   color: var(--color-ink-700);
-  margin-bottom: 0.6rem;
+  margin-bottom: 8px;
 }
 
 .observation p {
-  color: var(--color-ink-500);
-  line-height: 1.75;
-  font-size: 0.95rem;
+  color: var(--color-ink-700);
+  line-height: 1.8;
+  font-size: 16px;
 }
 
-/* Highlighted observation — coral accent */
-.observation-highlight {
-  background: var(--color-coral-50);
-  border-radius: 20px;
-  border: 1px solid var(--color-coral-200);
-  border-left: 3px solid var(--color-coral-600);
-  padding: 1.75rem 2rem;
+/* Umber-tinted — divergence, reconstruction, reinforcement */
+.observation-umber {
+  background: var(--color-umber-50);
+  border-radius: 16px;
+  border: 1px solid var(--color-umber-200);
+  border-left: 3px solid var(--color-umber-600);
+  padding: 28px 32px;
 }
-.observation-highlight h3 { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 1.05rem; font-weight: 600; color: var(--color-ink-700); margin-bottom: 0.6rem; }
-.observation-highlight p { color: var(--color-ink-500); line-height: 1.75; font-size: 0.95rem; }
+.observation-umber h3 {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 15px; font-weight: 500; color: var(--color-ink-700); margin-bottom: 8px;
+}
+.observation-umber p { color: var(--color-ink-700); line-height: 1.8; font-size: 16px; }
 
-/* Sage observation — for "what you kept" */
+/* Sage-tinted — self-governance, what the user kept */
 .observation-sage {
   background: var(--color-sage-100);
-  border-radius: 20px;
+  border-radius: 16px;
   border: 1px solid var(--color-sage-200);
-  border-left: 3px solid var(--color-sage-500);
-  padding: 1.75rem 2rem;
+  border-left: 3px solid var(--color-sage-600);
+  padding: 28px 32px;
 }
-.observation-sage h3 { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 1.05rem; font-weight: 600; color: var(--color-ink-700); margin-bottom: 0.6rem; }
-.observation-sage p { color: var(--color-ink-500); line-height: 1.75; font-size: 0.95rem; }
+.observation-sage h3 {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 15px; font-weight: 500; color: var(--color-ink-700); margin-bottom: 8px;
+}
+.observation-sage p { color: var(--color-ink-700); line-height: 1.8; font-size: 16px; }
 
-/* Quiet surface — for charts, data sections */
+/* Quiet surface for charts */
 .surface-quiet {
   background: var(--color-linen-100);
-  border-radius: 20px;
-  padding: 1.5rem;
+  border-radius: 16px;
+  padding: 20px;
 }
 
-/* ── Confidence dots ─────────────────────────────────── */
+/* ── Confidence markers ──────────────────────────────── */
 
-.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.dot-high { background-color: var(--color-sage-500); }
-.dot-medium { background-color: var(--color-gold-500); }
-.dot-low { background-color: var(--color-ink-300); }
-
-/* ── Pill / Tag ──────────────────────────────────────── */
-
-.pill {
-  display: inline-flex;
-  align-items: center;
-  padding: 5px 14px;
-  border-radius: 9999px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-}
+.dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.dot-counted { background-color: var(--color-sage-600); }
+.dot-patterned { background-color: var(--color-umber-600); }
+.dot-interpretive { background-color: var(--color-trace-500); }
 
 /* ── Buttons ─────────────────────────────────────────── */
 
 .btn-primary {
   display: inline-flex; align-items: center; justify-content: center;
-  padding: 14px 28px;
-  background: var(--color-coral-600);
+  padding: 16px 32px;
+  background: var(--color-umber-600);
   color: white;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-size: 15px; font-weight: 600;
   border-radius: 14px;
-  box-shadow: 0 2px 8px rgba(224, 122, 95, 0.2);
   border: none; cursor: pointer;
+  letter-spacing: 0.01em;
 }
-.btn-primary:hover { background: var(--color-coral-700); box-shadow: 0 4px 16px rgba(224, 122, 95, 0.25); }
+.btn-primary:hover { background: var(--color-umber-700); }
 .btn-primary:active { transform: scale(0.98); }
 
 .btn-secondary {
   display: inline-flex; align-items: center; justify-content: center;
-  padding: 14px 28px;
+  padding: 16px 32px;
   background: white;
   color: var(--color-ink-700);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -248,22 +262,81 @@ a, button { transition: all 0.15s ease; }
 
 .input-field {
   width: 100%;
-  padding: 16px 20px;
+  padding: 18px 22px;
   background: var(--color-linen-100);
   border: 1px solid transparent;
   border-radius: 14px;
   font-family: Georgia, 'Times New Roman', serif;
   font-size: 17px; color: var(--color-ink-900);
-  line-height: 1.5;
+  line-height: 1.6;
 }
-.input-field::placeholder { color: var(--color-ink-300); font-style: italic; }
-.input-field:focus { outline: none; border-color: var(--color-coral-600); background: white; }
+.input-field::placeholder { color: var(--color-ink-400); font-style: italic; }
+.input-field:focus { outline: none; border-color: var(--color-umber-600); background: white; }
+
+/* ── Pill ────────────────────────────────────────────── */
+
+.pill {
+  display: inline-flex; align-items: center;
+  padding: 5px 14px;
+  border-radius: 9999px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 13px; font-weight: 500;
+}
+
+/* ── Link styling ────────────────────────────────────── */
+
+.text-link {
+  color: var(--color-umber-600);
+  text-decoration: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 500;
+}
+.text-link:hover { color: var(--color-umber-700); text-decoration: underline; }
 
 /* ── Chart typography ────────────────────────────────── */
 
-svg text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+svg text {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
 
-/* ── Presentation mode ───────────────────────────────── */
+/* ── The threshold pause ─────────────────────────────── */
+
+.threshold {
+  padding: 80px 0;
+  text-align: center;
+}
+.threshold p {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+  color: var(--color-ink-400);
+  letter-spacing: 0.02em;
+}
+
+/* ── Card ────────────────────────────────────────────── */
+
+.card {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid var(--color-linen-200);
+  box-shadow: 0 2px 8px rgba(42, 36, 32, 0.03);
+}
+.card-hover { transition: box-shadow 0.2s ease, transform 0.2s ease; }
+.card-hover:hover {
+  box-shadow: 0 6px 24px rgba(42, 36, 32, 0.06);
+  transform: translateY(-1px);
+}
+
+/* keep old aliases working */
+.card-soft { background: var(--color-linen-100); border-radius: 16px; border: 1px solid var(--color-linen-200); }
+.confidence-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; }
+.confidence-high { background-color: var(--color-sage-600); }
+.confidence-medium { background-color: var(--color-umber-600); }
+.confidence-low { background-color: var(--color-trace-500); }
+.observation-highlight { background: var(--color-umber-50); border-radius: 16px; border: 1px solid var(--color-umber-200); border-left: 3px solid var(--color-umber-600); padding: 28px 32px; }
+.observation-highlight h3 { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 15px; font-weight: 500; color: var(--color-ink-700); margin-bottom: 8px; }
+.observation-highlight p { color: var(--color-ink-700); line-height: 1.8; font-size: 16px; }
+
+/* ── Presentation Mode ───────────────────────────────── */
 
 .presentation-mode body { font-size: 1.2rem; }
 .presentation-mode nav { display: none; }

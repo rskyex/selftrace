@@ -49,7 +49,7 @@ export default function TrendsPage() {
             ? 'Your topics narrowed over time. You started with a wider range and gradually concentrated on fewer. That could mean deepening expertise, intentional focus, or drifting toward what gets response.'
             : 'Your topic range stayed fairly broad. You didn\'t narrow toward a single focus the way some posting histories do.'}
         </p>
-        <ConfidenceDot level="medium" />
+        <ConfidenceDot level="patterned" />
 
         <div className="content-column -mx-6 my-6">
           <TopicStreamChart data={analysis.topicDistribution.value} />
@@ -60,7 +60,7 @@ export default function TrendsPage() {
         <p className="text-[15px] text-ink-400 mb-2">
           {narrowed ? `Yours went from ${eFirst.toFixed(1)} to ${eLast.toFixed(1)} — a noticeable narrowing.` : 'Yours stayed relatively stable.'}
         </p>
-        <AreaChart data={e} confidence="medium" />
+        <AreaChart data={e} confidence="patterned" />
 
         {/* Vocabulary */}
         <h2 className="text-[24px] font-bold text-ink-900 mt-14 mb-2">Words that changed</h2>
@@ -74,7 +74,7 @@ export default function TrendsPage() {
             </div>
           ))}
         </div>
-        <div className="mt-3"><ConfidenceDot level="medium" /></div>
+        <div className="mt-3"><ConfidenceDot level="patterned" /></div>
 
         {/* Tone */}
         <h2 className="text-[24px] font-bold text-ink-900 mt-14 mb-2">How your tone shifted</h2>
@@ -96,7 +96,7 @@ export default function TrendsPage() {
             );
           })}
         </div>
-        <div className="mt-3"><ConfidenceDot level="low" /></div>
+        <div className="mt-3"><ConfidenceDot level="interpretive" /></div>
         <p className="mt-4 text-[14px] text-ink-400 italic">
           Could reflect life changes, evolving interests, audience shifts, or platform dynamics. Probably a mix.
         </p>

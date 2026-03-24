@@ -14,14 +14,14 @@ export function TimelineBand({ data }: { data: TimeSeriesPoint[] }) {
   const step = Math.max(1, Math.floor(data.length / 7));
 
   return (
-    <div className="w-full surface-quiet rounded-none my-4 px-0">
+    <div className="w-full surface-quiet rounded-none px-0">
       <svg viewBox={`0 0 ${w} ${h}`} className="w-full" style={{ height: '80px' }} role="img" aria-label="Posting density">
-        <path d={area} fill="#FFF7F2" opacity={0.9} />
-        <path d={line} fill="none" stroke="#E07A5F" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
+        <path d={area} fill="#EAE5DD" opacity={0.8} />
+        <path d={line} fill="none" stroke="#C8B8A8" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
         {data.map((d, i) => {
           if (i % step !== 0 && i !== data.length - 1) return null;
           const dt = new Date(d.date);
-          return <text key={i} x={x(i)} y={h - 3} textAnchor="middle" fill="#9B958E" fontSize={10} aria-hidden="true">{`${dt.toLocaleString('en', { month: 'short' })} '${dt.getFullYear().toString().slice(2)}`}</text>;
+          return <text key={i} x={x(i)} y={h - 3} textAnchor="middle" fill="#B5AEA5" fontSize={10}>{`${dt.toLocaleString('en', { month: 'short' })} '${dt.getFullYear().toString().slice(2)}`}</text>;
         })}
       </svg>
     </div>

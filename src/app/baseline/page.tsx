@@ -72,7 +72,7 @@ export default function BaselinePage() {
         <AreaChart
           data={analysis.postingFrequency.value}
           caption={analysis.postingFrequency.evidence}
-          confidence="medium"
+          confidence="patterned"
         />
 
         {/* Data Quality */}

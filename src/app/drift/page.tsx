@@ -60,7 +60,7 @@ export default function DriftPage() {
             : 'Your topic range stayed relatively broad throughout. You didn\'t narrow toward a single focus the way some posting histories do.'
           }
         </p>
-        <ConfidenceDot level="medium" />
+        <ConfidenceDot level="patterned" />
 
         <div className="wide-column -mx-6 my-6">
           <TopicStreamChart data={analysis.topicDistribution.value} />
@@ -77,7 +77,7 @@ export default function DriftPage() {
             : ` Yours stayed relatively stable.`
           }
         </p>
-        <AreaChart data={entropy} confidence="medium" color="coral" />
+        <AreaChart data={entropy} confidence="patterned" color="umber" />
 
         {/* ── Vocabulary ──────────────────────────── */}
         <h2 className="text-[24px] font-semibold text-ink-900 tracking-tight mt-14 mb-2">
@@ -102,7 +102,7 @@ export default function DriftPage() {
             </div>
           ))}
         </div>
-        <div className="mt-3"><ConfidenceDot level="medium" /></div>
+        <div className="mt-3"><ConfidenceDot level="patterned" /></div>
 
         {/* ── Tone ────────────────────────────────── */}
         <h2 className="text-[24px] font-semibold text-ink-900 tracking-tight mt-14 mb-2">
@@ -132,7 +132,7 @@ export default function DriftPage() {
             );
           })}
         </div>
-        <div className="mt-3"><ConfidenceDot level="low" /></div>
+        <div className="mt-3"><ConfidenceDot level="interpretive" /></div>
 
         <p className="mt-6 text-[15px] text-ink-400 italic leading-relaxed">
           Changes in tone could reflect life circumstances, evolving interests,

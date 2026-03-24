@@ -52,7 +52,7 @@ export default function WhatStuckPage() {
               <p className="font-sans text-[13px]">{t.postCount} posts &middot; above-average response &middot; frequency increased</p>
             </div>
           ))}
-          <ConfidenceDot level="low" />
+          <ConfidenceDot level="interpretive" />
         </section>
       )}
 
@@ -70,7 +70,7 @@ export default function WhatStuckPage() {
               <p className="font-sans text-[13px]">{t.postCount} posts &middot; low engagement &middot; you kept going</p>
             </div>
           ))}
-          <ConfidenceDot level="high" />
+          <ConfidenceDot level="counted" />
         </section>
       )}
 
@@ -89,7 +89,7 @@ export default function WhatStuckPage() {
               </div>
             ))}
           </div>
-          <div className="mt-3"><ConfidenceDot level="medium" /></div>
+          <div className="mt-3"><ConfidenceDot level="patterned" /></div>
         </section>
       )}
 
@@ -106,7 +106,7 @@ export default function WhatStuckPage() {
               <p className="font-sans text-[12px] text-ink-300 mt-1">{events[0].daysBetween} days between occurrences</p>
             </div>
           ))}
-          <div className="mt-3"><ConfidenceDot level="medium" /></div>
+          <div className="mt-3"><ConfidenceDot level="patterned" /></div>
         </section>
       )}
 
@@ -118,7 +118,7 @@ export default function WhatStuckPage() {
             Did topics that got more attention one quarter show up more the next?
             This is our least certain analysis.
           </p>
-          <AreaChart data={reinforcementCorrelation.value} confidence="low" color="gold" caption="Engagement-frequency correlation by quarter" />
+          <AreaChart data={reinforcementCorrelation.value} confidence="interpretive" color="trace" caption="Engagement-frequency correlation by quarter" />
         </section>
       )}
 

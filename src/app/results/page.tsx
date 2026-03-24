@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { AreaChart } from '@/components/shared/AreaChart';
-import { SparkLine } from '@/components/shared/SparkLine';
 import { ConfidenceDot } from '@/components/shared/ConfidenceDot';
 import { ProfileSwitcher } from '@/components/shared/ProfileSwitcher';
 import { useData } from '@/lib/data/context';
@@ -12,27 +11,27 @@ export default function ResultsPage() {
 
   if (!isLoaded || !analysis) {
     return (
-      <div className="reading-column px-6 pt-24 pb-24">
-        <h1 className="text-[32px] font-bold tracking-tight text-ink-900 mb-4">Your results</h1>
-        <p className="text-ink-400 mb-10">Load a profile to see your patterns.</p>
+      <div className="reading-column px-6 pt-28 pb-24">
+        <h1 className="text-[30px] font-bold tracking-tight text-ink-900 mb-4">Your results</h1>
+        <p className="text-ink-500 mb-10">Load a profile to begin.</p>
         <ProfileSwitcher />
       </div>
     );
   }
 
   const profile = activeProfile!;
-  const posts = profile.posts;
-  const half = Math.floor(posts.length / 2);
+  const startDate = new Date(profile.dataQuality.dateRange.start).toLocaleDateString('en', { month: 'long', year: 'numeric' });
+  const endDate = new Date(profile.dataQuality.dateRange.end).toLocaleDateString('en', { month: 'long', year: 'numeric' });
 
   // Top topics
   const topicCounts: Record<string, number> = {};
-  for (const p of posts) { if (p.derived) for (const t of p.derived.topics) topicCounts[t.topic] = (topicCounts[t.topic] || 0) + 1; }
+  for (const p of profile.posts) { if (p.derived) for (const t of p.derived.topics) topicCounts[t.topic] = (topicCounts[t.topic] || 0) + 1; }
   const topTopics = Object.entries(topicCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
 
-  // Tone
-  const tA = analysis.toneTrends.value.assertiveness;
-  const assertFirst = tA[0]?.value ?? 0, assertLast = tA[tA.length - 1]?.value ?? 0;
-  const toneWord = assertLast > assertFirst + 0.1 ? 'more assertive' : assertLast < assertFirst - 0.1 ? 'softer' : 'fairly consistent';
+  // Entropy direction
+  const e = analysis.topicEntropy.value;
+  const eFirst = e[0]?.value ?? 0, eLast = e[e.length - 1]?.value ?? 0;
+  const narrowed = eLast < eFirst * 0.75;
 
   // Engagement
   const eng = analysis.engagementSensitivity;
@@ -40,100 +39,132 @@ export default function ResultsPage() {
   const reinforced = eng?.value.filter(t => t.frequencyTrend === 'increasing' && t.averageEngagement > avgEng).slice(0, 3) ?? [];
   const kept = eng?.value.filter(t => t.averageEngagement < avgEng * 0.5 && t.frequencyTrend !== 'decreasing').slice(0, 3) ?? [];
 
-  // Self-descriptions
-  const lateDescs = analysis.selfDescriptionShift.value.late;
-  const descCounts: Record<string, number> = {};
-  for (const d of lateDescs) descCounts[d.phrase] = (descCounts[d.phrase] || 0) + 1;
-  const topDescs = Object.entries(descCounts).sort((a, b) => b[1] - a[1]).slice(0, 3);
-
-  const startDate = new Date(profile.dataQuality.dateRange.start).toLocaleDateString('en', { month: 'long', year: 'numeric' });
-  const endDate = new Date(profile.dataQuality.dateRange.end).toLocaleDateString('en', { month: 'long', year: 'numeric' });
-
   return (
-    <div className="reading-column px-6 pt-24 pb-24">
-      <h1 className="text-[32px] font-bold tracking-tight text-ink-900 mb-1">
-        Here&apos;s what we noticed.
-      </h1>
-      <p className="font-sans text-[14px] text-ink-300 mb-14">
-        Based on {profile.dataQuality.totalPosts.toLocaleString()} posts &middot; {startDate} to {endDate}
-      </p>
+    <div className="reading-column px-6 pt-28 pb-24">
+      {/* ── Frame ────────────────────────────────── */}
+      <div className="mb-20">
+        <p className="font-sans text-[12px] text-ink-400 mb-8">
+          {profile.dataQuality.totalPosts.toLocaleString()} posts &middot; {startDate} to {endDate}
+        </p>
 
-      {/* ── The Mirror ───────────────────────────── */}
-      {selfPortrait && selfPortrait.topics && (
-        <section className="mb-16">
-          <h2 className="text-[24px] font-bold text-ink-900 mb-6">What you told us vs. what your posts show</h2>
+        <div className="prose-body text-[18px] text-ink-700 leading-[1.85]">
+          <p>Here is your posting history, read carefully.</p>
+          <p>
+            What follows isn&apos;t a personality test or a diagnosis. It&apos;s a reconstruction &mdash;
+            a picture of your visible self assembled from what you wrote, when you wrote it,
+            and how the environment around you responded.
+          </p>
+          <p className="text-ink-500">
+            Some of what you see will match how you already understand yourself. Some of it
+            may not. That gap &mdash; between how you experience yourself and what the traces
+            show &mdash; is often where the most interesting questions live.
+          </p>
+          <p className="text-ink-500">
+            We&apos;ll show you what we can see, name what it might mean, and be honest about
+            what we can&apos;t know. The interpretation is yours.
+          </p>
+        </div>
+      </div>
 
+      {/* ── Your World ───────────────────────────── */}
+      <div className="threshold">
+        <p>Your world</p>
+      </div>
+
+      <section className="mb-20">
+        <h2 className="text-[24px] font-semibold text-ink-900 tracking-tight mb-4">
+          Your range of subjects over time
+        </h2>
+        <p className="text-[17px] text-ink-700 leading-[1.8] mb-2">
+          Across {profile.dataQuality.totalPosts.toLocaleString()} posts, your most frequent
+          topics were {topTopics.slice(0, 3).map(([t]) => t).join(', ')}.
+          {narrowed
+            ? ' Your range of subjects narrowed over this period \u2014 you engaged with fewer topics by the end than at the start.'
+            : ' Your range of subjects stayed relatively broad throughout.'}
+        </p>
+        <p className="text-[16px] text-ink-500 leading-[1.8] mb-4">
+          {narrowed
+            ? 'This could mean deepening focus, intentional specialization, or a gradual drifting toward what the environment made easiest to talk about. Probably some of each.'
+            : 'Not everyone narrows. A stable range can mean deliberate breadth, or that the feedback environment didn\u2019t strongly select for any single direction.'}
+        </p>
+        <ConfidenceDot level="patterned" />
+        <AreaChart data={e} confidence="patterned" color="trace" caption="Topic diversity by quarter" />
+      </section>
+
+      {/* ── Your Self ────────────────────────────── */}
+      <div className="threshold">
+        <p>Your self</p>
+      </div>
+
+      {selfPortrait && selfPortrait.whatMatters && (
+        <section className="mb-20">
+          <h2 className="text-[24px] font-semibold text-ink-900 tracking-tight mb-4">
+            What you told us, and what the traces show
+          </h2>
           <div className="grid md:grid-cols-2 gap-5 mb-6">
             <div className="observation">
-              <h3>What you told us</h3>
-              <p className="mb-2"><strong className="text-ink-700">Topics that matter:</strong> <em>{selfPortrait.topics}</em></p>
-              {selfPortrait.values && <p className="mb-2"><strong className="text-ink-700">How you describe yourself:</strong> <em>{selfPortrait.voice || selfPortrait.values}</em></p>}
-              {selfPortrait.driftedFrom && <p><strong className="text-ink-700">What you think you post about:</strong> <em>{selfPortrait.driftedFrom}</em></p>}
+              <h3>How you described yourself</h3>
+              {selfPortrait.whatMatters && <p className="mb-2 italic">&ldquo;{selfPortrait.whatMatters}&rdquo;</p>}
+              {selfPortrait.returnTo && <p className="mb-2 text-[14px]">Returns to: <em>{selfPortrait.returnTo}</em></p>}
+              {selfPortrait.mostVisible && <p className="mb-2 text-[14px]">Most visible side: <em>{selfPortrait.mostVisible}</em></p>}
+              {selfPortrait.leastVisible && <p className="text-[14px]">Least visible: <em>{selfPortrait.leastVisible}</em></p>}
             </div>
-
-            <div className="observation-highlight">
-              <h3>What your posts show</h3>
+            <div className="observation-umber">
+              <h3>What the traces show</h3>
               <p className="mb-3">Your most frequent topics:</p>
               <div className="flex flex-wrap gap-2 mb-3">
                 {topTopics.map(([t, c]) => (
-                  <span key={t} className="pill bg-coral-100 text-coral-700">{t} <span className="text-coral-500 ml-1 text-[11px]">{c}</span></span>
+                  <span key={t} className="pill bg-umber-100 text-umber-700">{t} <span className="text-umber-500 ml-1 text-[11px]">{c}</span></span>
                 ))}
               </div>
-              <p>Your voice has been {toneWord} over time.</p>
-              {topDescs.length > 0 && <p className="mt-2">You describe yourself as: <em>&ldquo;{topDescs[0][0]}&rdquo;</em></p>}
+              {reinforced.length > 0 && <p className="text-[14px]">Reinforced: {reinforced.map(t => t.topic).join(', ')}</p>}
             </div>
           </div>
-
-          <p className="text-[15px] text-ink-400 italic leading-relaxed">
-            These differences don&apos;t mean your self-image is wrong. They mean
-            what you notice about yourself and what shows up in the data are
-            sometimes different things. That gap is often the most interesting part.
+          <p className="text-[16px] text-ink-500 leading-[1.8]">
+            Where these overlap, your self-knowledge lines up with the visible record.
+            Where they diverge, something worth noticing may have happened in the space
+            between &mdash; not an error in how you see yourself, but a gap between the
+            self you experience and the self the data can see.
           </p>
-          <div className="mt-2"><ConfidenceDot level="medium" /></div>
+          <div className="mt-2"><ConfidenceDot level="patterned" /></div>
         </section>
       )}
 
-      {/* ── Snapshot ─────────────────────────────── */}
-      <section className="mb-16">
-        <h2 className="text-[24px] font-bold text-ink-900 mb-4">Your snapshot</h2>
-
-        <div className="observation mb-4">
-          <p>
-            Across {profile.dataQuality.totalPosts.toLocaleString()} posts
-            over about {profile.timePeriods.length * 3} months, your most
-            frequent topics were <strong>{topTopics.slice(0, 3).map(([t]) => t).join(', ')}</strong>.
-            Your voice became {toneWord} over time.
-            {reinforced.length > 0 && ` Some of what you posted most about was also what got the most attention.`}
-          </p>
-        </div>
-
-        <AreaChart data={analysis.postingFrequency.value} caption="How often you posted, month by month" confidence="high" />
-      </section>
-
-      {/* ── What got attention ────────────────────── */}
+      {/* ── Brief reinforcement signal ───────────── */}
       {reinforced.length > 0 && (
-        <section className="mb-16">
-          <h2 className="text-[24px] font-bold text-ink-900 mb-2">What got attention</h2>
-          <p className="text-[15px] text-ink-400 mb-6">
-            These topics got more engagement than average — and you posted about them
-            more over time. Worth noticing, even if the attention didn&apos;t cause it.
+        <section className="mb-20">
+          <h2 className="text-[24px] font-semibold text-ink-900 tracking-tight mb-4">
+            What the environment appeared to reward
+          </h2>
+          <p className="text-[16px] text-ink-500 leading-[1.8] mb-6">
+            These topics received more engagement than average, and you posted about
+            them more over time. The pattern is visible. Whether the attention caused
+            the increase is something only you can feel.
           </p>
           {reinforced.map(t => (
-            <div key={t.topic} className="observation mb-3">
+            <div key={t.topic} className="observation-umber mb-3">
               <h3>{t.topic}</h3>
-              <p className="font-sans text-[13px]">{t.postCount} posts &middot; above-average response &middot; frequency increased</p>
+              <p className="font-sans text-[13px]">{t.postCount} posts &middot; above-average engagement &middot; frequency increased</p>
             </div>
           ))}
-          <ConfidenceDot level="low" />
+          <div className="mt-2"><ConfidenceDot level="interpretive" /></div>
         </section>
       )}
 
-      {/* ── What you kept ────────────────────────── */}
+      {/* ── Your Authorship ──────────────────────── */}
+      <div className="threshold">
+        <p>Your authorship</p>
+      </div>
+
       {kept.length > 0 && (
-        <section className="mb-16">
-          <h2 className="text-[24px] font-bold text-ink-900 mb-2">What you kept anyway</h2>
-          <p className="text-[15px] text-ink-400 mb-6">
-            These persisted despite low engagement. That says something.
+        <section className="mb-20">
+          <h2 className="text-[24px] font-semibold text-ink-900 tracking-tight mb-4">
+            What you kept
+          </h2>
+          <p className="text-[16px] text-ink-500 leading-[1.8] mb-6">
+            Below-average engagement, but you kept going. That persistence &mdash; continuing
+            to express something because it matters to you, not because the environment
+            rewards it &mdash; may be the clearest trace of your own agency.
           </p>
           {kept.map(t => (
             <div key={t.topic} className="observation-sage mb-3">
@@ -141,51 +172,28 @@ export default function ResultsPage() {
               <p className="font-sans text-[13px]">{t.postCount} posts &middot; low engagement &middot; you kept going</p>
             </div>
           ))}
-          <ConfidenceDot level="high" />
+          <div className="mt-2"><ConfidenceDot level="counted" /></div>
         </section>
       )}
 
-      {/* ── Tone snapshot ────────────────────────── */}
-      <section className="mb-16">
-        <h2 className="text-[24px] font-bold text-ink-900 mb-2">Your tone</h2>
-        <p className="text-[15px] text-ink-400 mb-6">
-          Rough signals based on word patterns, not precise measurements.
-        </p>
-        <div className="grid grid-cols-2 gap-4">
-          {(['assertiveness', 'emotionality', 'formality', 'urgency'] as const).map(m => {
-            const s = analysis.toneTrends.value[m];
-            const f = s[0]?.value ?? 0, l = s[s.length - 1]?.value ?? 0;
-            return (
-              <div key={m} className="observation text-center py-4">
-                <p className="font-sans text-[11px] text-ink-400 uppercase tracking-wider mb-2">{m}</p>
-                <SparkLine data={s} width={80} height={22} />
-                <p className="font-sans text-[14px] text-ink-700 mt-2">{f.toFixed(2)} &rarr; {l.toFixed(2)}</p>
-              </div>
-            );
-          })}
-        </div>
-        <div className="mt-3"><ConfidenceDot level="low" /></div>
-      </section>
-
       {/* ── Closing ──────────────────────────────── */}
-      <div className="border-t border-linen-200 pt-10 mt-10">
-        <p className="text-[18px] text-ink-500 leading-relaxed mb-2">
-          These are patterns, not a verdict. Some will feel right. Some might
-          surprise you. What you do with them is entirely up to you.
+      <section className="border-t border-linen-200 pt-14 mt-6 prose-body">
+        <p className="text-[17px] text-ink-500 leading-[1.8]">
+          These are traces, not verdicts. Some will match how you already understand
+          yourself. Some may not. What you do with the difference is yours to decide.
         </p>
-        <p className="text-[16px] text-ink-400 italic">
+        <p className="text-[17px] text-ink-400 italic">
           Patterns you can see are patterns you can choose.
         </p>
-      </div>
+      </section>
 
       {/* ── Go deeper ────────────────────────────── */}
-      <div className="mt-12 flex flex-wrap gap-6">
-        <Link href="/trends" className="font-sans text-[14px] text-coral-600 hover:text-coral-700 font-semibold">
-          See how things shifted over time &rarr;
-        </Link>
-        <Link href="/what-stuck" className="font-sans text-[14px] text-coral-600 hover:text-coral-700 font-semibold">
-          See what stuck &rarr;
-        </Link>
+      <div className="mt-16 space-y-4">
+        <Link href="/returning" className="text-link block text-[15px]">What keeps resurfacing &rarr;</Link>
+        <Link href="/rewarded" className="text-link block text-[15px]">What the environment rewarded &rarr;</Link>
+        <Link href="/selves" className="text-link block text-[15px]">The self you described and the self the traces show &rarr;</Link>
+        <Link href="/shifted" className="text-link block text-[15px]">How things shifted &rarr;</Link>
+        <Link href="/kept" className="text-link block text-[15px]">What you kept &rarr;</Link>
       </div>
     </div>
   );

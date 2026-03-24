@@ -2,7 +2,7 @@
 
 import type { TimeSeriesPoint } from '@/lib/data/types';
 
-export function SparkLine({ data, width = 90, height = 24, color = '#E07A5F' }: {
+export function SparkLine({ data, width = 90, height = 24, color = '#B5704D' }: {
   data: TimeSeriesPoint[]; width?: number; height?: number; color?: string;
 }) {
   if (data.length < 2) return null;

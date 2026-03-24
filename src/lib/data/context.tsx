@@ -6,10 +6,18 @@ import { getDemoProfiles, getDemoProfile } from '@/data/demo/profiles';
 import { runAnalysis } from '@/lib/analysis/pipeline';
 
 export interface SelfPortrait {
-  topics: string;
-  voice: string;
-  values: string;
-  driftedFrom: string;
+  /** What parts of yourself matter most to you? */
+  whatMatters: string;
+  /** What do you think you return to most often online? */
+  returnTo: string;
+  /** What side of yourself feels most visible online? */
+  mostVisible: string;
+  /** What side of yourself feels least visible online? */
+  leastVisible: string;
+  /** Do you feel your online self has changed over time? */
+  hasChanged: string;
+  /** Are there things you believe or care about differently now? */
+  changedBeliefs: string;
 }
 
 interface DataContextValue {

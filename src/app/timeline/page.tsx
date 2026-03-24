@@ -101,7 +101,7 @@ export default function TimelinePage() {
         <AreaChart
           data={topicEntropy.value}
           caption={topicEntropy.caveat}
-          confidence="medium"
+          confidence="patterned"
         />
 
         <SectionDivider />

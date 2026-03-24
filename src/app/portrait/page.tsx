@@ -110,11 +110,11 @@ export default function PortraitPage() {
       </div>
 
       {/* ── Self-portrait comparison ──────────────── */}
-      {selfPortrait && selfPortrait.topics && (
-        <div className="observation mb-10 bg-violet-50 border-violet-200">
+      {selfPortrait && selfPortrait.whatMatters && (
+        <div className="observation mb-10 bg-umber-50 border-umber-200">
           <h3>What you said vs. what your data shows</h3>
           <p className="mb-4">
-            You said you mostly post about: <em>&ldquo;{selfPortrait.topics}&rdquo;</em>
+            You said what matters most to you is: <em>&ldquo;{selfPortrait.whatMatters}&rdquo;</em>
           </p>
           <p className="mb-2">
             Your data actually shows these as your most frequent topics:
@@ -131,15 +131,15 @@ export default function PortraitPage() {
             notice about yourself and what shows up in the data are sometimes
             different. That&apos;s normal and interesting.
           </p>
-          <div className="mt-2"><ConfidenceDot level="medium" /></div>
+          <div className="mt-2"><ConfidenceDot level="patterned" /></div>
         </div>
       )}
 
-      {selfPortrait && selfPortrait.driftedFrom && (
+      {selfPortrait && selfPortrait.leastVisible && (
         <div className="observation mb-10">
-          <h3>About what you said you drifted from</h3>
+          <h3>About what feels least visible</h3>
           <p>
-            You mentioned drifting away from: <em>&ldquo;{selfPortrait.driftedFrom}&rdquo;</em>
+            You said this side feels least visible: <em>&ldquo;{selfPortrait.leastVisible}&rdquo;</em>
           </p>
           {fadedTopics.length > 0 ? (
             <p className="mt-2">
@@ -154,7 +154,7 @@ export default function PortraitPage() {
               show up at a finer level than our topic analysis captures.
             </p>
           )}
-          <div className="mt-2"><ConfidenceDot level="medium" /></div>
+          <div className="mt-2"><ConfidenceDot level="patterned" /></div>
         </div>
       )}
 
@@ -165,7 +165,7 @@ export default function PortraitPage() {
       <p className="text-[15px] text-ink-400 leading-relaxed mb-2">
         How often you posted, month by month.
       </p>
-      <AreaChart data={analysis.postingFrequency.value} confidence="high" />
+      <AreaChart data={analysis.postingFrequency.value} confidence="counted" />
 
       {/* ── What got rewarded ────────────────────── */}
       {highEngTopics.length > 0 && (
@@ -186,7 +186,7 @@ export default function PortraitPage() {
               </p>
             </div>
           ))}
-          <div className="mb-4"><ConfidenceDot level="low" /></div>
+          <div className="mb-4"><ConfidenceDot level="interpretive" /></div>
         </>
       )}
 
@@ -209,7 +209,7 @@ export default function PortraitPage() {
               </p>
             </div>
           ))}
-          <div className="mb-4"><ConfidenceDot level="high" /></div>
+          <div className="mb-4"><ConfidenceDot level="counted" /></div>
         </>
       )}
 
@@ -231,7 +231,7 @@ export default function PortraitPage() {
               </div>
             ))}
           </div>
-          <ConfidenceDot level="medium" />
+          <ConfidenceDot level="patterned" />
         </>
       )}
 

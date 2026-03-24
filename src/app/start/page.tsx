@@ -6,18 +6,23 @@ import { ProfileSwitcher } from '@/components/shared/ProfileSwitcher';
 import { useData } from '@/lib/data/context';
 import type { SelfPortrait } from '@/lib/data/context';
 
-const QUESTIONS = [
-  { key: 'topics', label: 'What topics matter most to you?', hint: 'The things you care about, whether or not you post about them' },
-  { key: 'posting', label: 'What do you think you actually post about most?', hint: 'What would someone see scrolling through your feed?' },
-  { key: 'voice', label: 'How would you describe yourself online, in a few words?', hint: 'However feels right — funny, serious, opinionated, careful, loud, quiet…' },
-  { key: 'wish', label: 'What side of yourself do you wish came through more?', hint: 'The parts that don\'t make it into posts as often' },
-] as const;
+const PROMPTS: { key: keyof SelfPortrait; question: string; context: string }[] = [
+  { key: 'whatMatters', question: 'What parts of yourself matter most to you?', context: 'Not what you post about. What you carry.' },
+  { key: 'returnTo', question: 'What do you think you return to most often online?', context: 'The things you find yourself writing about again and again.' },
+  { key: 'mostVisible', question: 'What side of yourself feels most visible online?', context: 'The version someone would piece together from your posts.' },
+  { key: 'leastVisible', question: 'What side of yourself feels least visible online?', context: 'The parts that don\u2019t tend to make it into what you publish.' },
+  { key: 'hasChanged', question: 'Do you feel your online self has changed over time?', context: 'Not whether you\u2019ve grown or changed in life \u2014 whether the you that shows up online has shifted.' },
+  { key: 'changedBeliefs', question: 'Are there things you believe or care about differently now than you used to?', context: 'This one is worth sitting with for a moment.' },
+];
 
 const LOADING_LINES = [
-  'Reading through your posts…',
-  'Noticing some patterns…',
-  'Comparing with what you told us…',
-  'Almost ready.',
+  'Reading through what you wrote.',
+  'Noticing what kept coming back.',
+  'Tracking how things shifted over time.',
+  'Comparing what got attention with what didn\u2019t.',
+  'Looking at what you kept doing anyway.',
+  'Placing all of this beside what you told us about yourself.',
+  'One more moment.',
 ];
 
 function StartInner() {
@@ -25,11 +30,13 @@ function StartInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  type Step = 'data' | 'q0' | 'q1' | 'q2' | 'q3' | 'online' | 'loading';
+  type Step = 'data' | 'q0' | 'q1' | 'q2' | 'q3' | 'q4' | 'q5' | 'loading';
   const [step, setStep] = useState<Step>('data');
-  const [answers, setAnswers] = useState({ topics: '', posting: '', voice: '', wish: '' });
-  const [onlineDiff, setOnlineDiff] = useState<string | null>(null);
+  const [answers, setAnswers] = useState<Record<string, string>>({
+    whatMatters: '', returnTo: '', mostVisible: '', leastVisible: '', hasChanged: '', changedBeliefs: '',
+  });
   const [loadingLine, setLoadingLine] = useState(0);
+  const [loadingFade, setLoadingFade] = useState(true);
 
   useEffect(() => {
     if (searchParams.get('demo') === 'true' && !isLoaded) loadProfile('demo-intellectual');
@@ -38,143 +45,129 @@ function StartInner() {
   useEffect(() => {
     if (step !== 'loading') return;
     const timer = setInterval(() => {
-      setLoadingLine(prev => {
-        if (prev >= LOADING_LINES.length - 1) {
-          clearInterval(timer);
-          setTimeout(() => router.push('/results'), 800);
-          return prev;
-        }
-        return prev + 1;
-      });
-    }, 1800);
+      setLoadingFade(false);
+      setTimeout(() => {
+        setLoadingLine(prev => {
+          if (prev >= LOADING_LINES.length - 1) {
+            clearInterval(timer);
+            setTimeout(() => router.push('/results'), 1200);
+            return prev;
+          }
+          return prev + 1;
+        });
+        setLoadingFade(true);
+      }, 300);
+    }, loadingLine === 4 ? 3200 : 2700);
     return () => clearInterval(timer);
-  }, [step, router]);
+  }, [step, loadingLine, router]);
 
-  const goToQuestions = () => setStep('q0');
+  const goToReflection = () => setStep('q0');
   const setAnswer = (key: string, val: string) => setAnswers(prev => ({ ...prev, [key]: val }));
 
-  const nextQuestion = (current: Step) => {
-    const steps: Step[] = ['q0', 'q1', 'q2', 'q3', 'online'];
+  const next = (current: Step) => {
+    const steps: Step[] = ['q0', 'q1', 'q2', 'q3', 'q4', 'q5'];
     const idx = steps.indexOf(current);
-    if (idx < steps.length - 1) setStep(steps[idx + 1]);
+    if (idx < steps.length - 1) {
+      setStep(steps[idx + 1]);
+    } else {
+      finishReflection();
+    }
   };
 
-  const finishSelfInput = () => {
-    if (answers.topics || answers.voice || answers.posting) {
-      setSelfPortrait({ topics: answers.topics, voice: answers.voice, values: answers.wish, driftedFrom: answers.posting });
+  const finishReflection = () => {
+    const hasContent = Object.values(answers).some(v => v.trim().length > 0);
+    if (hasContent) {
+      setSelfPortrait(answers as unknown as SelfPortrait);
     }
     setStep('loading');
   };
 
-  const skipToLoading = () => {
-    setStep('loading');
-  };
-
-  // ── Data connection step ──────────────────────
+  // ── Data connection ───────────────────────────
   if (step === 'data') {
     return (
-      <div className="reading-column px-6 pt-24 pb-24">
-        <h1 className="text-[32px] font-bold tracking-tight text-ink-900 mb-3">
+      <div className="reading-column px-6 pt-28 pb-24">
+        <h1 className="text-[30px] font-bold tracking-tight text-ink-900 mb-3">
           Let&apos;s start with your posts
         </h1>
-        <p className="text-[17px] text-ink-500 leading-relaxed mb-10">
-          Upload a data export, or pick a fictional profile to see how it works.
+        <p className="text-[17px] text-ink-500 leading-relaxed mb-12">
+          Upload a data export, or choose a fictional profile to see how this works.
           Everything happens in your browser.
         </p>
 
         <div className="observation text-center py-10 mb-8">
           <div className="border-2 border-dashed border-linen-300 rounded-2xl py-10 px-6 mx-4">
             <p className="text-[16px] text-ink-400 mb-1">Drag your export file here</p>
-            <p className="font-sans text-[13px] text-ink-300">Twitter/X, Instagram, or LinkedIn</p>
+            <p className="font-sans text-[12px] text-ink-300">Twitter/X, Instagram, or LinkedIn data export</p>
           </div>
         </div>
 
-        <p className="font-sans text-[14px] text-ink-400 text-center mb-6">or try a fictional profile:</p>
+        <p className="font-sans text-[13px] text-ink-400 text-center mb-6">or explore with a fictional profile:</p>
         <ProfileSwitcher />
 
         {isLoaded && (
-          <div className="mt-10 text-center">
-            <button onClick={goToQuestions} className="btn-primary">Continue</button>
+          <div className="mt-12 text-center">
+            <button onClick={goToReflection} className="btn-primary">Continue</button>
           </div>
         )}
+
+        <p className="font-sans text-[12px] text-ink-300 text-center mt-8">
+          Your data is never sent anywhere. There is no server.
+        </p>
       </div>
     );
   }
 
-  // ── Self-input questions (one at a time) ──────
-  if (step === 'q0' || step === 'q1' || step === 'q2' || step === 'q3') {
+  // ── Self-reflection prompts (one at a time) ───
+  if (step.startsWith('q')) {
     const qIdx = parseInt(step[1]);
-    const q = QUESTIONS[qIdx];
-    const dots = ['q0', 'q1', 'q2', 'q3', 'online'];
+    const prompt = PROMPTS[qIdx];
 
     return (
-      <div className="narrow-column px-6 pt-32 pb-24">
-        <p className="font-sans text-[13px] text-ink-300 mb-8">
-          {qIdx === 0 ? 'Before we look at your data, we\'d like to hear from you first.' : ''}
-        </p>
-        <label className="block text-[20px] text-ink-900 leading-snug mb-4">
-          {q.label}
+      <div className="narrow-column px-6 pt-36 pb-24">
+        {qIdx === 0 && (
+          <p className="font-sans text-[13px] text-ink-400 mb-12">
+            Before we look at your data, we&apos;d like to hear from you.
+          </p>
+        )}
+
+        <label className="block text-[22px] text-ink-900 leading-snug mb-4">
+          {prompt.question}
         </label>
+        <p className="text-[15px] text-ink-500 mb-8">
+          {prompt.context}
+        </p>
+
         <input
           type="text"
-          value={answers[q.key as keyof typeof answers]}
-          onChange={e => setAnswer(q.key, e.target.value)}
-          placeholder={q.hint}
-          className="input-field mb-8"
+          value={answers[prompt.key]}
+          onChange={e => setAnswer(prompt.key, e.target.value)}
+          className="input-field mb-10"
           autoFocus
         />
-        <div className="flex items-center gap-4">
-          <button onClick={() => nextQuestion(step)} className="btn-primary">Continue</button>
-          <button onClick={() => nextQuestion(step)} className="font-sans text-[13px] text-ink-300 hover:text-ink-500">Skip</button>
-        </div>
-        <div className="flex justify-center gap-2 mt-20">
-          {dots.map((s, i) => <div key={s} className={`w-2 h-2 rounded-full ${dots.indexOf(step) >= i ? 'bg-coral-600' : 'bg-linen-300'}`} />)}
-        </div>
-      </div>
-    );
-  }
 
-  // ── Online self question ──────────────────────
-  if (step === 'online') {
-    return (
-      <div className="narrow-column px-6 pt-32 pb-24">
-        <label className="block text-[20px] text-ink-900 leading-snug mb-6">
-          Does your online self feel different from your offline self?
-        </label>
-        <div className="space-y-3 mb-8">
-          {['Yes, noticeably', 'Sometimes', 'Not really'].map(opt => (
-            <button key={opt} onClick={() => setOnlineDiff(opt)}
-              className={`w-full text-left px-5 py-4 rounded-2xl border font-sans text-[15px] ${
-                onlineDiff === opt ? 'border-coral-600 bg-coral-50 text-ink-900' : 'border-linen-200 bg-white text-ink-500 hover:bg-linen-100'
-              }`}>
-              {opt}
-            </button>
-          ))}
-        </div>
-        <div className="flex items-center gap-4">
-          <button onClick={finishSelfInput} className="btn-primary">
-            Show me my patterns
+        <div className="flex items-center gap-6">
+          <button onClick={() => next(step)} className="text-link text-[15px]">
+            Continue
           </button>
-          <button onClick={skipToLoading} className="font-sans text-[13px] text-ink-300 hover:text-ink-500">Skip</button>
+          <button onClick={() => next(step)} className="font-sans text-[13px] text-ink-300 hover:text-ink-500">
+            Skip
+          </button>
         </div>
-        <div className="flex justify-center gap-2 mt-20">
-          {[0, 1, 2, 3, 4].map(i => <div key={i} className={`w-2 h-2 rounded-full ${i <= 4 ? 'bg-coral-600' : 'bg-linen-300'}`} />)}
-        </div>
+
+        <p className="font-sans text-[12px] text-ink-300 mt-24 text-center">
+          {qIdx + 1} of {PROMPTS.length}
+        </p>
       </div>
     );
   }
 
-  // ── Loading / analysis state ──────────────────
+  // ── Loading threshold ─────────────────────────
   return (
-    <div className="flex items-center justify-center min-h-[60vh]">
-      <div className="text-center">
-        <p className="text-[20px] text-ink-500 leading-relaxed transition-opacity duration-500">
+    <div className="flex items-center justify-center min-h-[70vh]">
+      <div className="text-center max-w-md px-6">
+        <p className={`text-[19px] text-ink-500 leading-relaxed transition-opacity duration-300 ${loadingFade ? 'opacity-100' : 'opacity-0'}`}>
           {LOADING_LINES[loadingLine]}
         </p>
-        <div className="mt-8 mx-auto w-48 h-px bg-linen-200 rounded overflow-hidden">
-          <div className="h-full bg-coral-600 rounded transition-all duration-1000 ease-out"
-            style={{ width: `${((loadingLine + 1) / LOADING_LINES.length) * 100}%` }} />
-        </div>
       </div>
     </div>
   );
