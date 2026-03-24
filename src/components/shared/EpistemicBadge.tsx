@@ -7,7 +7,6 @@ import { EPISTEMIC_LABELS } from '@/lib/epistemic/framing';
 interface EpistemicBadgeProps {
   status: EpistemicStatus;
   className?: string;
-  /** Show the full description inline instead of as tooltip */
   inline?: boolean;
 }
 
@@ -23,7 +22,7 @@ export function EpistemicBadge({ status, className = '', inline = false }: Epist
   }, []);
 
   const handleEnter = () => {
-    timeoutRef.current = setTimeout(() => setShowTooltip(true), 350);
+    timeoutRef.current = setTimeout(() => setShowTooltip(true), 300);
   };
 
   const handleLeave = () => {
@@ -33,7 +32,7 @@ export function EpistemicBadge({ status, className = '', inline = false }: Epist
 
   if (inline) {
     return (
-      <span className={`font-interface text-[11px] leading-tight ${statusTextColor[status]} ${className}`}>
+      <span className={`text-[12px] leading-tight ${statusTextColor[status]} ${className}`}>
         {config.label} — {config.description}
       </span>
     );
@@ -41,19 +40,16 @@ export function EpistemicBadge({ status, className = '', inline = false }: Epist
 
   return (
     <span
-      className={`relative inline-flex items-center font-interface ${className}`}
+      className={`relative inline-flex items-center ${className}`}
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
     >
-      <span className={`text-[10.5px] tracking-wide uppercase cursor-help ${statusClasses[status]}`}>
+      <span className={`pill cursor-help ${statusClasses[status]}`}>
         {config.label}
       </span>
 
       {showTooltip && (
-        <span
-          className="absolute bottom-full left-0 mb-2 w-64 px-4 py-3 bg-charcoal-900 text-cream-50 text-[12px] leading-relaxed rounded-sm z-50 pointer-events-none font-interface opacity-0 animate-[fadeIn_200ms_ease-out_forwards]"
-          style={{ animationFillMode: 'forwards' }}
-        >
+        <span className="absolute bottom-full left-0 mb-2 w-64 px-4 py-3 bg-charcoal-900 text-white text-[12px] leading-relaxed rounded-lg z-50 pointer-events-none shadow-lg">
           <span className="block font-medium mb-1">{config.label}</span>
           {config.tooltip}
         </span>
@@ -64,18 +60,18 @@ export function EpistemicBadge({ status, className = '', inline = false }: Epist
 
 const statusClasses: Record<EpistemicStatus, string> = {
   observed:
-    'text-charcoal-500',
+    'bg-sage-100 text-sage-700',
   inferred:
-    'text-charcoal-500 border-b border-dotted border-charcoal-400 pb-px',
+    'bg-accent-100 text-accent-700',
   speculative:
-    'text-amber-700 bg-amber-100/60 px-2 py-0.5 rounded-sm italic not-uppercase normal-case tracking-normal',
+    'bg-amber-100 text-amber-700',
   governance_commentary:
-    'text-slate-600 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-sm normal-case tracking-normal',
+    'bg-slate-100 text-slate-600 border border-slate-200',
 };
 
 const statusTextColor: Record<EpistemicStatus, string> = {
-  observed: 'text-charcoal-500',
-  inferred: 'text-charcoal-500',
+  observed: 'text-sage-700',
+  inferred: 'text-accent-700',
   speculative: 'text-amber-700',
   governance_commentary: 'text-slate-600',
 };

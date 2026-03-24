@@ -1,16 +1,14 @@
-import { EpistemicBadge } from './EpistemicBadge';
-
 interface GovernanceBlockProps {
   children: React.ReactNode;
 }
 
 export function GovernanceBlock({ children }: GovernanceBlockProps) {
   return (
-    <div className="border-l border-slate-200 bg-slate-100/60 pl-6 pr-6 py-5 my-10">
-      <div className="mb-3">
-        <EpistemicBadge status="governance_commentary" />
-      </div>
-      <div className="text-[14px] leading-relaxed text-slate-600">
+    <div className="card px-6 py-5 my-8 bg-slate-100/40">
+      <p className="text-[11px] font-medium text-charcoal-400 uppercase tracking-wider mb-2">
+        Platform context
+      </p>
+      <div className="text-[14px] leading-relaxed text-charcoal-500">
         {children}
       </div>
     </div>

@@ -1,82 +1,89 @@
 import { PageHeader } from '@/components/shared/PageHeader';
-import { SectionDivider } from '@/components/shared/SectionDivider';
 
 export default function PrivacyPage() {
   return (
     <div>
       <PageHeader
         title="Privacy"
-        subtitle="How this tool handles data. The short answer: it doesn't leave your browser."
+        subtitle="Your data never leaves your browser. Here's exactly how that works."
       />
 
-      <div className="reading-column px-6 pb-24">
-        <h2 className="text-[22px] text-charcoal-900 mb-4 mt-8">
-          Architecture
-        </h2>
-        <div className="prose-body text-[15px] text-charcoal-700 leading-[1.8] mb-10">
-          <p>
-            There is no &ldquo;trust us&rdquo; here. This tool has no server.
-            Your data is processed in your browser&apos;s JavaScript runtime
-            and exists only in memory. When you close the tab, it is gone.
-            You can verify this by reading the source code.
-          </p>
-        </div>
-
-        {/* Diagram */}
-        <div className="border border-cream-200 rounded-sm py-8 px-6 text-center font-interface mb-12">
-          <div className="inline-flex items-center gap-5 text-[12px] text-charcoal-700">
-            <div className="border border-charcoal-300 rounded-sm px-5 py-2.5">
+      <div className="wide-column px-6 pb-24">
+        {/* Architecture */}
+        <div className="card-elevated p-8 mb-12 text-center">
+          <div className="inline-flex items-center gap-6 text-[14px] text-charcoal-700">
+            <div className="card p-4 px-8 font-medium">
               Your Browser
             </div>
-            <span className="text-charcoal-300">↔</span>
-            <div className="border border-charcoal-300 rounded-sm px-5 py-2.5">
+            <span className="text-[20px] text-charcoal-300" aria-hidden="true">&harr;</span>
+            <div className="card p-4 px-8 font-medium">
               Your Data
             </div>
           </div>
-          <p className="mt-5 text-charcoal-400 text-[11px] tracking-wide">
-            That is the entire architecture. There is nothing else.
+          <p className="mt-6 text-[14px] text-charcoal-400">
+            That&apos;s the entire architecture. There is no server, no database,
+            no backend.
           </p>
         </div>
 
-        <h2 className="text-[22px] text-charcoal-900 mb-4">
-          What We Do Not Collect
-        </h2>
-        <ul className="space-y-2.5 mb-12">
-          {[
-            'We do not collect your posting data.',
-            'We do not collect analytics or usage telemetry.',
-            'We do not use cookies or local storage for tracking.',
-            'We do not send any data to any server.',
-            'We do not use third-party analytics services.',
-            'We do not store anything after you close the tab.',
-            'We do not share any information with any third party.',
-          ].map((item) => (
-            <li key={item} className="text-[14px] text-charcoal-700 leading-relaxed pl-5 border-l border-teal-200">
-              {item}
-            </li>
-          ))}
-        </ul>
+        <div className="grid md:grid-cols-2 gap-8 mb-16">
+          <div>
+            <h2 className="text-[20px] font-semibold text-charcoal-900 mb-4">
+              What we don&apos;t collect
+            </h2>
+            <div className="space-y-2">
+              {[
+                'Your posting data',
+                'Analytics or usage telemetry',
+                'Cookies or local storage tracking',
+                'Data sent to any server',
+                'Third-party analytics',
+                'Anything after you close the tab',
+                'Information shared with any third party',
+              ].map((item) => (
+                <div key={item} className="flex items-center gap-3 py-2 border-b border-cream-100">
+                  <span className="inline-block w-5 h-5 rounded-full bg-sage-100 text-sage-700 text-[11px] font-bold flex items-center justify-center" aria-hidden="true">
+                    &times;
+                  </span>
+                  <span className="text-[14px] text-charcoal-700">{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
 
-        <SectionDivider />
+          <div>
+            <h2 className="text-[20px] font-semibold text-charcoal-900 mb-4">
+              How it works technically
+            </h2>
+            <div className="space-y-4 text-[14px] text-charcoal-600 leading-relaxed">
+              <p>
+                SelfTrace is a static web application. When you upload or
+                paste your data, it&apos;s processed entirely in your browser&apos;s
+                JavaScript runtime.
+              </p>
+              <p>
+                Data exists only in memory. Nothing is written to disk,
+                local storage, or cookies. When you close the tab, your
+                data is garbage collected.
+              </p>
+              <p>
+                No third-party JavaScript with access to your data is loaded.
+                The source code is available for inspection — every claim on
+                this page can be verified.
+              </p>
+            </div>
+          </div>
+        </div>
 
-        <h2 className="text-[22px] text-charcoal-900 mb-4">
-          Third-Party Services
-        </h2>
-        <p className="text-[14px] text-charcoal-700 leading-relaxed mb-8">
-          This tool loads static assets as part of the standard Next.js build
-          process. No user data is transmitted to any external service. No
-          third-party JavaScript with access to your data is loaded.
-        </p>
-
-        <h2 className="text-[22px] text-charcoal-900 mb-4">
-          Source Code
-        </h2>
-        <p className="text-[14px] text-charcoal-700 leading-relaxed">
-          The source code for this tool is available for inspection. Every
-          claim made on this page can be verified by reading the code. If you
-          find a discrepancy between what this page says and what the code
-          does, please report it.
-        </p>
+        <div className="card p-6 bg-sage-100/30 border-sage-200 text-center">
+          <p className="text-[16px] font-medium text-charcoal-900 mb-2">
+            Privacy isn&apos;t a feature. It&apos;s the architecture.
+          </p>
+          <p className="text-[14px] text-charcoal-400">
+            We didn&apos;t add privacy protections to a server-based tool. We
+            built a tool that has no server to protect against.
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { PageHeader } from '@/components/shared/PageHeader';
 import { HowToRead } from '@/components/shared/HowToRead';
 import { CaveatPanel } from '@/components/shared/CaveatPanel';
@@ -10,7 +11,6 @@ import { GovernanceBlock } from '@/components/shared/GovernanceBlock';
 import { SectionDivider } from '@/components/shared/SectionDivider';
 import { ProfileSwitcher } from '@/components/shared/ProfileSwitcher';
 import { useData } from '@/lib/data/context';
-import { useState } from 'react';
 
 export default function ReinforcementPage() {
   const { activeProfile, analysis, isLoaded } = useData();
@@ -20,14 +20,10 @@ export default function ReinforcementPage() {
     return (
       <div>
         <PageHeader
-          title="Reinforcement Analysis"
-          subtitle="Examining whether engagement patterns correlate with content repetition."
+          title="What Gets Reinforced"
+          subtitle="See which posts earned attention — and whether it shaped what came next."
         />
-        <div className="reading-column px-6 pb-24">
-          <p className="text-[15px] text-charcoal-500 leading-relaxed mb-8">
-            This page examines correlations between engagement metrics and
-            subsequent posting patterns. Select a demo profile to begin.
-          </p>
+        <div className="wide-column px-6 pb-24">
           <ProfileSwitcher />
         </div>
       </div>
@@ -39,13 +35,13 @@ export default function ReinforcementPage() {
   if (!engagementSensitivity) {
     return (
       <div>
-        <PageHeader title="Reinforcement Analysis" />
+        <PageHeader title="What Gets Reinforced" />
         <EmptyState
-          title="Engagement data not available."
-          message="Your dataset does not include engagement metrics (likes, shares, replies, views). This analysis requires engagement data to examine reinforcement patterns. Timeline and narrative analyses remain available."
+          title="No engagement data"
+          message="This dataset doesn't include engagement metrics. Try a different profile or upload data with likes, shares, and replies."
           actions={[
-            { label: 'Go to timeline', href: '/timeline' },
-            { label: 'Go to narrative', href: '/narrative' },
+            { label: 'Go to drift', href: '/drift' },
+            { label: 'Go to identity', href: '/identity' },
           ]}
         />
       </div>
@@ -61,162 +57,145 @@ export default function ReinforcementPage() {
   return (
     <div>
       <PageHeader
-        title="Reinforcement Analysis"
-        subtitle={`Examining: ${activeProfile!.label}`}
+        title="What Gets Reinforced"
+        subtitle={`Engagement patterns for ${activeProfile!.label.toLowerCase()}`}
       />
 
-      <div className="reading-column px-6 pb-24">
-        {/* Caveat first — this is the interpretive frame, not a footnote */}
-        <CaveatPanel>
-          <p className="mb-3">
-            Correlation between engagement and subsequent content patterns does
-            not establish that engagement caused those patterns. You may have
-            repeated topics because you found them meaningful, because your life
-            circumstances focused your attention, because of external events, or
-            for reasons entirely unrelated to platform feedback.
-          </p>
-          <p>
-            This page surfaces a temporal correlation. It does not — and
-            cannot — determine why you posted what you posted. The caveat is
-            not supplementary context. It is the interpretive frame for
-            everything that follows.
-          </p>
+      <div className="wide-column px-6 pb-24">
+        <CaveatPanel title="Correlation, not causation">
+          Seeing a link between engagement and posting patterns doesn&apos;t prove
+          one caused the other. You may have repeated topics because they
+          mattered to you, because life focused your attention, or for reasons
+          unrelated to platform feedback.
         </CaveatPanel>
 
         <HowToRead>
-          This page asks: did content that received more engagement correlate
-          with patterns you repeated over time? All findings are correlational.
-          Counter-patterns — content you maintained without engagement reward —
-          are shown with equal weight, because persistence against incentive
-          is as informative as alignment with it.
+          This page asks: did posts that got more engagement correlate with
+          patterns you repeated? Content you kept posting despite low
+          engagement is shown equally — persistence against incentive is as
+          interesting as alignment with it.
         </HowToRead>
 
-        {/* ── Engagement Distribution ──────────────────────── */}
-        <h2 className="text-[22px] text-charcoal-900 mt-14 mb-3">
-          Engagement Distribution by Topic
+        {/* Engagement by topic */}
+        <h2 className="text-[24px] font-semibold text-charcoal-900 mt-10 mb-2">
+          Engagement by topic
         </h2>
-        <p className="text-[14px] text-charcoal-500 leading-relaxed mb-6">
+        <p className="text-[14px] text-charcoal-500 leading-relaxed mb-6 max-w-lg">
           Average engagement for each topic. This is a distribution, not a
-          ranking — no topic is &ldquo;better&rdquo; or &ldquo;worse&rdquo;
-          for receiving more or less engagement.
+          ranking — more engagement doesn&apos;t mean better.
         </p>
 
-        <div className="space-y-1.5">
+        <div className="card p-5 space-y-2">
           {engagementSensitivity.value.map((topic) => {
             const maxEng = Math.max(...engagementSensitivity.value.map(t => t.averageEngagement), 1);
             const barWidth = (topic.averageEngagement / maxEng) * 100;
 
             return (
               <div key={topic.topic} className="flex items-center gap-3">
-                <span className="font-interface text-[11px] text-charcoal-500 w-36 truncate text-right">
+                <span className="text-[13px] text-charcoal-700 w-40 truncate text-right">
                   {topic.topic}
                 </span>
-                <div className="flex-1 bg-cream-200 h-4 rounded-sm overflow-hidden">
+                <div className="flex-1 bg-cream-100 h-5 rounded-lg overflow-hidden">
                   <div
-                    className="h-full bg-charcoal-300 rounded-sm transition-all duration-700"
+                    className="h-full bg-accent-200 rounded-lg"
                     style={{ width: `${barWidth}%` }}
                   />
                 </div>
-                <span className="font-mono text-[10px] text-charcoal-400 w-10 text-right">
+                <span className="font-mono text-[11px] text-charcoal-400 w-10 text-right">
                   {topic.averageEngagement}
                 </span>
-                <span className="font-interface text-[10px] text-charcoal-400 w-16 text-center uppercase tracking-wide">
+                <span className={`pill text-[10px] w-20 justify-center ${
+                  topic.frequencyTrend === 'increasing' ? 'bg-accent-100 text-accent-700' :
+                  topic.frequencyTrend === 'decreasing' ? 'bg-amber-100 text-amber-700' :
+                  'bg-cream-100 text-charcoal-400'
+                }`}>
                   {topic.frequencyTrend}
                 </span>
               </div>
             );
           })}
-        </div>
-        <div className="mt-3">
-          <EpistemicBadge status={engagementSensitivity.status} />
+          <div className="pt-2">
+            <EpistemicBadge status={engagementSensitivity.status} />
+          </div>
         </div>
 
         <SectionDivider />
 
-        {/* ── High-Engagement Characteristics ──────────────── */}
+        {/* Topics that grew with engagement */}
         {highEngTopics.length > 0 && (
-          <>
-            <h2 className="text-[22px] text-charcoal-900 mb-3">
-              Topics with Increasing Frequency After Higher Engagement
-            </h2>
-            <p className="text-[14px] text-charcoal-500 leading-relaxed mb-6">
-              These topics received above-average engagement and their posting
-              frequency increased over the observed period. This temporal
-              correlation is noted, not explained — many factors beyond
-              engagement feedback can produce the same pattern.
-            </p>
-            <div className="space-y-3">
-              {highEngTopics.map(topic => (
-                <div key={topic.topic} className="py-3 border-b border-cream-200">
-                  <p className="text-[15px] text-charcoal-900">{topic.topic}</p>
-                  <p className="font-interface text-[11px] text-charcoal-400 mt-1">
-                    {topic.postCount} posts · avg engagement {topic.averageEngagement} · frequency {topic.frequencyTrend}
-                  </p>
-                </div>
-              ))}
-            </div>
-            <div className="mt-3">
-              <EpistemicBadge status="inferred" />
+          <div className="grid md:grid-cols-2 gap-8 mb-12">
+            <div>
+              <h2 className="text-[20px] font-semibold text-charcoal-900 mb-2">
+                Topics that grew with attention
+              </h2>
+              <p className="text-[14px] text-charcoal-500 leading-relaxed mb-4">
+                These received above-average engagement and you posted about
+                them more over time.
+              </p>
+              <div className="space-y-2">
+                {highEngTopics.map(topic => (
+                  <div key={topic.topic} className="card p-4">
+                    <p className="text-[15px] font-medium text-charcoal-900">{topic.topic}</p>
+                    <p className="text-[12px] text-charcoal-400 mt-1">
+                      {topic.postCount} posts &middot; avg engagement {topic.averageEngagement}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-3">
+                <EpistemicBadge status="inferred" />
+              </div>
             </div>
 
-            <SectionDivider />
-          </>
+            {/* Counter-patterns */}
+            {counterPatterns.length > 0 && (
+              <div>
+                <h2 className="text-[20px] font-semibold text-charcoal-900 mb-2">
+                  Topics you kept without reward
+                </h2>
+                <p className="text-[14px] text-charcoal-500 leading-relaxed mb-4">
+                  These persisted despite low engagement — interests or values
+                  that the engagement metric didn&apos;t capture.
+                </p>
+                <div className="space-y-2">
+                  {counterPatterns.map(topic => (
+                    <div key={topic.topic} className="card p-4 bg-sage-100/30 border-sage-200">
+                      <p className="text-[15px] font-medium text-charcoal-900">{topic.topic}</p>
+                      <p className="text-[12px] text-charcoal-400 mt-1">
+                        {topic.postCount} posts &middot; low engagement &middot; persisted
+                      </p>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-3">
+                  <EpistemicBadge status="observed" />
+                </div>
+              </div>
+            )}
+          </div>
         )}
 
-        {/* ── Counter-Patterns — given equal visual weight ── */}
-        {counterPatterns.length > 0 && (
-          <>
-            <h2 className="text-[22px] text-charcoal-900 mb-3">
-              Content Maintained Without Engagement Reward
-            </h2>
-            <p className="text-[14px] text-charcoal-500 leading-relaxed mb-6">
-              These topics persisted in the posting history despite receiving
-              below-average engagement. Their presence suggests commitments that
-              operate independently of visible feedback — interests, values, or
-              habits that the engagement metric does not capture.
-            </p>
-            <div className="space-y-3">
-              {counterPatterns.map(topic => (
-                <div key={topic.topic} className="py-3 border-b border-cream-200">
-                  <p className="text-[15px] text-charcoal-700">{topic.topic}</p>
-                  <p className="font-interface text-[11px] text-charcoal-400 mt-1">
-                    {topic.postCount} posts · low engagement · persisted
-                  </p>
-                </div>
-              ))}
-            </div>
-            <div className="mt-3">
-              <EpistemicBadge status="observed" />
-            </div>
-
-            <SectionDivider />
-          </>
-        )}
-
-        {/* ── Reinforcement Correlation — opt-in ───────────── */}
-        <h2 className="text-[22px] text-charcoal-900 mb-3">
-          Engagement–Frequency Correlation Over Time
+        {/* Correlation chart — opt-in */}
+        <h2 className="text-[20px] font-semibold text-charcoal-900 mb-2">
+          Engagement-frequency correlation
         </h2>
-        <p className="text-[14px] text-charcoal-500 leading-relaxed mb-4">
-          This chart measures whether topics that received higher engagement in
-          one quarter appear more frequently in the next. A positive correlation
-          is consistent with — but does not prove — sensitivity to engagement
-          feedback. It is also consistent with shared external events, genuine
-          interest deepening, and many other explanations.
+        <p className="text-[14px] text-charcoal-500 leading-relaxed mb-4 max-w-lg">
+          Did high-engagement topics in one quarter appear more in the next?
+          A positive correlation is consistent with — but doesn&apos;t prove —
+          sensitivity to engagement feedback.
         </p>
 
         {!showCorrelation ? (
-          <div className="bg-cream-100 border border-cream-200 rounded-sm p-5">
-            <p className="text-[13px] text-charcoal-500 leading-relaxed mb-3">
-              This analysis carries the highest epistemic uncertainty of any
-              view in this tool. It is labeled <em>speculative</em> because
-              the correlation it shows is the most easily misread as causal.
+          <div className="card p-5 bg-amber-100/30 border-amber-200">
+            <p className="text-[13px] text-charcoal-500 mb-3">
+              This carries the highest uncertainty of any analysis here.
+              The correlation is easy to misread as causal.
             </p>
             <button
               onClick={() => setShowCorrelation(true)}
-              className="font-interface text-[12px] text-teal-700 hover:text-teal-500 transition-colors duration-300"
+              className="text-[13px] font-medium text-accent-600 hover:text-accent-700"
             >
-              Show reinforcement correlation
+              Show correlation chart &rarr;
             </button>
           </div>
         ) : (
@@ -230,18 +209,11 @@ export default function ReinforcementPage() {
           )
         )}
 
-        <div className="mt-12">
-          <GovernanceBlock>
-            Most major platforms provide engagement metrics — likes, shares,
-            replies — as visible feedback on each post. This creates a
-            variable-ratio feedback environment: some posts receive substantial
-            response, others little, with no consistent pattern legible to the
-            user. Behavioral research associates variable-ratio schedules with
-            persistent repetition of rewarded behaviors. Whether platform
-            engagement feedback operates on self-expression in this way is an
-            open research question, not an established finding.
-          </GovernanceBlock>
-        </div>
+        <GovernanceBlock>
+          Platforms provide engagement metrics as visible feedback on each
+          post, creating a variable-ratio feedback environment. Whether
+          this shapes what people post next is an open research question.
+        </GovernanceBlock>
       </div>
     </div>
   );

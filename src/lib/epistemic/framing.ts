@@ -7,22 +7,22 @@ export const EPISTEMIC_LABELS: Record<EpistemicStatus, {
 }> = {
   observed: {
     label: 'Observed',
-    description: 'Directly present in the data.',
-    tooltip: 'This is drawn directly from your data. No interpretation has been applied.',
+    description: 'Directly in your data.',
+    tooltip: 'This comes directly from your data. No interpretation applied.',
   },
   inferred: {
     label: 'Inferred',
-    description: 'Derived from pattern analysis.',
-    tooltip: 'This pattern was detected through analysis. It reflects a plausible reading, not a certainty.',
+    description: 'Pattern-based finding.',
+    tooltip: 'Detected through pattern analysis. A plausible reading, not a certainty.',
   },
   speculative: {
     label: 'Speculative',
-    description: 'A possible interpretation.',
-    tooltip: 'This is one possible interpretation. You may read the same data differently.',
+    description: 'One possible reading.',
+    tooltip: 'One possible interpretation. You may read the same data differently.',
   },
   governance_commentary: {
-    label: 'Governance Commentary',
+    label: 'Platform context',
     description: 'About platform design, not your behavior.',
-    tooltip: 'This note concerns platform design or policy, not your behavior. It provides structural context.',
+    tooltip: 'Context about how platforms work. Not a claim about your behavior.',
   },
 };

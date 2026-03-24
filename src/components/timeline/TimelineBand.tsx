@@ -29,25 +29,24 @@ export function TimelineBand({ data }: TimelineBandProps) {
   const labelStep = Math.max(1, Math.floor(data.length / 8));
 
   return (
-    <div className="w-full bg-cream-100 border-y border-cream-200 my-6">
-      <svg viewBox={`0 0 ${width} ${height}`} className="w-full" preserveAspectRatio="none" style={{ height: '100px' }} role="img" aria-label={`Timeline showing posting density across ${data.length} months. Taller areas indicate more posts.`}>
+    <div className="w-full bg-white border-y border-cream-200 my-6">
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        className="w-full"
+        preserveAspectRatio="none"
+        style={{ height: '100px' }}
+        role="img"
+        aria-label={`Timeline showing posting density across ${data.length} months.`}
+      >
         <title>Posting density over time</title>
-        <path d={areaPath} fill="#E0F2EE" opacity={0.6} />
-        <path d={linePath} fill="none" stroke="#1A5C52" strokeWidth={2} />
+        <path d={areaPath} fill="#EEF2FF" opacity={0.7} />
+        <path d={linePath} fill="none" stroke="#6366F1" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
         {data.map((d, i) => {
           if (i % labelStep !== 0 && i !== data.length - 1) return null;
           const date = new Date(d.date);
           const label = `${date.toLocaleString('en', { month: 'short' })} '${date.getFullYear().toString().slice(2)}`;
           return (
-            <text
-              key={i}
-              x={xScale(i)}
-              y={height - 4}
-              textAnchor="middle"
-              fill="#78716C"
-              fontSize={9}
-              fontFamily="Arial, sans-serif"
-            >
+            <text key={i} x={xScale(i)} y={height - 4} textAnchor="middle" fill="#8F8F8F" fontSize={10} aria-hidden="true">
               {label}
             </text>
           );

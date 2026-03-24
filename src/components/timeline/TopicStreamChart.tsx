@@ -1,15 +1,14 @@
 'use client';
 
 import type { TopicOverTime } from '@/lib/data/types';
-import { EpistemicBadge } from '../shared/EpistemicBadge';
 
 interface TopicStreamChartProps {
   data: TopicOverTime[];
 }
 
 const TOPIC_COLORS = [
-  '#1A5C52', '#2D8A7A', '#44403C', '#78716C',
-  '#A16207', '#B8DDD5', '#D6D3D1', '#52525B',
+  '#6366F1', '#818CF8', '#3D3D3D', '#6B6B6B',
+  '#D97706', '#40916C', '#B8B8B8', '#4338CA',
 ];
 
 export function TopicStreamChart({ data }: TopicStreamChartProps) {
@@ -22,7 +21,6 @@ export function TopicStreamChart({ data }: TopicStreamChartProps) {
   const chartW = width - padding.left - padding.right;
   const chartH = height - padding.top - padding.bottom;
 
-  // Compute stacked values per month
   const stacked: number[][] = months.map((_, mi) => {
     return data.map(topic => topic.series[mi]?.value ?? 0);
   });
@@ -35,7 +33,6 @@ export function TopicStreamChart({ data }: TopicStreamChartProps) {
   const xScale = (i: number) => padding.left + (i / Math.max(months.length - 1, 1)) * chartW;
   const yScale = (v: number) => padding.top + chartH - (v / maxStacked) * chartH;
 
-  // Build stacked area paths
   const areas = data.map((_, topicIdx) => {
     const bottomValues = months.map((_, mi) => {
       let sum = 0;
@@ -56,47 +53,39 @@ export function TopicStreamChart({ data }: TopicStreamChartProps) {
   const labelStep = Math.max(1, Math.floor(months.length / 6));
 
   return (
-    <div className="my-6">
-      <svg viewBox={`0 0 ${width} ${height}`} className="w-full" style={{ maxHeight: `${height}px` }} role="img" aria-label={`Stacked area chart showing topic distribution over ${months.length} months across ${data.length} topics: ${data.map(d => d.topic).join(', ')}.`}>
-        <title>Topic distribution over time showing how topic proportions change across the observed period.</title>
+    <div className="my-6 card-elevated p-5">
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        className="w-full"
+        style={{ maxHeight: `${height}px` }}
+        role="img"
+        aria-label={`Topic distribution over ${months.length} months across ${data.length} topics.`}
+      >
+        <title>Topic distribution over time</title>
         {areas.map((path, i) => (
-          <path
-            key={i}
-            d={path}
-            fill={TOPIC_COLORS[i % TOPIC_COLORS.length]}
-            opacity={0.6}
-          />
+          <path key={i} d={path} fill={TOPIC_COLORS[i % TOPIC_COLORS.length]} opacity={0.5} />
         ))}
 
-        {/* X-axis labels */}
         {months.map((date, i) => {
           if (i % labelStep !== 0 && i !== months.length - 1) return null;
           const d = new Date(date);
           const label = `${d.toLocaleString('en', { month: 'short' })} '${d.getFullYear().toString().slice(2)}`;
           return (
-            <text key={i} x={xScale(i)} y={height - 8} textAnchor="middle" fill="#78716C" fontSize={10} fontFamily="Arial, sans-serif">
+            <text key={i} x={xScale(i)} y={height - 8} textAnchor="middle" fill="#8F8F8F" fontSize={10} aria-hidden="true">
               {label}
             </text>
           );
         })}
 
-        {/* Legend */}
         {data.slice(0, 6).map((topic, i) => (
-          <g key={topic.topic} transform={`translate(${width - padding.right + 12}, ${padding.top + i * 18})`}>
-            <rect width={10} height={10} fill={TOPIC_COLORS[i % TOPIC_COLORS.length]} opacity={0.6} />
-            <text x={14} y={9} fill="#78716C" fontSize={10} fontFamily="Arial, sans-serif">
+          <g key={topic.topic} transform={`translate(${width - padding.right + 12}, ${padding.top + i * 20})`}>
+            <rect width={12} height={12} rx={3} fill={TOPIC_COLORS[i % TOPIC_COLORS.length]} opacity={0.5} />
+            <text x={18} y={10} fill="#6B6B6B" fontSize={11}>
               {topic.topic}
             </text>
           </g>
         ))}
       </svg>
-
-      <div className="flex items-baseline gap-2 mt-2 px-1">
-        <p className="text-[13px] italic text-charcoal-500">
-          Topic distribution over time. Converging streams may indicate narrowing focus.
-        </p>
-        <EpistemicBadge status="inferred" />
-      </div>
     </div>
   );
 }

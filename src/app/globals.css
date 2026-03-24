@@ -1,32 +1,50 @@
 @import "tailwindcss";
 
 @theme {
-  /* Background — warm, archival, paper-like */
-  --color-cream-50: #FAF8F5;
-  --color-cream-100: #F3F0EB;
-  --color-cream-200: #E8E3DB;
-  --color-cream-300: #D8D0C4;
+  /* ── SelfTrace Design System ────────────────────────── */
 
-  /* Text — deep charcoal hierarchy */
-  --color-charcoal-900: #1C1917;
-  --color-charcoal-700: #44403C;
-  --color-charcoal-500: #78716C;
-  --color-charcoal-400: #948D85;
-  --color-charcoal-300: #D6D3D1;
+  /* Background — warm, soft, premium */
+  --color-cream-50: #FAFAF8;
+  --color-cream-100: #F5F4F0;
+  --color-cream-200: #ECEAE4;
+  --color-cream-300: #DDD9D0;
 
-  /* Analytical Accent — forest teal, never celebratory */
+  /* Text hierarchy — warm charcoal */
+  --color-charcoal-900: #1A1A1A;
+  --color-charcoal-700: #3D3D3D;
+  --color-charcoal-500: #6B6B6B;
+  --color-charcoal-400: #8F8F8F;
+  --color-charcoal-300: #B8B8B8;
+  --color-charcoal-200: #D4D4D4;
+
+  /* Primary accent — warm indigo, reflective, premium */
+  --color-accent-700: #4338CA;
+  --color-accent-600: #4F46E5;
+  --color-accent-500: #6366F1;
+  --color-accent-400: #818CF8;
+  --color-accent-200: #C7D2FE;
+  --color-accent-100: #EEF2FF;
+  --color-accent-50: #F5F7FF;
+
+  /* Sage — for positive / confidence signals */
+  --color-sage-700: #2D6A4F;
+  --color-sage-500: #40916C;
+  --color-sage-200: #B7E4C7;
+  --color-sage-100: #D8F3DC;
+
+  /* Amber — for uncertainty / caution */
+  --color-amber-700: #B45309;
+  --color-amber-500: #D97706;
+  --color-amber-200: #FDE68A;
+  --color-amber-100: #FEF3C7;
+
+  /* Teal — chart accent, analytical */
   --color-teal-700: #1A5C52;
   --color-teal-500: #2D8A7A;
   --color-teal-200: #B8DDD5;
   --color-teal-100: #E0F2EE;
 
-  /* Epistemic / Caution — amber, appears only with uncertainty */
-  --color-amber-700: #A16207;
-  --color-amber-500: #D4A017;
-  --color-amber-200: #F5E6B8;
-  --color-amber-100: #FDF6E3;
-
-  /* Governance — cool slate, structurally distinct from user-data claims */
+  /* Slate — structural */
   --color-slate-600: #52525B;
   --color-slate-300: #D4D4D8;
   --color-slate-200: #E4E4E7;
@@ -40,47 +58,45 @@ html {
 }
 
 body {
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   color: var(--color-charcoal-900);
-  line-height: 1.75;
+  font-size: 16px;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.01em;
+}
+
+h1, h2, h3, h4 {
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
 }
 
 /* ── Font Utilities ──────────────────────────────────── */
 
+.font-serif {
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
 .font-interface {
-  font-family: Arial, Helvetica, sans-serif;
-  letter-spacing: 0.02em;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: 0;
+}
+
+.font-mono {
+  font-family: 'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
 }
 
 /* ── Layout Columns ──────────────────────────────────── */
 
-.reading-column {
-  max-width: 36rem;
-  margin-left: auto;
-  margin-right: auto;
-}
+.reading-column { max-width: 40rem; margin-left: auto; margin-right: auto; }
+.prose-column { max-width: 44rem; margin-left: auto; margin-right: auto; }
+.wide-column { max-width: 64rem; margin-left: auto; margin-right: auto; }
+.content-column { max-width: 72rem; margin-left: auto; margin-right: auto; }
+.hero-column { max-width: 56rem; margin-left: auto; margin-right: auto; }
 
-.prose-column {
-  max-width: 40rem;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.wide-column {
-  max-width: 56rem;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.content-column {
-  max-width: 70rem;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* ── Prose Styling ───────────────────────────────────── */
+/* ── Prose ───────────────────────────────────────────── */
 
 .prose-body p {
   margin-bottom: 1.25em;
@@ -90,64 +106,79 @@ body {
   margin-bottom: 0;
 }
 
-/* ── Slow Transitions ────────────────────────────────── */
+/* ── Transitions ─────────────────────────────────────── */
 
-* {
-  transition-timing-function: ease-out;
-}
+a, button { transition: all 0.2s ease; }
 
 /* ── Selection ───────────────────────────────────────── */
 
 ::selection {
-  background-color: var(--color-teal-100);
+  background-color: var(--color-accent-200);
   color: var(--color-charcoal-900);
 }
 
-/* ── Focus States (Accessibility) ────────────────────── */
+/* ── Focus States ────────────────────────────────────── */
 
 :focus-visible {
-  outline: 2px solid var(--color-teal-500);
+  outline: 2px solid var(--color-accent-500);
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: 4px;
+}
+
+/* ── Cards ───────────────────────────────────────────── */
+
+.card {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid var(--color-cream-200);
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+}
+
+.card-elevated {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 6px 24px rgba(0, 0, 0, 0.04);
+}
+
+/* ── Gradient Backgrounds ────────────────────────────── */
+
+.bg-hero-gradient {
+  background: linear-gradient(180deg, var(--color-cream-50) 0%, white 50%, var(--color-accent-50) 100%);
+}
+
+.bg-section-alt {
+  background: linear-gradient(180deg, white 0%, var(--color-cream-50) 100%);
+}
+
+/* ── Pills / Badges ──────────────────────────────────── */
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+/* ── Chart typography ────────────────────────────────── */
+
+svg text {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 /* ── Presentation Mode ───────────────────────────────── */
-/* Activated via ?present=true URL parameter.             */
-/* Larger type, wider spacing, hidden nav for projectors. */
 
-.presentation-mode body {
-  font-size: 1.15rem;
-  line-height: 1.85;
-}
-
-.presentation-mode nav {
-  display: none;
-}
-
-.presentation-mode main {
-  margin-top: 0;
-}
-
-.presentation-mode footer {
-  display: none;
-}
-
-.presentation-mode .reading-column {
-  max-width: 44rem;
-}
-
-.presentation-mode .wide-column {
-  max-width: 64rem;
-}
-
-.presentation-mode h1 {
-  font-size: 2.2rem;
-}
-
-.presentation-mode h2 {
-  font-size: 1.6rem;
-}
-
-.presentation-mode .font-interface {
-  font-size: 0.8rem;
-}
+.presentation-mode body { font-size: 1.15rem; line-height: 1.85; }
+.presentation-mode nav { display: none; }
+.presentation-mode main { margin-top: 0; }
+.presentation-mode footer { display: none; }
+.presentation-mode .reading-column { max-width: 44rem; }
+.presentation-mode .wide-column { max-width: 64rem; }
+.presentation-mode h1 { font-size: 2.5rem; }
+.presentation-mode h2 { font-size: 1.7rem; }
