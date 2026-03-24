@@ -7,32 +7,29 @@ export function ProfileSwitcher() {
 
   return (
     <div>
-      <p className="text-[13px] text-charcoal-400 mb-6">
-        These are fictional profiles — synthetic posting histories designed
-        to show different patterns. No real person is represented.
+      <p className="text-[15px] text-ink-400 mb-6 leading-relaxed">
+        These are fictional profiles — made-up posting histories that show
+        different patterns. Pick one to see how SelfTrace works.
       </p>
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="space-y-3">
         {profiles.map((profile) => {
           const isActive = activeProfile?.id === profile.id;
           return (
             <button
               key={profile.id}
               onClick={() => loadProfile(profile.id)}
-              className={`card text-left p-5 ${
+              className={`card w-full text-left p-5 ${
                 isActive
-                  ? 'border-accent-500 bg-accent-50 shadow-sm'
-                  : 'hover:border-charcoal-300'
+                  ? 'border-violet-400 bg-violet-50'
+                  : 'hover:border-ink-300'
               }`}
               aria-pressed={isActive}
             >
-              <p className={`text-[15px] font-medium leading-snug ${isActive ? 'text-accent-700' : 'text-charcoal-900'}`}>
+              <p className={`font-sans text-[16px] font-medium ${isActive ? 'text-violet-700' : 'text-ink-900'}`}>
                 {profile.label}
               </p>
-              <p className="text-[13px] text-charcoal-500 leading-relaxed mt-2 line-clamp-2">
+              <p className="text-[14px] text-ink-400 leading-relaxed mt-1">
                 {profile.description}
-              </p>
-              <p className="text-[11px] text-charcoal-300 mt-3">
-                {profile.dataQuality.totalPosts} posts &middot; {profile.platform}
               </p>
             </button>
           );

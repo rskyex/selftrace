@@ -2,57 +2,23 @@ import Link from 'next/link';
 
 export function Footer() {
   return (
-    <footer className="border-t border-cream-200 mt-24 bg-white">
-      <div className="content-column px-6 py-16">
-        <div className="grid md:grid-cols-4 gap-10">
-          {/* Brand */}
-          <div className="md:col-span-2">
-            <p className="text-[16px] font-semibold text-charcoal-900 tracking-tight mb-3">
-              SelfTrace
-            </p>
-            <p className="text-[14px] text-charcoal-500 leading-relaxed max-w-sm">
-              Understand how your online self may have been shaped by platform
-              incentives. All analysis runs locally in your browser. Your data
-              never leaves your device.
-            </p>
-          </div>
-
-          {/* Product */}
-          <div>
-            <p className="text-[12px] font-medium text-charcoal-400 uppercase tracking-wider mb-4">
-              Product
-            </p>
-            <div className="space-y-2.5">
-              <Link href="/overview" className="block text-[14px] text-charcoal-500 hover:text-charcoal-900">Overview</Link>
-              <Link href="/drift" className="block text-[14px] text-charcoal-500 hover:text-charcoal-900">Drift</Link>
-              <Link href="/reinforcement" className="block text-[14px] text-charcoal-500 hover:text-charcoal-900">Reinforcement</Link>
-              <Link href="/identity" className="block text-[14px] text-charcoal-500 hover:text-charcoal-900">Identity</Link>
-              <Link href="/compare" className="block text-[14px] text-charcoal-500 hover:text-charcoal-900">Compare</Link>
-            </div>
-          </div>
-
-          {/* About */}
-          <div>
-            <p className="text-[12px] font-medium text-charcoal-400 uppercase tracking-wider mb-4">
-              About
-            </p>
-            <div className="space-y-2.5">
-              <Link href="/how-it-works" className="block text-[14px] text-charcoal-500 hover:text-charcoal-900">How it works</Link>
-              <Link href="/privacy" className="block text-[14px] text-charcoal-500 hover:text-charcoal-900">Privacy</Link>
-              <Link href="/connect" className="block text-[14px] text-charcoal-500 hover:text-charcoal-900">Connect data</Link>
-            </div>
-          </div>
+    <footer className="border-t border-warm-200 mt-24">
+      <div className="reading-column px-6 py-16 text-center">
+        <p className="font-sans text-[15px] font-semibold text-ink-900 tracking-tight mb-4">
+          SelfTrace
+        </p>
+        <p className="text-[15px] text-ink-400 leading-relaxed max-w-sm mx-auto mb-8">
+          A reflective tool, not a verdict. Everything here is a pattern,
+          not a diagnosis. You decide what it means.
+        </p>
+        <div className="flex flex-wrap justify-center gap-6 font-sans text-[13px] text-ink-300 mb-8">
+          <Link href="/about" className="hover:text-ink-500">How it works</Link>
+          <Link href="/privacy" className="hover:text-ink-500">Privacy</Link>
+          <Link href="/start" className="hover:text-ink-500">Get started</Link>
         </div>
-
-        <div className="mt-12 pt-8 border-t border-cream-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <p className="text-[13px] text-charcoal-400">
-            All patterns are correlational. All interpretations are yours.
-          </p>
-          <div className="flex items-center gap-2">
-            <span className="inline-block w-2 h-2 rounded-full bg-sage-500" aria-hidden="true" />
-            <span className="text-[12px] text-charcoal-400">100% client-side</span>
-          </div>
-        </div>
+        <p className="font-sans text-[12px] text-ink-300">
+          Your data never leaves your browser. There is no server.
+        </p>
       </div>
     </footer>
   );

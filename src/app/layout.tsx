@@ -6,20 +6,17 @@ import { PresentationToggle } from '@/components/layout/PresentationToggle';
 import { DataProvider } from '@/lib/data/context';
 
 export const metadata: Metadata = {
-  title: 'SelfTrace — See how platforms shaped your online self',
-  description: 'Understand how algorithmic feeds and engagement incentives may have shaped your online identity over time. Private, reflective, beautiful.',
+  title: 'SelfTrace — See your online patterns clearly',
+  description: 'A private, reflective tool that helps you understand how platform incentives may have shaped your online self over time.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="bg-cream-50 text-charcoal-900 min-h-screen">
+      <body className="bg-warm-50 text-ink-900 min-h-screen">
         <PresentationToggle />
         <DataProvider>
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:bg-white focus:px-4 focus:py-2 focus:text-accent-700 focus:border focus:border-accent-500 focus:rounded-lg text-[13px] font-medium"
-          >
+          <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:bg-white focus:px-4 focus:py-2 focus:text-violet-700 focus:border focus:border-violet-400 focus:rounded-lg font-sans text-[13px]">
             Skip to content
           </a>
           <TopNav />

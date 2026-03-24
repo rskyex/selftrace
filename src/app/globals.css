@@ -1,110 +1,135 @@
 @import "tailwindcss";
 
 @theme {
-  /* ── SelfTrace Design System ────────────────────────── */
+  /* ── SelfTrace — Warm, Trustworthy, Human ───────────── */
 
-  /* Background — warm, soft, premium */
-  --color-cream-50: #FAFAF8;
-  --color-cream-100: #F5F4F0;
-  --color-cream-200: #ECEAE4;
-  --color-cream-300: #DDD9D0;
+  /* Background — warm paper, not sterile white */
+  --color-warm-50: #FDFCFA;
+  --color-warm-100: #F8F6F2;
+  --color-warm-200: #F0ECE5;
+  --color-warm-300: #E2DCD2;
 
-  /* Text hierarchy — warm charcoal */
-  --color-charcoal-900: #1A1A1A;
-  --color-charcoal-700: #3D3D3D;
-  --color-charcoal-500: #6B6B6B;
-  --color-charcoal-400: #8F8F8F;
-  --color-charcoal-300: #B8B8B8;
-  --color-charcoal-200: #D4D4D4;
+  /* Text — soft, approachable, never harsh black */
+  --color-ink-900: #2C2825;
+  --color-ink-700: #4A4541;
+  --color-ink-500: #736E68;
+  --color-ink-400: #9B958E;
+  --color-ink-300: #C4BEB6;
+  --color-ink-200: #DBD6CF;
 
-  /* Primary accent — warm indigo, reflective, premium */
-  --color-accent-700: #4338CA;
-  --color-accent-600: #4F46E5;
-  --color-accent-500: #6366F1;
-  --color-accent-400: #818CF8;
-  --color-accent-200: #C7D2FE;
-  --color-accent-100: #EEF2FF;
-  --color-accent-50: #F5F7FF;
+  /* Accent — a dusty warm violet, reflective not corporate */
+  --color-violet-700: #6D28D9;
+  --color-violet-600: #7C3AED;
+  --color-violet-500: #8B5CF6;
+  --color-violet-400: #A78BFA;
+  --color-violet-200: #DDD6FE;
+  --color-violet-100: #EDE9FE;
+  --color-violet-50: #F5F3FF;
 
-  /* Sage — for positive / confidence signals */
-  --color-sage-700: #2D6A4F;
-  --color-sage-500: #40916C;
-  --color-sage-200: #B7E4C7;
-  --color-sage-100: #D8F3DC;
+  /* Warmth — terracotta/coral for gentle highlights */
+  --color-coral-600: #DC6843;
+  --color-coral-500: #E8825F;
+  --color-coral-200: #FECDB8;
+  --color-coral-100: #FEE8DB;
+  --color-coral-50: #FFF5EE;
 
-  /* Amber — for uncertainty / caution */
+  /* Calm — soft sage for reassurance */
+  --color-sage-600: #4D7C5F;
+  --color-sage-500: #6B9E7D;
+  --color-sage-200: #C1DEC9;
+  --color-sage-100: #E0F0E5;
+
+  /* Kept for compatibility */
+  --color-cream-50: #FDFCFA;
+  --color-cream-100: #F8F6F2;
+  --color-cream-200: #F0ECE5;
+  --color-cream-300: #E2DCD2;
+  --color-charcoal-900: #2C2825;
+  --color-charcoal-700: #4A4541;
+  --color-charcoal-500: #736E68;
+  --color-charcoal-400: #9B958E;
+  --color-charcoal-300: #C4BEB6;
+  --color-charcoal-200: #DBD6CF;
+  --color-accent-700: #6D28D9;
+  --color-accent-600: #7C3AED;
+  --color-accent-500: #8B5CF6;
+  --color-accent-400: #A78BFA;
+  --color-accent-200: #DDD6FE;
+  --color-accent-100: #EDE9FE;
+  --color-accent-50: #F5F3FF;
   --color-amber-700: #B45309;
   --color-amber-500: #D97706;
   --color-amber-200: #FDE68A;
   --color-amber-100: #FEF3C7;
-
-  /* Teal — chart accent, analytical */
   --color-teal-700: #1A5C52;
   --color-teal-500: #2D8A7A;
   --color-teal-200: #B8DDD5;
   --color-teal-100: #E0F2EE;
-
-  /* Slate — structural */
   --color-slate-600: #52525B;
   --color-slate-300: #D4D4D8;
   --color-slate-200: #E4E4E7;
   --color-slate-100: #F4F4F5;
+  --color-sage-700: #2D6A4F;
 }
 
 /* ── Base ────────────────────────────────────────────── */
 
 html {
-  background-color: var(--color-cream-50);
+  background-color: var(--color-warm-50);
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  color: var(--color-charcoal-900);
-  font-size: 16px;
-  line-height: 1.6;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  color: var(--color-ink-900);
+  font-size: 17px;
+  line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  letter-spacing: -0.01em;
 }
 
-h1, h2, h3, h4 {
+h1, h2, h3 {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-weight: 600;
-  letter-spacing: -0.025em;
-  line-height: 1.2;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+h4, h5, h6 {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 500;
 }
 
 /* ── Font Utilities ──────────────────────────────────── */
+
+.font-sans {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
 
 .font-serif {
   font-family: Georgia, 'Times New Roman', serif;
 }
 
 .font-interface {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  letter-spacing: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .font-mono {
-  font-family: 'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
+  font-family: 'SF Mono', 'Fira Code', monospace;
 }
 
-/* ── Layout Columns ──────────────────────────────────── */
+/* ── Layout ──────────────────────────────────────────── */
 
-.reading-column { max-width: 40rem; margin-left: auto; margin-right: auto; }
-.prose-column { max-width: 44rem; margin-left: auto; margin-right: auto; }
-.wide-column { max-width: 64rem; margin-left: auto; margin-right: auto; }
+.reading-column { max-width: 38rem; margin-left: auto; margin-right: auto; }
+.prose-column { max-width: 42rem; margin-left: auto; margin-right: auto; }
+.wide-column { max-width: 60rem; margin-left: auto; margin-right: auto; }
 .content-column { max-width: 72rem; margin-left: auto; margin-right: auto; }
-.hero-column { max-width: 56rem; margin-left: auto; margin-right: auto; }
+.hero-column { max-width: 48rem; margin-left: auto; margin-right: auto; }
+.narrow-column { max-width: 32rem; margin-left: auto; margin-right: auto; }
 
 /* ── Prose ───────────────────────────────────────────── */
 
-.prose-body p {
-  margin-bottom: 1.25em;
-}
-
-.prose-body p:last-child {
-  margin-bottom: 0;
-}
+.prose-body p { margin-bottom: 1.4em; }
+.prose-body p:last-child { margin-bottom: 0; }
 
 /* ── Transitions ─────────────────────────────────────── */
 
@@ -113,72 +138,91 @@ a, button { transition: all 0.2s ease; }
 /* ── Selection ───────────────────────────────────────── */
 
 ::selection {
-  background-color: var(--color-accent-200);
-  color: var(--color-charcoal-900);
+  background-color: var(--color-violet-200);
+  color: var(--color-ink-900);
 }
 
-/* ── Focus States ────────────────────────────────────── */
+/* ── Focus ───────────────────────────────────────────── */
 
 :focus-visible {
-  outline: 2px solid var(--color-accent-500);
+  outline: 2px solid var(--color-violet-400);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
 /* ── Cards ───────────────────────────────────────────── */
 
 .card {
   background: white;
-  border-radius: 16px;
-  border: 1px solid var(--color-cream-200);
-  transition: box-shadow 0.2s ease, transform 0.15s ease;
+  border-radius: 20px;
+  border: 1px solid var(--color-warm-200);
+  transition: box-shadow 0.25s ease;
 }
 
 .card:hover {
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 32px rgba(44, 40, 37, 0.06);
 }
 
-.card-elevated {
+.card-soft {
+  background: var(--color-warm-100);
+  border-radius: 20px;
+  border: 1px solid var(--color-warm-200);
+}
+
+/* ── Observation card — the "letter" format ──────────── */
+
+.observation {
   background: white;
-  border-radius: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 6px 24px rgba(0, 0, 0, 0.04);
+  border-radius: 20px;
+  border: 1px solid var(--color-warm-200);
+  padding: 2rem 2.25rem;
 }
 
-/* ── Gradient Backgrounds ────────────────────────────── */
-
-.bg-hero-gradient {
-  background: linear-gradient(180deg, var(--color-cream-50) 0%, white 50%, var(--color-accent-50) 100%);
+.observation h3 {
+  font-size: 1.125rem;
+  color: var(--color-ink-700);
+  margin-bottom: 0.75rem;
 }
 
-.bg-section-alt {
-  background: linear-gradient(180deg, white 0%, var(--color-cream-50) 100%);
+.observation p {
+  color: var(--color-ink-500);
+  line-height: 1.75;
 }
 
-/* ── Pills / Badges ──────────────────────────────────── */
+/* ── Confidence dot ──────────────────────────────────── */
+
+.confidence-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.confidence-high { background-color: var(--color-sage-500); }
+.confidence-medium { background-color: var(--color-violet-400); }
+.confidence-low { background-color: var(--color-ink-300); }
+
+/* ── Pill ────────────────────────────────────────────── */
 
 .pill {
   display: inline-flex;
   align-items: center;
-  padding: 4px 12px;
+  padding: 5px 14px;
   border-radius: 9999px;
-  font-size: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 13px;
   font-weight: 500;
-  letter-spacing: 0;
 }
 
-/* ── Chart typography ────────────────────────────────── */
+/* ── Chart ───────────────────────────────────────────── */
 
 svg text {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 /* ── Presentation Mode ───────────────────────────────── */
 
-.presentation-mode body { font-size: 1.15rem; line-height: 1.85; }
+.presentation-mode body { font-size: 1.2rem; }
 .presentation-mode nav { display: none; }
 .presentation-mode main { margin-top: 0; }
 .presentation-mode footer { display: none; }
-.presentation-mode .reading-column { max-width: 44rem; }
-.presentation-mode .wide-column { max-width: 64rem; }
-.presentation-mode h1 { font-size: 2.5rem; }
-.presentation-mode h2 { font-size: 1.7rem; }

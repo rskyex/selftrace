@@ -7,44 +7,25 @@ interface SparkLineProps {
   width?: number;
   height?: number;
   color?: string;
-  label?: string;
 }
 
-export function SparkLine({
-  data,
-  width = 120,
-  height = 32,
-  color = '#6366F1',
-  label,
-}: SparkLineProps) {
+export function SparkLine({ data, width = 100, height = 28, color = '#8B5CF6' }: SparkLineProps) {
   if (data.length < 2) return null;
 
-  const padding = 2;
-  const maxVal = Math.max(...data.map(d => d.value));
-  const minVal = Math.min(...data.map(d => d.value));
-  const range = maxVal - minVal || 1;
+  const pad = 2;
+  const maxV = Math.max(...data.map(d => d.value));
+  const minV = Math.min(...data.map(d => d.value));
+  const range = maxV - minV || 1;
 
-  const points = data.map((d, i) => {
-    const x = padding + (i / (data.length - 1)) * (width - padding * 2);
-    const y = padding + (1 - (d.value - minVal) / range) * (height - padding * 2);
+  const pts = data.map((d, i) => {
+    const x = pad + (i / (data.length - 1)) * (width - pad * 2);
+    const y = pad + (1 - (d.value - minV) / range) * (height - pad * 2);
     return `${x},${y}`;
   }).join(' ');
 
   return (
-    <span className="inline-flex items-center gap-2">
-      {label && (
-        <span className="text-[12px] text-charcoal-500">{label}</span>
-      )}
-      <svg width={width} height={height} className="inline-block" aria-hidden="true">
-        <polyline
-          points={points}
-          fill="none"
-          stroke={color}
-          strokeWidth={1.5}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </span>
+    <svg width={width} height={height} className="inline-block" aria-hidden="true">
+      <polyline points={pts} fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }

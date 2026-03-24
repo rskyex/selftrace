@@ -203,8 +203,8 @@ export default function ReinforcementPage() {
             <AreaChart
               data={reinforcementCorrelation.value}
               caption={reinforcementCorrelation.caveat}
-              status={reinforcementCorrelation.status}
-              color="amber"
+              confidence="low"
+              color="coral"
             />
           )
         )}

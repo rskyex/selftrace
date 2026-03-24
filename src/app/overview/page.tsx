@@ -78,7 +78,7 @@ export default function OverviewPage() {
         <AreaChart
           data={analysis.postingFrequency.value}
           caption="Posting frequency over time"
-          status={analysis.postingFrequency.status}
+          confidence="medium"
         />
 
         {/* Quick insights */}

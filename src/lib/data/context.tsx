@@ -5,12 +5,21 @@ import type { DatasetProfile, AnalysisResult } from '@/lib/data/types';
 import { getDemoProfiles, getDemoProfile } from '@/data/demo/profiles';
 import { runAnalysis } from '@/lib/analysis/pipeline';
 
+export interface SelfPortrait {
+  topics: string;
+  voice: string;
+  values: string;
+  driftedFrom: string;
+}
+
 interface DataContextValue {
   profiles: DatasetProfile[];
   activeProfile: DatasetProfile | null;
   analysis: AnalysisResult | null;
   loadProfile: (id: string) => void;
   isLoaded: boolean;
+  selfPortrait: SelfPortrait | null;
+  setSelfPortrait: (portrait: SelfPortrait) => void;
 }
 
 const DataContext = createContext<DataContextValue>({
@@ -19,12 +28,15 @@ const DataContext = createContext<DataContextValue>({
   analysis: null,
   loadProfile: () => {},
   isLoaded: false,
+  selfPortrait: null,
+  setSelfPortrait: () => {},
 });
 
 export function DataProvider({ children }: { children: React.ReactNode }) {
   const profiles = useMemo(() => getDemoProfiles(), []);
   const [activeProfile, setActiveProfile] = useState<DatasetProfile | null>(null);
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
+  const [selfPortrait, setSelfPortrait] = useState<SelfPortrait | null>(null);
 
   const loadProfile = useCallback((id: string) => {
     const profile = getDemoProfile(id);
@@ -40,6 +52,8 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       analysis,
       loadProfile,
       isLoaded: activeProfile !== null,
+      selfPortrait,
+      setSelfPortrait,
     }}>
       {children}
     </DataContext.Provider>
