@@ -77,7 +77,7 @@ export default function DriftPage() {
             : ` Yours stayed relatively stable.`
           }
         </p>
-        <AreaChart data={entropy} confidence="medium" color="violet" />
+        <AreaChart data={entropy} confidence="medium" color="coral" />
 
         {/* ── Vocabulary ──────────────────────────── */}
         <h2 className="text-[24px] font-semibold text-ink-900 tracking-tight mt-14 mb-2">
