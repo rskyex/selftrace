@@ -256,6 +256,80 @@ export default function HomePage() {
           </ScrollReveal>
         </div>
       </section>
+
+      {/* ── Govern the Human Project ─────────────────────── */}
+      <section className="py-20 md:py-28 border-t border-linen-200">
+        <div className="content-column px-6">
+          <ScrollReveal>
+            <div className="text-center mb-14">
+              <p className="font-sans text-[12px] text-ink-400 tracking-[0.2em] uppercase mb-4">
+                Part of
+              </p>
+              <h2 className="font-display text-[24px] md:text-[28px] text-ink-900 leading-[1.2] mb-4">
+                The Govern the Human Project
+              </h2>
+              <p className="text-[16px] md:text-[17px] text-ink-500 leading-[1.75] max-w-lg mx-auto">
+                SelfTrace is one experiment within a broader inquiry into how
+                AI systems shape human identity, agency, and self-understanding.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+              {/* Govern the Human card */}
+              <a
+                href="https://govern-the-human.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group block card card-hover overflow-hidden"
+              >
+                <div className="relative aspect-[1.91/1] overflow-hidden">
+                  <Image
+                    src="/govern-the-human-og.png"
+                    alt="Govern the Human"
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    sizes="(max-width: 768px) 100vw, 320px"
+                  />
+                </div>
+                <div className="px-5 py-4">
+                  <p className="font-sans text-[14px] font-medium text-ink-900 mb-1">
+                    Govern the Human
+                  </p>
+                  <p className="text-[13px] text-ink-400 leading-[1.5]">
+                    The parent project exploring AI governance from the human side.
+                  </p>
+                </div>
+              </a>
+
+              {/* Risa Koyanagi card */}
+              <a
+                href="https://risakoyanagi.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group block card card-hover overflow-hidden"
+              >
+                <div className="relative aspect-[1.91/1] overflow-hidden">
+                  <Image
+                    src="/risa-koyanagi-og.png"
+                    alt="Risa Koyanagi"
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    sizes="(max-width: 768px) 100vw, 320px"
+                  />
+                </div>
+                <div className="px-5 py-4">
+                  <p className="font-sans text-[14px] font-medium text-ink-900 mb-1">
+                    Risa Koyanagi
+                  </p>
+                  <p className="text-[13px] text-ink-400 leading-[1.5]">
+                    Creator of SelfTrace and the Govern the Human project.
+                  </p>
+                </div>
+              </a>
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
     </div>
   );
 }
