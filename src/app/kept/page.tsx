@@ -10,8 +10,8 @@ export default function KeptPage() {
 
   if (!isLoaded || !analysis) {
     return (
-      <div className="reading-column px-6 pt-28 pb-24">
-        <h1 className="text-[30px] font-bold tracking-tight text-ink-900 mb-4">What you kept</h1>
+      <div className="reading-column px-6 pt-24 pb-24">
+        <h1 className="font-display text-[30px] md:text-[36px] tracking-tight text-ink-900 leading-[1.1] mb-4">What you kept</h1>
         <p className="text-ink-500 mb-10">Load a profile to see what persisted.</p>
         <ProfileSwitcher />
       </div>
@@ -40,8 +40,8 @@ export default function KeptPage() {
   const distributedPhrases = narrativeRepetition.value.filter(p => p.temporalSpread === 'distributed').slice(0, 4);
 
   return (
-    <div className="reading-column px-6 pt-28 pb-24">
-      <h1 className="text-[30px] font-bold tracking-tight text-ink-900 mb-3">
+    <div className="reading-column px-6 pt-24 pb-24">
+      <h1 className="font-display text-[30px] md:text-[36px] tracking-tight text-ink-900 leading-[1.1] mb-3">
         What you kept
       </h1>
       <p className="text-[17px] text-ink-500 leading-[1.8] mb-20">
@@ -53,7 +53,7 @@ export default function KeptPage() {
       {/* ── The Holdout ──────────────────────────── */}
       {persistent.length > 0 && (
         <section className="mb-24">
-          <h2 className="text-[22px] font-semibold text-ink-900 tracking-tight mb-4">
+          <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-4">
             Kept without encouragement
           </h2>
           <p className="text-[16px] text-ink-500 leading-[1.8] mb-8">
@@ -76,7 +76,7 @@ export default function KeptPage() {
       {/* ── Resisted reward ──────────────────────── */}
       {resisted.length > 0 && (
         <section className="mb-24">
-          <h2 className="text-[22px] font-semibold text-ink-900 tracking-tight mb-4">
+          <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-4">
             Resisted reward
           </h2>
           <p className="text-[16px] text-ink-500 leading-[1.8] mb-6">
@@ -96,7 +96,7 @@ export default function KeptPage() {
       {/* ── Stable self-descriptions ─────────────── */}
       {stableDescs.length > 0 && (
         <section className="mb-24">
-          <h2 className="text-[22px] font-semibold text-ink-900 tracking-tight mb-4">
+          <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-4">
             Stable ground
           </h2>
           <p className="text-[16px] text-ink-500 leading-[1.8] mb-6">
@@ -115,7 +115,7 @@ export default function KeptPage() {
       {/* ── Consistent phrases ───────────────────── */}
       {distributedPhrases.length > 0 && (
         <section className="mb-24">
-          <h2 className="text-[22px] font-semibold text-ink-900 tracking-tight mb-4">
+          <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-4">
             Language that held
           </h2>
           <p className="text-[16px] text-ink-500 leading-[1.8] mb-6">

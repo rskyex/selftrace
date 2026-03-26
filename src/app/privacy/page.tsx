@@ -1,11 +1,16 @@
 export default function PrivacyPage() {
   return (
-    <div className="reading-column px-6 pt-20 pb-24">
-      <h1 className="text-[32px] font-semibold tracking-tight text-ink-900 mb-4">
-        Your data stays yours
-      </h1>
+    <div className="reading-column px-6 pt-24 pb-24">
+      <header className="mb-16">
+        <p className="font-sans text-[12px] text-ink-400 tracking-[0.2em] uppercase mb-5">
+          Privacy
+        </p>
+        <h1 className="font-display text-[30px] md:text-[36px] tracking-tight text-ink-900 leading-[1.1]">
+          Your data stays yours
+        </h1>
+      </header>
 
-      <div className="prose-body text-[17px] text-ink-500 leading-[1.8] mb-12">
+      <div className="prose-body text-[17px] text-ink-500 leading-[1.85] mb-16">
         <p>
           There is no &ldquo;trust us&rdquo; here. This tool has no server.
           Your data is processed entirely in your browser and exists only
@@ -14,7 +19,7 @@ export default function PrivacyPage() {
       </div>
 
       {/* Architecture */}
-      <div className="observation text-center py-8 mb-12">
+      <div className="observation text-center py-8 mb-16">
         <div className="inline-flex items-center gap-6 font-sans text-[15px] text-ink-700">
           <div className="card px-6 py-3 font-medium">Your Browser</div>
           <span className="text-[20px] text-ink-300" aria-hidden="true">&harr;</span>
@@ -25,10 +30,10 @@ export default function PrivacyPage() {
         </p>
       </div>
 
-      <h2 className="text-[24px] font-semibold text-ink-900 tracking-tight mb-4">
+      <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-5">
         What we don&apos;t collect
       </h2>
-      <div className="space-y-2 mb-12">
+      <div className="space-y-2 mb-16">
         {[
           'Your posting data',
           'Analytics or usage telemetry',
@@ -43,7 +48,7 @@ export default function PrivacyPage() {
         ))}
       </div>
 
-      <div className="observation bg-sage-100 border-sage-200">
+      <div className="observation-sage">
         <h3>Privacy is the architecture, not a feature</h3>
         <p>
           We didn&apos;t add privacy protections to a server-based tool. We built
