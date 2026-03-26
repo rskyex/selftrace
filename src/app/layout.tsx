@@ -6,6 +6,7 @@ import { PresentationToggle } from '@/components/layout/PresentationToggle';
 import { DataProvider } from '@/lib/data/context';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://selftrace.vercel.app'),
   title: {
     default: 'SelfTrace',
     template: '%s — SelfTrace',
