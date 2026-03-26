@@ -63,6 +63,23 @@ export default function SelvesPage() {
           <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-6">
             How you experience yourself
           </h2>
+
+          {/* Personality type badges */}
+          {(selfPortrait.mbti || selfPortrait.enneagram) && (
+            <div className="flex gap-3 mb-6">
+              {selfPortrait.mbti && (
+                <span className="pill bg-linen-100 text-ink-700 text-[13px] font-medium border border-linen-200">
+                  MBTI: {selfPortrait.mbti}
+                </span>
+              )}
+              {selfPortrait.enneagram && (
+                <span className="pill bg-linen-100 text-ink-700 text-[13px] font-medium border border-linen-200">
+                  Enneagram: Type {selfPortrait.enneagram}
+                </span>
+              )}
+            </div>
+          )}
+
           <div className="observation mb-4">
             {selfPortrait.whatMatters && (
               <div className="mb-5">
@@ -88,10 +105,28 @@ export default function SelvesPage() {
                 <p className="text-[17px] text-ink-700 italic">&ldquo;{selfPortrait.leastVisible}&rdquo;</p>
               </div>
             )}
+            {selfPortrait.offlineVsOnline && (
+              <div className="mb-5">
+                <p className="font-sans text-[12px] text-ink-400 mb-1">How close friends see you differently online</p>
+                <p className="text-[17px] text-ink-700 italic">&ldquo;{selfPortrait.offlineVsOnline}&rdquo;</p>
+              </div>
+            )}
             {selfPortrait.hasChanged && (
-              <div>
+              <div className="mb-5">
                 <p className="font-sans text-[12px] text-ink-400 mb-1">Whether your online self has changed</p>
                 <p className="text-[17px] text-ink-700 italic">&ldquo;{selfPortrait.hasChanged}&rdquo;</p>
+              </div>
+            )}
+            {selfPortrait.platformInfluence && (
+              <div className="mb-5">
+                <p className="font-sans text-[12px] text-ink-400 mb-1">What you think platforms changed about your expression</p>
+                <p className="text-[17px] text-ink-700 italic">&ldquo;{selfPortrait.platformInfluence}&rdquo;</p>
+              </div>
+            )}
+            {selfPortrait.consumptionPattern && (
+              <div>
+                <p className="font-sans text-[12px] text-ink-400 mb-1">What content you consume most</p>
+                <p className="text-[17px] text-ink-700 italic">&ldquo;{selfPortrait.consumptionPattern}&rdquo;</p>
               </div>
             )}
           </div>

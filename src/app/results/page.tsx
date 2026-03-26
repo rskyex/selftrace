@@ -191,6 +191,7 @@ export default function ResultsPage() {
 
       {/* ── Go deeper ────────────────────────────── */}
       <div className="mt-16 space-y-4">
+        <Link href="/algorithm-influence" className="text-link block text-[15px]">How the algorithm may have shaped you &rarr;</Link>
         <Link href="/returning" className="text-link block text-[15px]">What keeps resurfacing &rarr;</Link>
         <Link href="/rewarded" className="text-link block text-[15px]">What the environment rewarded &rarr;</Link>
         <Link href="/selves" className="text-link block text-[15px]">The self you described and the self the traces show &rarr;</Link>

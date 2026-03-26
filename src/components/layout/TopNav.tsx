@@ -8,6 +8,7 @@ import { useData } from '@/lib/data/context';
 
 const resultLinks = [
   { href: '/results', label: 'Your results' },
+  { href: '/algorithm-influence', label: 'Algorithm influence' },
   { href: '/kept', label: 'What you kept' },
 ];
 
