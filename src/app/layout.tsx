@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             Skip to content
           </a>
           <TopNav />
-          <main id="main-content" className="mt-14">
+          <main id="main-content" className="mt-16">
             {children}
           </main>
           <Footer />
