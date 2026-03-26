@@ -30,7 +30,7 @@ export default function CivicPage() {
       />
 
       <div className="wide-column px-6 pb-24">
-        <p className="text-[15px] text-charcoal-500 leading-relaxed mb-10 max-w-lg">
+        <p className="text-[15px] text-ink-500 leading-relaxed mb-10 max-w-lg">
           If platform incentives shape self-presentation for millions of
           users simultaneously, the effects aren&apos;t only personal — they&apos;re
           civic. These questions connect patterns in your data to bigger
@@ -40,10 +40,10 @@ export default function CivicPage() {
         <div className="space-y-6">
           {civicQuestions.value.map((q, i) => (
             <div key={i} className="card p-6">
-              <h2 className="text-[18px] font-semibold text-charcoal-900 mb-3">
+              <h2 className="font-display text-[18px] text-ink-900 mb-3">
                 {q.question}
               </h2>
-              <p className="text-[14px] text-charcoal-500 leading-relaxed mb-4">
+              <p className="text-[14px] text-ink-500 leading-relaxed mb-4">
                 {q.context}
               </p>
               {q.dataConnection && (

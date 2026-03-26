@@ -9,7 +9,7 @@ export function CaveatPanel({ title = 'Keep in mind', children }: CaveatPanelPro
       <h3 className="text-[13px] font-medium text-amber-700 mb-2">
         {title}
       </h3>
-      <div className="text-[14px] leading-relaxed text-charcoal-500">
+      <div className="text-[14px] leading-relaxed text-ink-500">
         {children}
       </div>
     </div>

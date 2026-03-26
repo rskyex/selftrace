@@ -47,11 +47,11 @@ export default function BaselinePage() {
             { label: 'Avg / Month', value: String(dataQuality.averagePostsPerMonth) },
             { label: 'Platform', value: activeProfile.platform },
           ].map((stat) => (
-            <div key={stat.label} className="py-4 border-b border-cream-200">
-              <p className="font-interface text-[10px] text-charcoal-400 uppercase tracking-widest mb-1">
+            <div key={stat.label} className="py-4 border-b border-linen-200">
+              <p className="font-sans text-[10px] text-ink-400 uppercase tracking-widest mb-1">
                 {stat.label}
               </p>
-              <p className="font-mono text-[18px] text-charcoal-900">
+              <p className="font-mono text-[18px] text-ink-900">
                 {stat.value}
               </p>
             </div>
@@ -60,13 +60,13 @@ export default function BaselinePage() {
 
         <div className="flex items-center gap-2 my-2">
           <EpistemicBadge status="observed" />
-          <span className="font-interface text-[10px] text-charcoal-300">
+          <span className="font-sans text-[10px] text-ink-300">
             {dataQuality.dateRange.start.slice(0, 10)} to {dataQuality.dateRange.end.slice(0, 10)}
           </span>
         </div>
 
         {/* Posting Frequency */}
-        <h2 className="text-[22px] text-charcoal-900 mt-14 mb-3">
+        <h2 className="text-[22px] text-ink-900 mt-14 mb-3">
           Posting Frequency, by Month
         </h2>
         <AreaChart
@@ -76,21 +76,21 @@ export default function BaselinePage() {
         />
 
         {/* Data Quality */}
-        <h2 className="text-[22px] text-charcoal-900 mt-14 mb-4">
+        <h2 className="text-[22px] text-ink-900 mt-14 mb-4">
           Data Quality
         </h2>
-        <div className="space-y-3 text-[14px] text-charcoal-700 leading-relaxed">
+        <div className="space-y-3 text-[14px] text-ink-700 leading-relaxed">
           <p>
             {dataQuality.hasEngagementData
               ? 'Engagement data (likes, shares, replies, views) is present.'
               : 'This dataset does not include engagement data. Reinforcement analysis will be unavailable.'}
           </p>
           {dataQuality.missingFields.length > 0 ? (
-            <p className="text-charcoal-500">
+            <p className="text-ink-500">
               Missing fields: {dataQuality.missingFields.join(', ')}.
             </p>
           ) : (
-            <p className="text-charcoal-400">
+            <p className="text-ink-400">
               No expected fields are missing.
             </p>
           )}

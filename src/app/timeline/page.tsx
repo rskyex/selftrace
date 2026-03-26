@@ -24,7 +24,7 @@ export default function TimelinePage() {
           subtitle="How posting patterns shift over time."
         />
         <div className="reading-column px-6 pb-24">
-          <p className="text-[15px] text-charcoal-500 leading-relaxed mb-8">
+          <p className="text-[15px] text-ink-500 leading-relaxed mb-8">
             This page examines how your posting patterns, topics, and language
             change over time. To begin, select a demo profile below.
           </p>
@@ -56,7 +56,7 @@ export default function TimelinePage() {
       <TimelineBand data={analysis.postingFrequency.value} />
 
       <div className="wide-column px-6">
-        <p className="text-[13px] text-charcoal-400 font-interface mt-2">
+        <p className="text-[13px] text-ink-400 font-sans mt-2">
           Posting density over time. Each point represents one month.
         </p>
       </div>
@@ -64,10 +64,10 @@ export default function TimelinePage() {
       <div className="reading-column px-6 pb-24">
         {/* ── Topic Concentration ──────────────────────────── */}
         <div className="mt-16">
-          <h2 className="text-[22px] text-charcoal-900 mb-3">
+          <h2 className="text-[22px] text-ink-900 mb-3">
             Topic Concentration Over Time
           </h2>
-          <p className="text-[14px] text-charcoal-500 leading-relaxed mb-2">
+          <p className="text-[14px] text-ink-500 leading-relaxed mb-2">
             How the distribution of topics in your posts shifts across the
             observed period. Converging streams may indicate narrowing focus —
             which can reflect deepening expertise, intentional specialization,
@@ -85,10 +85,10 @@ export default function TimelinePage() {
         <SectionDivider />
 
         {/* ── Topic Entropy ────────────────────────────────── */}
-        <h2 className="text-[22px] text-charcoal-900 mb-3">
+        <h2 className="text-[22px] text-ink-900 mb-3">
           Topic Diversity
         </h2>
-        <p className="text-[14px] text-charcoal-500 leading-relaxed mb-1">
+        <p className="text-[14px] text-ink-500 leading-relaxed mb-1">
           Shannon entropy measures how evenly distributed your topics are per
           quarter. Higher values indicate more diverse topics; declining values
           suggest concentration around fewer subjects. This pattern is common
@@ -107,10 +107,10 @@ export default function TimelinePage() {
         <SectionDivider />
 
         {/* ── Vocabulary Drift ─────────────────────────────── */}
-        <h2 className="text-[22px] text-charcoal-900 mb-3">
+        <h2 className="text-[22px] text-ink-900 mb-3">
           Vocabulary Shift
         </h2>
-        <p className="text-[14px] text-charcoal-500 leading-relaxed mb-6">
+        <p className="text-[14px] text-ink-500 leading-relaxed mb-6">
           Terms that changed in frequency between the first and second halves of
           the posting history. Vocabulary change is a normal feature of sustained
           writing and may reflect evolving interests, audience adaptation,
@@ -119,21 +119,21 @@ export default function TimelinePage() {
 
         <div className="space-y-1">
           {vocabularyDrift.value.map((term) => (
-            <div key={term.term} className="flex items-center gap-4 py-2.5 border-b border-cream-200">
-              <span className="font-mono text-[13px] text-charcoal-900 w-36 truncate">
+            <div key={term.term} className="flex items-center gap-4 py-2.5 border-b border-linen-200">
+              <span className="font-mono text-[13px] text-ink-900 w-36 truncate">
                 {term.term}
               </span>
-              <span className="font-interface text-[10px] text-charcoal-400 w-16 text-center uppercase tracking-wide">
+              <span className="font-sans text-[10px] text-ink-400 w-16 text-center uppercase tracking-wide">
                 {term.direction}
               </span>
-              <span className="font-mono text-[11px] text-charcoal-400 w-8 text-right">
+              <span className="font-mono text-[11px] text-ink-400 w-8 text-right">
                 {term.earlierFrequency}
               </span>
-              <span className="text-charcoal-300 text-[11px]">→</span>
-              <span className="font-mono text-[11px] text-charcoal-700 w-8">
+              <span className="text-ink-300 text-[11px]">→</span>
+              <span className="font-mono text-[11px] text-ink-700 w-8">
                 {term.laterFrequency}
               </span>
-              <span className="font-interface text-[10px] text-charcoal-300">
+              <span className="font-sans text-[10px] text-ink-300">
                 per 100 posts
               </span>
             </div>
@@ -146,10 +146,10 @@ export default function TimelinePage() {
         <SectionDivider />
 
         {/* ── Tone Trends ──────────────────────────────────── */}
-        <h2 className="text-[22px] text-charcoal-900 mb-3">
+        <h2 className="text-[22px] text-ink-900 mb-3">
           Tone Markers Over Time
         </h2>
-        <p className="text-[14px] text-charcoal-500 leading-relaxed mb-2">
+        <p className="text-[14px] text-ink-500 leading-relaxed mb-2">
           Approximate linguistic indicators, averaged per quarter. These are
           heuristic measures based on word patterns — exclamation density,
           hedge words, intensifiers, sentence length — and are culturally
@@ -168,8 +168,8 @@ export default function TimelinePage() {
             const direction = last > first + 0.05 ? '↑' : last < first - 0.05 ? '↓' : '—';
 
             return (
-              <div key={marker} className="flex items-center gap-4 py-3 border-b border-cream-200">
-                <span className="font-interface text-[11px] text-charcoal-500 uppercase tracking-wide w-28">
+              <div key={marker} className="flex items-center gap-4 py-3 border-b border-linen-200">
+                <span className="font-sans text-[11px] text-ink-500 uppercase tracking-wide w-28">
                   {marker}
                 </span>
                 <SparkLine
@@ -178,10 +178,10 @@ export default function TimelinePage() {
                   height={28}
                   color="#78716C"
                 />
-                <span className="font-mono text-[11px] text-charcoal-400 w-20 text-right">
+                <span className="font-mono text-[11px] text-ink-400 w-20 text-right">
                   {first.toFixed(2)} → {last.toFixed(2)}
                 </span>
-                <span className="font-mono text-[12px] text-charcoal-300 w-4">
+                <span className="font-mono text-[12px] text-ink-300 w-4">
                   {direction}
                 </span>
               </div>
@@ -189,7 +189,7 @@ export default function TimelinePage() {
           })}
         </div>
 
-        <p className="mt-4 text-[13px] italic text-charcoal-400 leading-relaxed">
+        <p className="mt-4 text-[13px] italic text-ink-400 leading-relaxed">
           Changes in linguistic tone may reflect life circumstances, audience
           shifts, world events, personal growth, or platform dynamics.
           These heuristics cannot distinguish between these explanations.

@@ -15,7 +15,7 @@ export default function TrendsPage() {
   if (!isLoaded || !analysis) {
     return (
       <div className="reading-column px-6 pt-24 pb-24">
-        <h1 className="text-[32px] font-bold tracking-tight text-ink-900 mb-4">Your trends</h1>
+        <h1 className="font-display text-[30px] md:text-[36px] tracking-tight text-ink-900 leading-[1.1] mb-4">Your trends</h1>
         <p className="text-ink-400 mb-10">How your patterns shifted over time.</p>
         <ProfileSwitcher />
       </div>
@@ -30,7 +30,7 @@ export default function TrendsPage() {
   return (
     <div>
       <div className="reading-column px-6 pt-24">
-        <h1 className="text-[32px] font-bold tracking-tight text-ink-900 mb-2">Your trends</h1>
+        <h1 className="font-display text-[30px] md:text-[36px] tracking-tight text-ink-900 leading-[1.1] mb-2">Your trends</h1>
         <p className="text-[17px] text-ink-400 mb-10">
           How things shifted over time — gradually enough you might not have noticed.
         </p>
@@ -43,7 +43,7 @@ export default function TrendsPage() {
 
       <div className="reading-column px-6 pb-24">
         {/* Topic focus */}
-        <h2 className="text-[24px] font-bold text-ink-900 mb-2">Where your focus went</h2>
+        <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 mb-2">Where your focus went</h2>
         <p className="text-[15px] text-ink-400 leading-relaxed mb-4">
           {narrowed
             ? 'Your topics narrowed over time. You started with a wider range and gradually concentrated on fewer. That could mean deepening expertise, intentional focus, or drifting toward what gets response.'
@@ -56,14 +56,14 @@ export default function TrendsPage() {
         </div>
 
         {/* Diversity */}
-        <h2 className="text-[24px] font-bold text-ink-900 mt-14 mb-2">How spread out your interests were</h2>
+        <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 mt-14 mb-2">How spread out your interests were</h2>
         <p className="text-[15px] text-ink-400 mb-2">
           {narrowed ? `Yours went from ${eFirst.toFixed(1)} to ${eLast.toFixed(1)} — a noticeable narrowing.` : 'Yours stayed relatively stable.'}
         </p>
         <AreaChart data={e} confidence="patterned" />
 
         {/* Vocabulary */}
-        <h2 className="text-[24px] font-bold text-ink-900 mt-14 mb-2">Words that changed</h2>
+        <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 mt-14 mb-2">Words that changed</h2>
         <p className="text-[15px] text-ink-400 mb-6">Some words became more central to how you write. Others faded.</p>
         <div className="space-y-1">
           {vocabularyDrift.value.slice(0, 8).map(t => (
@@ -77,7 +77,7 @@ export default function TrendsPage() {
         <div className="mt-3"><ConfidenceDot level="patterned" /></div>
 
         {/* Tone */}
-        <h2 className="text-[24px] font-bold text-ink-900 mt-14 mb-2">How your tone shifted</h2>
+        <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 mt-14 mb-2">How your tone shifted</h2>
         <p className="text-[15px] text-ink-400 mb-6">Rough approximations. Think of these as directional, not precise.</p>
         <div className="space-y-3">
           {(['assertiveness', 'emotionality', 'formality', 'urgency'] as const).map(m => {

@@ -13,7 +13,7 @@ export default function WhatStuckPage() {
   if (!isLoaded || !analysis) {
     return (
       <div className="reading-column px-6 pt-24 pb-24">
-        <h1 className="text-[32px] font-bold tracking-tight text-ink-900 mb-4">What stuck</h1>
+        <h1 className="font-display text-[30px] md:text-[36px] tracking-tight text-ink-900 leading-[1.1] mb-4">What stuck</h1>
         <p className="text-ink-400 mb-10">Which patterns got reinforced — and which ones you kept regardless.</p>
         <ProfileSwitcher />
       </div>
@@ -33,7 +33,7 @@ export default function WhatStuckPage() {
 
   return (
     <div className="reading-column px-6 pt-24 pb-24">
-      <h1 className="text-[32px] font-bold tracking-tight text-ink-900 mb-2">What stuck</h1>
+      <h1 className="font-display text-[30px] md:text-[36px] tracking-tight text-ink-900 leading-[1.1] mb-2">What stuck</h1>
       <p className="text-[17px] text-ink-400 mb-12">
         Patterns that repeated — some because they got attention, some because they mattered to you regardless.
       </p>
@@ -41,7 +41,7 @@ export default function WhatStuckPage() {
       {/* Reinforced */}
       {reinforced.length > 0 && (
         <section className="mb-16">
-          <h2 className="text-[24px] font-bold text-ink-900 mb-2">Patterns that got rewarded</h2>
+          <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 mb-2">Patterns that got rewarded</h2>
           <p className="text-[15px] text-ink-400 mb-6">
             These got more engagement than average, and you posted about them more over time.
             That doesn&apos;t prove the attention caused it. But the pattern is there.
@@ -59,7 +59,7 @@ export default function WhatStuckPage() {
       {/* Persistent */}
       {persistent.length > 0 && (
         <section className="mb-16">
-          <h2 className="text-[24px] font-bold text-ink-900 mb-2">What you kept without reward</h2>
+          <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 mb-2">What you kept without reward</h2>
           <p className="text-[15px] text-ink-400 mb-6">
             Below-average engagement, but you kept posting. That persistence suggests
             something meaningful — interests the engagement metric doesn&apos;t capture.
@@ -77,7 +77,7 @@ export default function WhatStuckPage() {
       {/* Recurring phrases */}
       {narrativeRepetition.value.length > 0 && (
         <section className="mb-16">
-          <h2 className="text-[24px] font-bold text-ink-900 mb-2">Phrases you return to</h2>
+          <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 mb-2">Phrases you return to</h2>
           <p className="text-[15px] text-ink-400 mb-6">
             Phrases in 3+ posts. Repetition is normal — it can mean conviction, habit, or a developing voice.
           </p>
@@ -96,7 +96,7 @@ export default function WhatStuckPage() {
       {/* Echoes */}
       {echoes.length > 0 && (
         <section className="mb-16">
-          <h2 className="text-[24px] font-bold text-ink-900 mb-2">Echoes across time</h2>
+          <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 mb-2">Echoes across time</h2>
           <p className="text-[15px] text-ink-400 mb-6">
             Phrasing that reappeared months apart. Could be habit, deliberate callback, or coincidence.
           </p>
@@ -113,7 +113,7 @@ export default function WhatStuckPage() {
       {/* Feedback loop */}
       {reinforcementCorrelation && (
         <section className="mb-16">
-          <h2 className="text-[24px] font-bold text-ink-900 mb-2">The feedback loop question</h2>
+          <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 mb-2">The feedback loop question</h2>
           <p className="text-[15px] text-ink-400 mb-2">
             Did topics that got more attention one quarter show up more the next?
             This is our least certain analysis.

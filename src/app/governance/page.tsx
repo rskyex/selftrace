@@ -54,7 +54,7 @@ export default function GovernancePage() {
 
       <div className="reading-column px-6 pb-24">
         {/* Framing essay */}
-        <div className="prose-body text-[15px] leading-[1.8] text-charcoal-700 mt-8">
+        <div className="prose-body text-[15px] leading-[1.8] text-ink-700 mt-8">
           <p>
             This page provides structural context. It describes design choices —
             algorithmic, economic, and architectural — that shape the environment
@@ -77,10 +77,10 @@ export default function GovernancePage() {
 
         {/* Definition */}
         <div className="border-l border-charcoal-300 pl-6 mb-12">
-          <h3 className="font-interface text-[11px] text-charcoal-400 uppercase tracking-widest mb-3">
+          <h3 className="font-sans text-[11px] text-ink-400 uppercase tracking-widest mb-3">
             Key Term
           </h3>
-          <p className="text-[15px] text-charcoal-700 leading-relaxed">
+          <p className="text-[15px] text-ink-700 leading-relaxed">
             <em>Platform governance</em>, as used here, refers to the design
             choices, algorithmic systems, economic models, and policy decisions
             that structure how users create, distribute, and receive content.
@@ -92,10 +92,10 @@ export default function GovernancePage() {
         </div>
 
         {/* Design Patterns */}
-        <h2 className="text-[22px] text-charcoal-900 mb-4">
+        <h2 className="text-[22px] text-ink-900 mb-4">
           Design Patterns of Concern
         </h2>
-        <p className="text-[14px] text-charcoal-500 leading-relaxed mb-8">
+        <p className="text-[14px] text-ink-500 leading-relaxed mb-8">
           Each pattern describes a platform feature, how it operates, what
           effects it may have on self-presentation, and what constructive
           purposes it also serves. The &ldquo;Also true&rdquo; section is not
@@ -105,29 +105,29 @@ export default function GovernancePage() {
 
         <div className="space-y-8">
           {DESIGN_PATTERNS.map((pattern) => (
-            <div key={pattern.feature} className="border-t border-cream-200 pt-6">
-              <h3 className="text-[17px] text-charcoal-900 mb-4 italic">
+            <div key={pattern.feature} className="border-t border-linen-200 pt-6">
+              <h3 className="text-[17px] text-ink-900 mb-4 italic">
                 {pattern.feature}
               </h3>
 
               <div className="space-y-4 text-[14px] leading-relaxed">
                 <div>
-                  <span className="font-interface text-[10px] text-charcoal-400 uppercase tracking-widest">
+                  <span className="font-sans text-[10px] text-ink-400 uppercase tracking-widest">
                     Mechanism
                   </span>
-                  <p className="text-charcoal-700 mt-1">{pattern.mechanism}</p>
+                  <p className="text-ink-700 mt-1">{pattern.mechanism}</p>
                 </div>
                 <div>
-                  <span className="font-interface text-[10px] text-charcoal-400 uppercase tracking-widest">
+                  <span className="font-sans text-[10px] text-ink-400 uppercase tracking-widest">
                     Possible Effect on Self-Presentation
                   </span>
-                  <p className="text-charcoal-700 mt-1">{pattern.effect}</p>
+                  <p className="text-ink-700 mt-1">{pattern.effect}</p>
                 </div>
                 <div>
-                  <span className="font-interface text-[10px] text-charcoal-400 uppercase tracking-widest">
+                  <span className="font-sans text-[10px] text-ink-400 uppercase tracking-widest">
                     Also True
                   </span>
-                  <p className="text-charcoal-500 mt-1 italic">{pattern.counter}</p>
+                  <p className="text-ink-500 mt-1 italic">{pattern.counter}</p>
                 </div>
               </div>
 
@@ -141,10 +141,10 @@ export default function GovernancePage() {
         <SectionDivider />
 
         {/* Transparency Gaps */}
-        <h2 className="text-[22px] text-charcoal-900 mb-4">
+        <h2 className="text-[22px] text-ink-900 mb-4">
           What Is Not Publicly Known
         </h2>
-        <p className="text-[14px] text-charcoal-500 leading-relaxed mb-6">
+        <p className="text-[14px] text-ink-500 leading-relaxed mb-6">
           The following aspects of platform operation are not publicly disclosed
           by most major platforms. These are factual absences in public
           knowledge, not conspiracy claims. Platforms may have legitimate
@@ -155,14 +155,14 @@ export default function GovernancePage() {
 
         <ul className="space-y-3">
           {TRANSPARENCY_GAPS.map((gap) => (
-            <li key={gap} className="text-[14px] text-charcoal-700 leading-relaxed pl-5 border-l border-slate-200">
+            <li key={gap} className="text-[14px] text-ink-700 leading-relaxed pl-5 border-l border-slate-200">
               {gap}
             </li>
           ))}
         </ul>
         <div className="mt-3 flex items-center gap-2">
           <EpistemicBadge status="observed" />
-          <span className="font-interface text-[10px] text-charcoal-300">
+          <span className="font-sans text-[10px] text-ink-300">
             Based on publicly available platform documentation
           </span>
         </div>
@@ -170,10 +170,10 @@ export default function GovernancePage() {
         <SectionDivider />
 
         {/* Governance Framework Tiers */}
-        <h2 className="text-[22px] text-charcoal-900 mb-4">
+        <h2 className="text-[22px] text-ink-900 mb-4">
           What Current Governance Frameworks Address
         </h2>
-        <p className="text-[14px] text-charcoal-500 leading-relaxed mb-8">
+        <p className="text-[14px] text-ink-500 leading-relaxed mb-8">
           Existing regulatory and self-governance frameworks address different
           layers of platform impact. The third tier — cumulative behavioral
           effects on self-expression — is the layer this tool attempts to make
@@ -182,10 +182,10 @@ export default function GovernancePage() {
 
         <div className="space-y-5">
           <div className="border-l-2 border-teal-200 pl-5 py-3">
-            <h4 className="font-interface text-[11px] text-charcoal-500 uppercase tracking-widest mb-2">
+            <h4 className="font-sans text-[11px] text-ink-500 uppercase tracking-widest mb-2">
               Well Addressed
             </h4>
-            <p className="text-[14px] text-charcoal-700 leading-relaxed">
+            <p className="text-[14px] text-ink-700 leading-relaxed">
               Content moderation. Hate speech and misinformation. Data privacy
               protections (GDPR, CCPA). Transparency reporting requirements.
               Age-appropriate design codes.
@@ -193,10 +193,10 @@ export default function GovernancePage() {
           </div>
 
           <div className="border-l-2 border-amber-200 pl-5 py-3">
-            <h4 className="font-interface text-[11px] text-amber-700 uppercase tracking-widest mb-2">
+            <h4 className="font-sans text-[11px] text-amber-700 uppercase tracking-widest mb-2">
               Partially Addressed
             </h4>
-            <p className="text-[14px] text-charcoal-700 leading-relaxed">
+            <p className="text-[14px] text-ink-700 leading-relaxed">
               Algorithmic transparency (EU AI Act, DSA). Dark pattern
               regulation. Platform market concentration. Researcher access to
               platform data. These frameworks exist but implementation and
@@ -205,10 +205,10 @@ export default function GovernancePage() {
           </div>
 
           <div className="border-l-2 border-amber-500 pl-5 py-3 bg-amber-100/30">
-            <h4 className="font-interface text-[11px] text-amber-700 uppercase tracking-widest mb-2">
+            <h4 className="font-sans text-[11px] text-amber-700 uppercase tracking-widest mb-2">
               Largely Unaddressed
             </h4>
-            <p className="text-[14px] text-charcoal-700 leading-relaxed">
+            <p className="text-[14px] text-ink-700 leading-relaxed">
               Cumulative behavioral effects of platform design on
               self-expression. The gradual shaping of identity presentation
               through reinforcement dynamics. Structural conditions that may

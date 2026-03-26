@@ -21,7 +21,7 @@ export default function ComparePage() {
           subtitle="Compare your self-described identity with what your data shows."
         />
         <div className="wide-column px-6 pb-24">
-          <p className="text-[15px] text-charcoal-500 leading-relaxed mb-8 max-w-lg">
+          <p className="text-[15px] text-ink-500 leading-relaxed mb-8 max-w-lg">
             This page compares three versions of your online self: the self
             you started with, the self that gets rewarded, and the self
             you became. Connect your data to explore.
@@ -130,24 +130,24 @@ export default function ComparePage() {
         {/* Three-column persona cards */}
         <div className="grid md:grid-cols-3 gap-5 mt-10">
           <div className="card p-6">
-            <div className="w-10 h-10 rounded-full bg-cream-200 flex items-center justify-center mb-4">
+            <div className="w-10 h-10 rounded-full bg-linen-200 flex items-center justify-center mb-4">
               <span className="text-[16px]" aria-hidden="true">1</span>
             </div>
-            <h3 className="text-[18px] font-semibold text-charcoal-900 mb-1">Your early self</h3>
-            <p className="text-[13px] text-charcoal-400 mb-4">First half of your posting history</p>
+            <h3 className="font-display text-[18px] text-ink-900 mb-1">Your early self</h3>
+            <p className="text-[13px] text-ink-400 mb-4">First half of your posting history</p>
 
-            <p className="text-[11px] font-medium text-charcoal-400 uppercase tracking-wider mb-2">Top topics</p>
+            <p className="text-[11px] font-medium text-ink-400 uppercase tracking-wider mb-2">Top topics</p>
             <div className="flex flex-wrap gap-1.5 mb-4">
               {personas.early.topics.map(t => (
-                <span key={t} className="pill bg-cream-200 text-charcoal-700">{t}</span>
+                <span key={t} className="pill bg-linen-200 text-ink-700">{t}</span>
               ))}
             </div>
 
-            <p className="text-[11px] font-medium text-charcoal-400 uppercase tracking-wider mb-2">Tone</p>
+            <p className="text-[11px] font-medium text-ink-400 uppercase tracking-wider mb-2">Tone</p>
             <div className="space-y-1 text-[12px]">
-              <div className="flex justify-between"><span className="text-charcoal-400">Assertiveness</span><span className="font-mono">{personas.early.tone.assertiveness.toFixed(2)}</span></div>
-              <div className="flex justify-between"><span className="text-charcoal-400">Emotionality</span><span className="font-mono">{personas.early.tone.emotionality.toFixed(2)}</span></div>
-              <div className="flex justify-between"><span className="text-charcoal-400">Formality</span><span className="font-mono">{personas.early.tone.formality.toFixed(2)}</span></div>
+              <div className="flex justify-between"><span className="text-ink-400">Assertiveness</span><span className="font-mono">{personas.early.tone.assertiveness.toFixed(2)}</span></div>
+              <div className="flex justify-between"><span className="text-ink-400">Emotionality</span><span className="font-mono">{personas.early.tone.emotionality.toFixed(2)}</span></div>
+              <div className="flex justify-between"><span className="text-ink-400">Formality</span><span className="font-mono">{personas.early.tone.formality.toFixed(2)}</span></div>
             </div>
             <div className="mt-3">
               <EpistemicBadge status="observed" />
@@ -158,21 +158,21 @@ export default function ComparePage() {
             <div className="w-10 h-10 rounded-full bg-accent-200 text-accent-700 flex items-center justify-center mb-4">
               <span className="text-[16px] font-semibold" aria-hidden="true">2</span>
             </div>
-            <h3 className="text-[18px] font-semibold text-charcoal-900 mb-1">Your current self</h3>
-            <p className="text-[13px] text-charcoal-400 mb-4">Second half of your posting history</p>
+            <h3 className="font-display text-[18px] text-ink-900 mb-1">Your current self</h3>
+            <p className="text-[13px] text-ink-400 mb-4">Second half of your posting history</p>
 
-            <p className="text-[11px] font-medium text-charcoal-400 uppercase tracking-wider mb-2">Top topics</p>
+            <p className="text-[11px] font-medium text-ink-400 uppercase tracking-wider mb-2">Top topics</p>
             <div className="flex flex-wrap gap-1.5 mb-4">
               {personas.current.topics.map(t => (
                 <span key={t} className="pill bg-accent-100 text-accent-700">{t}</span>
               ))}
             </div>
 
-            <p className="text-[11px] font-medium text-charcoal-400 uppercase tracking-wider mb-2">Tone</p>
+            <p className="text-[11px] font-medium text-ink-400 uppercase tracking-wider mb-2">Tone</p>
             <div className="space-y-1 text-[12px]">
-              <div className="flex justify-between"><span className="text-charcoal-400">Assertiveness</span><span className="font-mono">{personas.current.tone.assertiveness.toFixed(2)}</span></div>
-              <div className="flex justify-between"><span className="text-charcoal-400">Emotionality</span><span className="font-mono">{personas.current.tone.emotionality.toFixed(2)}</span></div>
-              <div className="flex justify-between"><span className="text-charcoal-400">Formality</span><span className="font-mono">{personas.current.tone.formality.toFixed(2)}</span></div>
+              <div className="flex justify-between"><span className="text-ink-400">Assertiveness</span><span className="font-mono">{personas.current.tone.assertiveness.toFixed(2)}</span></div>
+              <div className="flex justify-between"><span className="text-ink-400">Emotionality</span><span className="font-mono">{personas.current.tone.emotionality.toFixed(2)}</span></div>
+              <div className="flex justify-between"><span className="text-ink-400">Formality</span><span className="font-mono">{personas.current.tone.formality.toFixed(2)}</span></div>
             </div>
             <div className="mt-3">
               <EpistemicBadge status="observed" />
@@ -183,10 +183,10 @@ export default function ComparePage() {
             <div className="w-10 h-10 rounded-full bg-amber-200 text-amber-700 flex items-center justify-center mb-4">
               <span className="text-[16px] font-semibold" aria-hidden="true">R</span>
             </div>
-            <h3 className="text-[18px] font-semibold text-charcoal-900 mb-1">Your rewarded self</h3>
-            <p className="text-[13px] text-charcoal-400 mb-4">What gets the most engagement</p>
+            <h3 className="font-display text-[18px] text-ink-900 mb-1">Your rewarded self</h3>
+            <p className="text-[13px] text-ink-400 mb-4">What gets the most engagement</p>
 
-            <p className="text-[11px] font-medium text-charcoal-400 uppercase tracking-wider mb-2">Highest-engagement topics</p>
+            <p className="text-[11px] font-medium text-ink-400 uppercase tracking-wider mb-2">Highest-engagement topics</p>
             {personas.rewarded.topics.length > 0 ? (
               <div className="flex flex-wrap gap-1.5 mb-4">
                 {personas.rewarded.topics.map(t => (
@@ -194,10 +194,10 @@ export default function ComparePage() {
                 ))}
               </div>
             ) : (
-              <p className="text-[13px] text-charcoal-300 italic mb-4">No engagement data</p>
+              <p className="text-[13px] text-ink-300 italic mb-4">No engagement data</p>
             )}
 
-            <p className="text-[12px] text-charcoal-500 leading-relaxed">
+            <p className="text-[12px] text-ink-500 leading-relaxed">
               This is the version of you that the engagement metric rewards.
               It&apos;s not the &ldquo;real&rdquo; you — it&apos;s the version that
               generates visible response.
@@ -211,32 +211,32 @@ export default function ComparePage() {
         <SectionDivider />
 
         {/* Alignment analysis */}
-        <h2 className="text-[24px] font-semibold text-charcoal-900 mb-2">
+        <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 mb-2">
           Where they align — and diverge
         </h2>
-        <p className="text-[14px] text-charcoal-500 leading-relaxed mb-8 max-w-lg">
+        <p className="text-[14px] text-ink-500 leading-relaxed mb-8 max-w-lg">
           Differences between your three selves are patterns in the data,
           not judgments about who you should be.
         </p>
 
         <div className="grid md:grid-cols-3 gap-5 mb-8">
           <div className="card p-5 text-center">
-            <p className="text-[32px] font-semibold text-charcoal-900">{personas.earlyCurrentOverlap}/5</p>
-            <p className="text-[13px] text-charcoal-500 mt-1">topics overlap between early and current self</p>
+            <p className="text-[32px] font-semibold text-ink-900">{personas.earlyCurrentOverlap}/5</p>
+            <p className="text-[13px] text-ink-500 mt-1">topics overlap between early and current self</p>
           </div>
           <div className="card p-5 text-center">
-            <p className="text-[32px] font-semibold text-charcoal-900">{personas.currentRewardedOverlap}/5</p>
-            <p className="text-[13px] text-charcoal-500 mt-1">current topics that are also highest-engagement</p>
+            <p className="text-[32px] font-semibold text-ink-900">{personas.currentRewardedOverlap}/5</p>
+            <p className="text-[13px] text-ink-500 mt-1">current topics that are also highest-engagement</p>
           </div>
           <div className="card p-5 text-center">
-            <p className="text-[32px] font-semibold text-charcoal-900">{personas.earlyRewardedOverlap}/5</p>
-            <p className="text-[13px] text-charcoal-500 mt-1">early topics that became highest-engagement</p>
+            <p className="text-[32px] font-semibold text-ink-900">{personas.earlyRewardedOverlap}/5</p>
+            <p className="text-[13px] text-ink-500 mt-1">early topics that became highest-engagement</p>
           </div>
         </div>
 
         {/* Narrative interpretation */}
-        <div className="card p-6 bg-cream-100/50">
-          <h3 className="text-[16px] font-semibold text-charcoal-900 mb-3">What this pattern suggests</h3>
+        <div className="card p-6 bg-linen-100/50">
+          <h3 className="text-[16px] font-semibold text-ink-900 mb-3">What this pattern suggests</h3>
           <div className="space-y-3 text-[14px] text-charcoal-600 leading-relaxed">
             {driftedFromEarly && (
               <p>

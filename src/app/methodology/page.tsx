@@ -104,7 +104,7 @@ export default function MethodologyPage() {
       />
 
       <div className="reading-column px-6 pb-24">
-        <div className="prose-body text-[15px] leading-[1.8] text-charcoal-700 mt-8 mb-12">
+        <div className="prose-body text-[15px] leading-[1.8] text-ink-700 mt-8 mb-12">
           <p>
             This page is the methods section of the project. It describes
             every analytical technique, every assumption, and every known
@@ -114,10 +114,10 @@ export default function MethodologyPage() {
         </div>
 
         {/* Epistemic Framework */}
-        <h2 className="text-[22px] text-charcoal-900 mb-6">
+        <h2 className="text-[22px] text-ink-900 mb-6">
           Epistemic Framework
         </h2>
-        <p className="text-[14px] text-charcoal-500 leading-relaxed mb-6">
+        <p className="text-[14px] text-ink-500 leading-relaxed mb-6">
           Every claim in this tool carries one of four epistemic labels. These
           labels are structural — they are enforced at the type level in the
           codebase, meaning no analytical output can be rendered without
@@ -147,12 +147,12 @@ export default function MethodologyPage() {
               meaning: 'Context about platform design. Not a claim about your behavior.',
             },
           ]).map(({ status, example, meaning }) => (
-            <div key={status} className="border-l border-cream-300 pl-5 py-2">
+            <div key={status} className="border-l border-linen-300 pl-5 py-2">
               <div className="mb-2">
                 <EpistemicBadge status={status} />
               </div>
-              <p className="text-[14px] text-charcoal-500 leading-relaxed mb-1">{meaning}</p>
-              <p className="text-[13px] text-charcoal-700 italic">{example}</p>
+              <p className="text-[14px] text-ink-500 leading-relaxed mb-1">{meaning}</p>
+              <p className="text-[13px] text-ink-700 italic">{example}</p>
             </div>
           ))}
         </div>
@@ -160,20 +160,20 @@ export default function MethodologyPage() {
         <SectionDivider />
 
         {/* Analytical Methods */}
-        <h2 className="text-[22px] text-charcoal-900 mb-6">
+        <h2 className="text-[22px] text-ink-900 mb-6">
           Analytical Methods
         </h2>
 
         <div className="space-y-8">
           {METHODS.map((method) => (
-            <div key={method.name} className="border-b border-cream-200 pb-6">
-              <h3 className="text-[17px] italic text-charcoal-900 mb-2">{method.name}</h3>
-              <p className="text-[14px] text-charcoal-700 leading-relaxed mb-3">{method.plain}</p>
+            <div key={method.name} className="border-b border-linen-200 pb-6">
+              <h3 className="text-[17px] italic text-ink-900 mb-2">{method.name}</h3>
+              <p className="text-[14px] text-ink-700 leading-relaxed mb-3">{method.plain}</p>
               <details className="group">
-                <summary className="font-interface text-[11px] text-teal-700 cursor-pointer hover:text-teal-500 transition-colors duration-200 tracking-wide">
+                <summary className="font-sans text-[11px] text-teal-700 cursor-pointer hover:text-teal-500 transition-colors duration-200 tracking-wide">
                   Technical detail
                 </summary>
-                <p className="text-[13px] text-charcoal-500 leading-relaxed mt-3 pl-5 border-l border-cream-200">
+                <p className="text-[13px] text-ink-500 leading-relaxed mt-3 pl-5 border-l border-linen-200">
                   {method.technical}
                 </p>
               </details>
@@ -184,21 +184,21 @@ export default function MethodologyPage() {
         <SectionDivider />
 
         {/* Assumptions */}
-        <h2 className="text-[22px] text-charcoal-900 mb-6">
+        <h2 className="text-[22px] text-ink-900 mb-6">
           Assumptions
         </h2>
-        <p className="text-[14px] text-charcoal-500 leading-relaxed mb-6">
+        <p className="text-[14px] text-ink-500 leading-relaxed mb-6">
           These are the conditions the tool assumes to be true. Where an
           assumption is weak, this is noted.
         </p>
         <div className="space-y-4">
           {ASSUMPTIONS.map((a, i) => (
-            <div key={i} className="border-b border-cream-200 pb-4">
-              <p className="text-[14px] text-charcoal-700 leading-relaxed">
-                <span className="font-mono text-charcoal-400 mr-2">{i + 1}.</span>
+            <div key={i} className="border-b border-linen-200 pb-4">
+              <p className="text-[14px] text-ink-700 leading-relaxed">
+                <span className="font-mono text-ink-400 mr-2">{i + 1}.</span>
                 {a.claim}
               </p>
-              <p className="text-[13px] text-charcoal-500 leading-relaxed mt-1 pl-6">
+              <p className="text-[13px] text-ink-500 leading-relaxed mt-1 pl-6">
                 {a.justification}
               </p>
             </div>
@@ -208,18 +208,18 @@ export default function MethodologyPage() {
         <SectionDivider />
 
         {/* Limitations — prominent, not buried */}
-        <h2 className="text-[22px] text-charcoal-900 mb-4">
+        <h2 className="text-[22px] text-ink-900 mb-4">
           Limitations
         </h2>
-        <p className="text-[14px] text-charcoal-500 leading-relaxed mb-6">
+        <p className="text-[14px] text-ink-500 leading-relaxed mb-6">
           This section carries equal weight to the methods section above.
           A tool that hides its limitations is not a serious tool.
         </p>
         <div className="border-l-2 border-amber-500 bg-amber-100/40 pl-6 pr-6 py-6 space-y-5">
           {LIMITATIONS.map((lim) => (
             <div key={lim.title}>
-              <h4 className="text-[15px] text-charcoal-900 mb-1">{lim.title}</h4>
-              <p className="text-[14px] text-charcoal-700 leading-relaxed">{lim.detail}</p>
+              <h4 className="text-[15px] text-ink-900 mb-1">{lim.title}</h4>
+              <p className="text-[14px] text-ink-700 leading-relaxed">{lim.detail}</p>
             </div>
           ))}
         </div>
@@ -227,10 +227,10 @@ export default function MethodologyPage() {
         <SectionDivider />
 
         {/* What This Tool Is Not */}
-        <h2 className="text-[22px] text-charcoal-900 mb-4">
+        <h2 className="text-[22px] text-ink-900 mb-4">
           What This Tool Is Not
         </h2>
-        <div className="prose-body text-[15px] text-charcoal-700 leading-[1.8]">
+        <div className="prose-body text-[15px] text-ink-700 leading-[1.8]">
           <p>
             This is not a scientific instrument. It is not a diagnostic tool.
             It is not a replacement for rigorous research methodology. It is
