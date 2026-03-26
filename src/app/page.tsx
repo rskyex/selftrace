@@ -296,7 +296,7 @@ export default function HomePage() {
                     Govern the Human
                   </p>
                   <p className="text-[13px] text-ink-400 leading-[1.5]">
-                    The parent project exploring AI governance from the human side.
+                    A research platform on what AI governance misses: how AI-mediated environments may reshape the human subject.
                   </p>
                 </div>
               </a>
