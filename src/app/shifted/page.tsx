@@ -14,8 +14,8 @@ export default function ShiftedPage() {
 
   if (!isLoaded || !analysis) {
     return (
-      <div className="reading-column px-6 pt-28 pb-24">
-        <h1 className="text-[30px] font-bold tracking-tight text-ink-900 mb-4">How things shifted</h1>
+      <div className="reading-column px-6 pt-24 pb-24">
+        <h1 className="font-display text-[30px] md:text-[36px] tracking-tight text-ink-900 leading-[1.1] mb-4">How things shifted</h1>
         <p className="text-ink-500 mb-10">Load a profile to see drift over time.</p>
         <ProfileSwitcher />
       </div>
@@ -29,8 +29,8 @@ export default function ShiftedPage() {
 
   return (
     <div>
-      <div className="reading-column px-6 pt-28">
-        <h1 className="text-[30px] font-bold tracking-tight text-ink-900 mb-3">
+      <div className="reading-column px-6 pt-24">
+        <h1 className="font-display text-[30px] md:text-[36px] tracking-tight text-ink-900 leading-[1.1] mb-3">
           How things shifted
         </h1>
         <p className="text-[17px] text-ink-500 leading-[1.8] mb-16">
@@ -49,7 +49,7 @@ export default function ShiftedPage() {
       <div className="reading-column px-6 pb-24">
         {/* ── The Corridor ───────────────────────── */}
         <section className="mb-20 mt-16">
-          <h2 className="text-[22px] font-semibold text-ink-900 tracking-tight mb-4">
+          <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-4">
             Your epistemic corridor
           </h2>
           <p className="text-[16px] text-ink-500 leading-[1.8] mb-2">
@@ -70,7 +70,7 @@ export default function ShiftedPage() {
 
         {/* ── Topic stream ───────────────────────── */}
         <section className="mb-20">
-          <h2 className="text-[22px] font-semibold text-ink-900 tracking-tight mb-4">
+          <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-4">
             Where your attention went
           </h2>
           <p className="text-[16px] text-ink-500 leading-[1.8] mb-2">
@@ -82,7 +82,7 @@ export default function ShiftedPage() {
 
         {/* ── Vocabulary ─────────────────────────── */}
         <section className="mb-20">
-          <h2 className="text-[22px] font-semibold text-ink-900 tracking-tight mb-4">
+          <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-4">
             Words that changed
           </h2>
           <p className="text-[16px] text-ink-500 leading-[1.8] mb-6">
@@ -108,7 +108,7 @@ export default function ShiftedPage() {
 
         {/* ── Tone trajectory ────────────────────── */}
         <section className="mb-20">
-          <h2 className="text-[22px] font-semibold text-ink-900 tracking-tight mb-4">
+          <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-4">
             How your tone evolved
           </h2>
           <p className="text-[16px] text-ink-500 leading-[1.8] mb-6">

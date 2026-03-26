@@ -12,8 +12,8 @@ export default function ReturningPage() {
 
   if (!isLoaded || !analysis) {
     return (
-      <div className="reading-column px-6 pt-28 pb-24">
-        <h1 className="text-[30px] font-bold tracking-tight text-ink-900 mb-4">What keeps resurfacing</h1>
+      <div className="reading-column px-6 pt-24 pb-24">
+        <h1 className="font-display text-[30px] md:text-[36px] tracking-tight text-ink-900 leading-[1.1] mb-4">What keeps resurfacing</h1>
         <p className="text-ink-500 mb-10">Load a profile to see what recurs.</p>
         <ProfileSwitcher />
       </div>
@@ -42,8 +42,8 @@ export default function ReturningPage() {
   const fadedDescs = [...earlyDescs].filter(d => !lateDescs.has(d));
 
   return (
-    <div className="reading-column px-6 pt-28 pb-24">
-      <h1 className="text-[30px] font-bold tracking-tight text-ink-900 mb-3">
+    <div className="reading-column px-6 pt-24 pb-24">
+      <h1 className="font-display text-[30px] md:text-[36px] tracking-tight text-ink-900 leading-[1.1] mb-3">
         What keeps resurfacing
       </h1>
       <p className="text-[17px] text-ink-500 leading-[1.8] mb-16">
@@ -56,7 +56,7 @@ export default function ReturningPage() {
       {/* ── Recurring phrases ────────────────────── */}
       {narrativeRepetition.value.length > 0 && (
         <section className="mb-20">
-          <h2 className="text-[22px] font-semibold text-ink-900 tracking-tight mb-4">
+          <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-4">
             Phrases you return to
           </h2>
           <p className="text-[16px] text-ink-500 leading-[1.8] mb-6">
@@ -78,7 +78,7 @@ export default function ReturningPage() {
       {/* ── Echo map ─────────────────────────────── */}
       {memoryEvents.value.length > 0 && (
         <section className="mb-20">
-          <h2 className="text-[22px] font-semibold text-ink-900 tracking-tight mb-4">
+          <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-4">
             Echoes across time
           </h2>
           <p className="text-[16px] text-ink-500 leading-[1.8] mb-2">
@@ -104,7 +104,7 @@ export default function ReturningPage() {
       {/* ── Self-descriptions over time ──────────── */}
       {(stableDescs.length > 0 || newDescs.length > 0 || fadedDescs.length > 0) && (
         <section className="mb-20">
-          <h2 className="text-[22px] font-semibold text-ink-900 tracking-tight mb-4">
+          <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-4">
             The self you built in words
           </h2>
           <p className="text-[16px] text-ink-500 leading-[1.8] mb-6">

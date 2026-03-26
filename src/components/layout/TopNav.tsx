@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { useData } from '@/lib/data/context';
@@ -17,9 +18,18 @@ export function TopNav() {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-linen-50/90 backdrop-blur-md border-b border-linen-200/50" role="navigation" aria-label="Main">
-      <div className="content-column h-14 px-6 flex items-center justify-between">
-        <Link href="/" className="font-sans text-[16px] font-bold text-ink-900 tracking-tight hover:text-umber-600">
-          SelfTrace
+      <div className="hero-column h-16 px-6 flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
+          <Image
+            src="/logo.png"
+            alt="SelfTrace"
+            width={32}
+            height={32}
+            className="w-8 h-8"
+          />
+          <span className="font-sans text-[16px] font-semibold text-ink-900 tracking-tight">
+            SelfTrace
+          </span>
         </Link>
 
         <div className="hidden md:flex items-center gap-1">
@@ -40,7 +50,7 @@ export function TopNav() {
             How it works
           </Link>
           {!isLoaded && (
-            <Link href="/start" className="ml-2 btn-primary !py-1.5 !px-5 !text-[13px] !rounded-lg">
+            <Link href="/start" className="ml-3 btn-primary !py-2 !px-6 !text-[13px]">
               Begin
             </Link>
           )}

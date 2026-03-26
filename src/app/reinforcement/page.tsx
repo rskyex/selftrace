@@ -77,10 +77,10 @@ export default function ReinforcementPage() {
         </HowToRead>
 
         {/* Engagement by topic */}
-        <h2 className="text-[24px] font-semibold text-charcoal-900 mt-10 mb-2">
+        <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 mt-10 mb-2">
           Engagement by topic
         </h2>
-        <p className="text-[14px] text-charcoal-500 leading-relaxed mb-6 max-w-lg">
+        <p className="text-[14px] text-ink-500 leading-relaxed mb-6 max-w-lg">
           Average engagement for each topic. This is a distribution, not a
           ranking — more engagement doesn&apos;t mean better.
         </p>
@@ -92,22 +92,22 @@ export default function ReinforcementPage() {
 
             return (
               <div key={topic.topic} className="flex items-center gap-3">
-                <span className="text-[13px] text-charcoal-700 w-40 truncate text-right">
+                <span className="text-[13px] text-ink-700 w-40 truncate text-right">
                   {topic.topic}
                 </span>
-                <div className="flex-1 bg-cream-100 h-5 rounded-lg overflow-hidden">
+                <div className="flex-1 bg-linen-100 h-5 rounded-lg overflow-hidden">
                   <div
                     className="h-full bg-accent-200 rounded-lg"
                     style={{ width: `${barWidth}%` }}
                   />
                 </div>
-                <span className="font-mono text-[11px] text-charcoal-400 w-10 text-right">
+                <span className="font-mono text-[11px] text-ink-400 w-10 text-right">
                   {topic.averageEngagement}
                 </span>
                 <span className={`pill text-[10px] w-20 justify-center ${
                   topic.frequencyTrend === 'increasing' ? 'bg-accent-100 text-accent-700' :
                   topic.frequencyTrend === 'decreasing' ? 'bg-amber-100 text-amber-700' :
-                  'bg-cream-100 text-charcoal-400'
+                  'bg-linen-100 text-ink-400'
                 }`}>
                   {topic.frequencyTrend}
                 </span>
@@ -125,18 +125,18 @@ export default function ReinforcementPage() {
         {highEngTopics.length > 0 && (
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             <div>
-              <h2 className="text-[20px] font-semibold text-charcoal-900 mb-2">
+              <h2 className="font-display text-[20px] text-ink-900 mb-2">
                 Topics that grew with attention
               </h2>
-              <p className="text-[14px] text-charcoal-500 leading-relaxed mb-4">
+              <p className="text-[14px] text-ink-500 leading-relaxed mb-4">
                 These received above-average engagement and you posted about
                 them more over time.
               </p>
               <div className="space-y-2">
                 {highEngTopics.map(topic => (
                   <div key={topic.topic} className="card p-4">
-                    <p className="text-[15px] font-medium text-charcoal-900">{topic.topic}</p>
-                    <p className="text-[12px] text-charcoal-400 mt-1">
+                    <p className="text-[15px] font-medium text-ink-900">{topic.topic}</p>
+                    <p className="text-[12px] text-ink-400 mt-1">
                       {topic.postCount} posts &middot; avg engagement {topic.averageEngagement}
                     </p>
                   </div>
@@ -150,18 +150,18 @@ export default function ReinforcementPage() {
             {/* Counter-patterns */}
             {counterPatterns.length > 0 && (
               <div>
-                <h2 className="text-[20px] font-semibold text-charcoal-900 mb-2">
+                <h2 className="font-display text-[20px] text-ink-900 mb-2">
                   Topics you kept without reward
                 </h2>
-                <p className="text-[14px] text-charcoal-500 leading-relaxed mb-4">
+                <p className="text-[14px] text-ink-500 leading-relaxed mb-4">
                   These persisted despite low engagement — interests or values
                   that the engagement metric didn&apos;t capture.
                 </p>
                 <div className="space-y-2">
                   {counterPatterns.map(topic => (
                     <div key={topic.topic} className="card p-4 bg-sage-100/30 border-sage-200">
-                      <p className="text-[15px] font-medium text-charcoal-900">{topic.topic}</p>
-                      <p className="text-[12px] text-charcoal-400 mt-1">
+                      <p className="text-[15px] font-medium text-ink-900">{topic.topic}</p>
+                      <p className="text-[12px] text-ink-400 mt-1">
                         {topic.postCount} posts &middot; low engagement &middot; persisted
                       </p>
                     </div>
@@ -176,10 +176,10 @@ export default function ReinforcementPage() {
         )}
 
         {/* Correlation chart — opt-in */}
-        <h2 className="text-[20px] font-semibold text-charcoal-900 mb-2">
+        <h2 className="font-display text-[20px] text-ink-900 mb-2">
           Engagement-frequency correlation
         </h2>
-        <p className="text-[14px] text-charcoal-500 leading-relaxed mb-4 max-w-lg">
+        <p className="text-[14px] text-ink-500 leading-relaxed mb-4 max-w-lg">
           Did high-engagement topics in one quarter appear more in the next?
           A positive correlation is consistent with — but doesn&apos;t prove —
           sensitivity to engagement feedback.
@@ -187,7 +187,7 @@ export default function ReinforcementPage() {
 
         {!showCorrelation ? (
           <div className="card p-5 bg-amber-100/30 border-amber-200">
-            <p className="text-[13px] text-charcoal-500 mb-3">
+            <p className="text-[13px] text-ink-500 mb-3">
               This carries the highest uncertainty of any analysis here.
               The correlation is easy to misread as causal.
             </p>

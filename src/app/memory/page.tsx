@@ -57,13 +57,13 @@ export default function MemoryPage() {
             <div className="space-y-4">
               {grouped.map(([phrase, events]) => (
                 <div key={phrase} className="card p-5">
-                  <p className="text-[15px] text-charcoal-900 italic mb-2">&ldquo;{phrase}&rdquo;</p>
+                  <p className="text-[15px] text-ink-900 italic mb-2">&ldquo;{phrase}&rdquo;</p>
                   {events.slice(0, 2).map((ev, i) => (
-                    <p key={i} className="text-[12px] text-charcoal-400">
+                    <p key={i} className="text-[12px] text-ink-400">
                       {new Date(ev.earlierDate).toLocaleDateString('en', { month: 'short', year: 'numeric' })}
                       {' → '}
                       {new Date(ev.laterDate).toLocaleDateString('en', { month: 'short', year: 'numeric' })}
-                      <span className="ml-2 text-charcoal-300">({ev.daysBetween} days)</span>
+                      <span className="ml-2 text-ink-300">({ev.daysBetween} days)</span>
                     </p>
                   ))}
                 </div>
@@ -74,7 +74,7 @@ export default function MemoryPage() {
             </div>
           </>
         ) : (
-          <p className="text-[15px] text-charcoal-400 py-12">
+          <p className="text-[15px] text-ink-400 py-12">
             No phrase recurrences found with 30+ days between occurrences.
           </p>
         )}

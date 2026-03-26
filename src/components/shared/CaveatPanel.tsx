@@ -5,11 +5,11 @@ interface CaveatPanelProps {
 
 export function CaveatPanel({ title = 'Keep in mind', children }: CaveatPanelProps) {
   return (
-    <div className="card-elevated px-6 py-5 my-8 border-l-3 border-l-amber-400">
-      <h3 className="text-[13px] font-medium text-amber-700 mb-2">
+    <div className="card px-6 py-5 my-8 border-l-3 border-l-umber-500">
+      <h3 className="font-sans text-[13px] font-medium text-umber-700 mb-2">
         {title}
       </h3>
-      <div className="text-[14px] leading-relaxed text-charcoal-500">
+      <div className="text-[14px] leading-relaxed text-ink-500">
         {children}
       </div>
     </div>

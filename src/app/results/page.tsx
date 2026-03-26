@@ -11,8 +11,10 @@ export default function ResultsPage() {
 
   if (!isLoaded || !analysis) {
     return (
-      <div className="reading-column px-6 pt-28 pb-24">
-        <h1 className="text-[30px] font-bold tracking-tight text-ink-900 mb-4">Your results</h1>
+      <div className="reading-column px-6 pt-24 pb-24">
+        <h1 className="font-display text-[30px] md:text-[36px] tracking-tight text-ink-900 leading-[1.1] mb-4">
+          Your results
+        </h1>
         <p className="text-ink-500 mb-10">Load a profile to begin.</p>
         <ProfileSwitcher />
       </div>
@@ -40,10 +42,10 @@ export default function ResultsPage() {
   const kept = eng?.value.filter(t => t.averageEngagement < avgEng * 0.5 && t.frequencyTrend !== 'decreasing').slice(0, 3) ?? [];
 
   return (
-    <div className="reading-column px-6 pt-28 pb-24">
+    <div className="reading-column px-6 pt-24 pb-24">
       {/* ── Frame ────────────────────────────────── */}
       <div className="mb-20">
-        <p className="font-sans text-[12px] text-ink-400 mb-8">
+        <p className="font-sans text-[12px] text-ink-400 tracking-[0.15em] mb-8">
           {profile.dataQuality.totalPosts.toLocaleString()} posts &middot; {startDate} to {endDate}
         </p>
 
@@ -72,7 +74,7 @@ export default function ResultsPage() {
       </div>
 
       <section className="mb-20">
-        <h2 className="text-[24px] font-semibold text-ink-900 tracking-tight mb-4">
+        <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-4">
           Your range of subjects over time
         </h2>
         <p className="text-[17px] text-ink-700 leading-[1.8] mb-2">
@@ -98,7 +100,7 @@ export default function ResultsPage() {
 
       {selfPortrait && selfPortrait.whatMatters && (
         <section className="mb-20">
-          <h2 className="text-[24px] font-semibold text-ink-900 tracking-tight mb-4">
+          <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-4">
             What you told us, and what the traces show
           </h2>
           <div className="grid md:grid-cols-2 gap-5 mb-6">
@@ -133,7 +135,7 @@ export default function ResultsPage() {
       {/* ── Brief reinforcement signal ───────────── */}
       {reinforced.length > 0 && (
         <section className="mb-20">
-          <h2 className="text-[24px] font-semibold text-ink-900 tracking-tight mb-4">
+          <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-4">
             What the environment appeared to reward
           </h2>
           <p className="text-[16px] text-ink-500 leading-[1.8] mb-6">
@@ -158,7 +160,7 @@ export default function ResultsPage() {
 
       {kept.length > 0 && (
         <section className="mb-20">
-          <h2 className="text-[24px] font-semibold text-ink-900 tracking-tight mb-4">
+          <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-4">
             What you kept
           </h2>
           <p className="text-[16px] text-ink-500 leading-[1.8] mb-6">
@@ -182,7 +184,7 @@ export default function ResultsPage() {
           These are traces, not verdicts. Some will match how you already understand
           yourself. Some may not. What you do with the difference is yours to decide.
         </p>
-        <p className="text-[17px] text-ink-400 italic">
+        <p className="font-display text-[18px] text-ink-400 italic">
           Patterns you can see are patterns you can choose.
         </p>
       </section>

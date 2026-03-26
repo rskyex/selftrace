@@ -12,8 +12,8 @@ export default function RewardedPage() {
 
   if (!isLoaded || !analysis) {
     return (
-      <div className="reading-column px-6 pt-28 pb-24">
-        <h1 className="text-[30px] font-bold tracking-tight text-ink-900 mb-4">What the environment rewarded</h1>
+      <div className="reading-column px-6 pt-24 pb-24">
+        <h1 className="font-display text-[30px] md:text-[36px] tracking-tight text-ink-900 leading-[1.1] mb-4">What the environment rewarded</h1>
         <p className="text-ink-500 mb-10">Load a profile to see engagement patterns.</p>
         <ProfileSwitcher />
       </div>
@@ -23,8 +23,8 @@ export default function RewardedPage() {
   const { engagementSensitivity, reinforcementCorrelation, toneTrends } = analysis;
   if (!engagementSensitivity) {
     return (
-      <div className="reading-column px-6 pt-28 pb-24">
-        <h1 className="text-[30px] font-bold tracking-tight text-ink-900 mb-4">What the environment rewarded</h1>
+      <div className="reading-column px-6 pt-24 pb-24">
+        <h1 className="font-display text-[30px] md:text-[36px] tracking-tight text-ink-900 leading-[1.1] mb-4">What the environment rewarded</h1>
         <p className="text-ink-500">No engagement data available for this profile.</p>
       </div>
     );
@@ -41,8 +41,8 @@ export default function RewardedPage() {
   const toneShifted = Math.abs(aLast - aFirst) > 0.08;
 
   return (
-    <div className="reading-column px-6 pt-28 pb-24">
-      <h1 className="text-[30px] font-bold tracking-tight text-ink-900 mb-3">
+    <div className="reading-column px-6 pt-24 pb-24">
+      <h1 className="font-display text-[30px] md:text-[36px] tracking-tight text-ink-900 leading-[1.1] mb-3">
         What the environment rewarded
       </h1>
       <p className="text-[17px] text-ink-500 leading-[1.8] mb-16">
@@ -53,7 +53,7 @@ export default function RewardedPage() {
 
       {/* ── The Selection Landscape ──────────────── */}
       <section className="mb-20">
-        <h2 className="text-[22px] font-semibold text-ink-900 tracking-tight mb-4">
+        <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-4">
           The selection landscape
         </h2>
         <p className="text-[16px] text-ink-500 leading-[1.8] mb-2">
@@ -75,7 +75,7 @@ export default function RewardedPage() {
       {/* ── Reinforced ───────────────────────────── */}
       {reinforced.length > 0 && (
         <section className="mb-20">
-          <h2 className="text-[22px] font-semibold text-ink-900 tracking-tight mb-4">
+          <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-4">
             Patterns that appeared to be reinforced
           </h2>
           <p className="text-[16px] text-ink-500 leading-[1.8] mb-6">
@@ -96,7 +96,7 @@ export default function RewardedPage() {
       {/* ── What faded ───────────────────────────── */}
       {faded.length > 0 && (
         <section className="mb-20">
-          <h2 className="text-[22px] font-semibold text-ink-900 tracking-tight mb-4">
+          <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-4">
             What faded quietly
           </h2>
           <p className="text-[16px] text-ink-500 leading-[1.8] mb-6">
@@ -117,7 +117,7 @@ export default function RewardedPage() {
       {/* ── Feedback loop ────────────────────────── */}
       {reinforcementCorrelation && (
         <section className="mb-20">
-          <h2 className="text-[22px] font-semibold text-ink-900 tracking-tight mb-4">
+          <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-4">
             The feedback loop question
           </h2>
           <p className="text-[16px] text-ink-500 leading-[1.8] mb-2">

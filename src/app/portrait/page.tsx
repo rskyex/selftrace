@@ -13,8 +13,8 @@ export default function PortraitPage() {
 
   if (!isLoaded || !analysis) {
     return (
-      <div className="reading-column px-6 pt-20 pb-24">
-        <h1 className="text-[32px] font-semibold tracking-tight text-ink-900 mb-4">
+      <div className="reading-column px-6 pt-24 pb-24">
+        <h1 className="font-display text-[30px] md:text-[36px] tracking-tight text-ink-900 leading-[1.1] mb-4">
           Your portrait
         </h1>
         <p className="text-[17px] text-ink-400 leading-relaxed mb-10">
@@ -84,8 +84,8 @@ export default function PortraitPage() {
   const endDate = new Date(profile.dataQuality.dateRange.end).toLocaleDateString('en', { month: 'long', year: 'numeric' });
 
   return (
-    <div className="reading-column px-6 pt-20 pb-24">
-      <h1 className="text-[32px] font-semibold tracking-tight text-ink-900 mb-2">
+    <div className="reading-column px-6 pt-24 pb-24">
+      <h1 className="font-display text-[30px] md:text-[36px] tracking-tight text-ink-900 leading-[1.1] mb-2">
         Your portrait
       </h1>
       <p className="font-sans text-[14px] text-ink-300 mb-12">
@@ -159,7 +159,7 @@ export default function PortraitPage() {
       )}
 
       {/* ── Posting frequency ────────────────────── */}
-      <h2 className="text-[24px] font-semibold text-ink-900 tracking-tight mt-16 mb-2">
+      <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mt-16 mb-2">
         Your posting over time
       </h2>
       <p className="text-[15px] text-ink-400 leading-relaxed mb-2">
@@ -170,7 +170,7 @@ export default function PortraitPage() {
       {/* ── What got rewarded ────────────────────── */}
       {highEngTopics.length > 0 && (
         <>
-          <h2 className="text-[24px] font-semibold text-ink-900 tracking-tight mt-16 mb-2">
+          <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mt-16 mb-2">
             What got attention
           </h2>
           <p className="text-[15px] text-ink-400 leading-relaxed mb-6">
@@ -193,7 +193,7 @@ export default function PortraitPage() {
       {/* ── What you kept ────────────────────────── */}
       {keptAnyway.length > 0 && (
         <>
-          <h2 className="text-[24px] font-semibold text-ink-900 tracking-tight mt-16 mb-2">
+          <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mt-16 mb-2">
             What you kept anyway
           </h2>
           <p className="text-[15px] text-ink-400 leading-relaxed mb-6">
@@ -216,7 +216,7 @@ export default function PortraitPage() {
       {/* ── How you describe yourself ────────────── */}
       {topDescs.length > 0 && (
         <>
-          <h2 className="text-[24px] font-semibold text-ink-900 tracking-tight mt-16 mb-2">
+          <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mt-16 mb-2">
             How you describe yourself (in your posts)
           </h2>
           <p className="text-[15px] text-ink-400 leading-relaxed mb-6">
@@ -236,7 +236,7 @@ export default function PortraitPage() {
       )}
 
       {/* ── Tone ─────────────────────────────────── */}
-      <h2 className="text-[24px] font-semibold text-ink-900 tracking-tight mt-16 mb-2">
+      <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mt-16 mb-2">
         Your tone
       </h2>
       <p className="text-[15px] text-ink-400 leading-relaxed mb-6">

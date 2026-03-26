@@ -14,8 +14,8 @@ export default function DriftPage() {
 
   if (!isLoaded || !analysis) {
     return (
-      <div className="reading-column px-6 pt-20 pb-24">
-        <h1 className="text-[32px] font-semibold tracking-tight text-ink-900 mb-4">Your drift</h1>
+      <div className="reading-column px-6 pt-24 pb-24">
+        <h1 className="font-display text-[30px] md:text-[36px] tracking-tight text-ink-900 leading-[1.1] mb-4">Your drift</h1>
         <p className="text-[17px] text-ink-400 leading-relaxed mb-10">
           How your posting patterns shifted over time — gradually enough that
           you might not have noticed.
@@ -34,7 +34,7 @@ export default function DriftPage() {
   return (
     <div>
       <div className="reading-column px-6 pt-20">
-        <h1 className="text-[32px] font-semibold tracking-tight text-ink-900 mb-2">
+        <h1 className="font-display text-[30px] md:text-[36px] tracking-tight text-ink-900 leading-[1.1] mb-2">
           Your drift
         </h1>
         <p className="text-[17px] text-ink-400 leading-relaxed mb-10">
@@ -51,7 +51,7 @@ export default function DriftPage() {
         </p>
 
         {/* ── Topic concentration ────────────────── */}
-        <h2 className="text-[24px] font-semibold text-ink-900 tracking-tight mb-2">
+        <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-2">
           Where your focus went
         </h2>
         <p className="text-[15px] text-ink-400 leading-relaxed mb-4">
@@ -67,7 +67,7 @@ export default function DriftPage() {
         </div>
 
         {/* ── Topic diversity ─────────────────────── */}
-        <h2 className="text-[24px] font-semibold text-ink-900 tracking-tight mt-14 mb-2">
+        <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mt-14 mb-2">
           Topic variety over time
         </h2>
         <p className="text-[15px] text-ink-400 leading-relaxed mb-2">
@@ -80,7 +80,7 @@ export default function DriftPage() {
         <AreaChart data={entropy} confidence="patterned" color="umber" />
 
         {/* ── Vocabulary ──────────────────────────── */}
-        <h2 className="text-[24px] font-semibold text-ink-900 tracking-tight mt-14 mb-2">
+        <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mt-14 mb-2">
           Words that changed
         </h2>
         <p className="text-[15px] text-ink-400 leading-relaxed mb-6">
@@ -105,7 +105,7 @@ export default function DriftPage() {
         <div className="mt-3"><ConfidenceDot level="patterned" /></div>
 
         {/* ── Tone ────────────────────────────────── */}
-        <h2 className="text-[24px] font-semibold text-ink-900 tracking-tight mt-14 mb-2">
+        <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mt-14 mb-2">
           How your tone changed
         </h2>
         <p className="text-[15px] text-ink-400 leading-relaxed mb-6">

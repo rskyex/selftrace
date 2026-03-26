@@ -14,7 +14,7 @@ export function HowToRead({ children, label = 'How to read this' }: HowToReadPro
     <div className="my-6">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full text-left py-2.5 text-[13px] text-charcoal-400 hover:text-charcoal-600 flex items-center justify-between"
+        className="w-full text-left py-2.5 text-[13px] text-ink-400 hover:text-ink-600 flex items-center justify-between"
         aria-expanded={isOpen}
       >
         <span>{label}</span>
@@ -30,7 +30,7 @@ export function HowToRead({ children, label = 'How to read this' }: HowToReadPro
         </svg>
       </button>
       {isOpen && (
-        <div className="pb-4 text-[14px] leading-relaxed text-charcoal-500 border-t border-cream-200 pt-3">
+        <div className="pb-4 text-[14px] leading-relaxed text-ink-500 border-t border-linen-200 pt-3">
           {children}
         </div>
       )}

@@ -11,8 +11,8 @@ export default function SelvesPage() {
 
   if (!isLoaded || !analysis) {
     return (
-      <div className="reading-column px-6 pt-28 pb-24">
-        <h1 className="text-[30px] font-bold tracking-tight text-ink-900 mb-4">The self you described and the self the traces show</h1>
+      <div className="reading-column px-6 pt-24 pb-24">
+        <h1 className="font-display text-[30px] md:text-[36px] tracking-tight text-ink-900 leading-[1.1] mb-4">The self you described and the self the traces show</h1>
         <p className="text-ink-500 mb-10">Load a profile to see the comparison.</p>
         <ProfileSwitcher />
       </div>
@@ -46,8 +46,8 @@ export default function SelvesPage() {
   }).filter(t => Math.abs(t.delta) > 0.05);
 
   return (
-    <div className="reading-column px-6 pt-28 pb-24">
-      <h1 className="text-[30px] font-bold tracking-tight text-ink-900 mb-3">
+    <div className="reading-column px-6 pt-24 pb-24">
+      <h1 className="font-display text-[30px] md:text-[36px] tracking-tight text-ink-900 leading-[1.1] mb-3">
         The self you described and the self the traces show
       </h1>
       <p className="text-[17px] text-ink-500 leading-[1.8] mb-16">
@@ -60,7 +60,7 @@ export default function SelvesPage() {
       {/* ── The experienced self ─────────────────── */}
       {selfPortrait && (
         <section className="mb-20">
-          <h2 className="text-[22px] font-semibold text-ink-900 tracking-tight mb-6">
+          <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-6">
             How you experience yourself
           </h2>
           <div className="observation mb-4">
@@ -100,7 +100,7 @@ export default function SelvesPage() {
 
       {/* ── The trace-reconstructed self ──────────── */}
       <section className="mb-20">
-        <h2 className="text-[22px] font-semibold text-ink-900 tracking-tight mb-6">
+        <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-6">
           The self the traces show
         </h2>
         <div className="observation-umber mb-6">
@@ -148,7 +148,7 @@ export default function SelvesPage() {
       {/* ── The rewarded self ────────────────────── */}
       {rewardedTopics.length > 0 && (
         <section className="mb-20">
-          <h2 className="text-[22px] font-semibold text-ink-900 tracking-tight mb-4">
+          <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-4">
             The self the environment rewarded
           </h2>
           <p className="text-[16px] text-ink-500 leading-[1.8] mb-6">

@@ -85,12 +85,12 @@ export default function OverviewPage() {
         <div className="grid md:grid-cols-3 gap-5 mt-10">
           <Link href="/drift" className="card p-5 group">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-[15px] font-semibold text-charcoal-900">Your Drift</h3>
+              <h3 className="text-[15px] font-semibold text-ink-900">Your Drift</h3>
               <span className="text-[13px] text-accent-500 group-hover:translate-x-1 transition-transform">&rarr;</span>
             </div>
             <div className="flex items-center gap-3">
               <SparkLine data={entropy} width={100} height={24} />
-              <span className="text-[12px] text-charcoal-400">
+              <span className="text-[12px] text-ink-400">
                 Topic diversity: {firstEntropy.toFixed(1)} &rarr; {lastEntropy.toFixed(1)}
               </span>
             </div>
@@ -98,10 +98,10 @@ export default function OverviewPage() {
 
           <Link href="/reinforcement" className="card p-5 group">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-[15px] font-semibold text-charcoal-900">Reinforcement</h3>
+              <h3 className="text-[15px] font-semibold text-ink-900">Reinforcement</h3>
               <span className="text-[13px] text-accent-500 group-hover:translate-x-1 transition-transform">&rarr;</span>
             </div>
-            <p className="text-[12px] text-charcoal-400">
+            <p className="text-[12px] text-ink-400">
               {highEngTopics.length > 0
                 ? `${highEngTopics.length} topic${highEngTopics.length > 1 ? 's' : ''} show engagement-frequency correlation`
                 : 'Explore engagement patterns'}
@@ -110,10 +110,10 @@ export default function OverviewPage() {
 
           <Link href="/identity" className="card p-5 group">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-[15px] font-semibold text-charcoal-900">Identity</h3>
+              <h3 className="text-[15px] font-semibold text-ink-900">Identity</h3>
               <span className="text-[13px] text-accent-500 group-hover:translate-x-1 transition-transform">&rarr;</span>
             </div>
-            <p className="text-[12px] text-charcoal-400">
+            <p className="text-[12px] text-ink-400">
               {analysis.narrativeRepetition.value.length > 0
                 ? `${analysis.narrativeRepetition.value.length} recurring phrases detected`
                 : 'Explore self-presentation patterns'}
@@ -123,7 +123,7 @@ export default function OverviewPage() {
 
         {/* Tone snapshot */}
         <div className="card p-5 mt-5">
-          <h3 className="text-[15px] font-semibold text-charcoal-900 mb-4">Tone snapshot</h3>
+          <h3 className="text-[15px] font-semibold text-ink-900 mb-4">Tone snapshot</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {(['assertiveness', 'emotionality', 'formality', 'urgency'] as const).map((marker) => {
               const series = analysis.toneTrends.value[marker];
@@ -132,8 +132,8 @@ export default function OverviewPage() {
               return (
                 <div key={marker} className="flex items-center gap-3">
                   <div>
-                    <p className="text-[11px] text-charcoal-400 uppercase tracking-wider">{marker}</p>
-                    <p className="text-[14px] font-medium text-charcoal-700">
+                    <p className="text-[11px] text-ink-400 uppercase tracking-wider">{marker}</p>
+                    <p className="text-[14px] font-medium text-ink-700">
                       {first.toFixed(2)} &rarr; {last.toFixed(2)}
                     </p>
                   </div>
@@ -142,7 +142,7 @@ export default function OverviewPage() {
               );
             })}
           </div>
-          <p className="mt-3 text-[12px] text-charcoal-300">
+          <p className="mt-3 text-[12px] text-ink-300">
             Approximate heuristic measures. Not precise. <Link href="/how-it-works" className="text-accent-500 hover:text-accent-600">Learn more</Link>
           </p>
         </div>
