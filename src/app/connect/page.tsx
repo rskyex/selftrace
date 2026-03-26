@@ -67,7 +67,7 @@ function ConnectInner() {
 
         {/* Continue buttons */}
         {isLoaded && activeProfile && (
-          <div className="card-elevated p-6 mb-12">
+          <div className="card p-6 mb-12">
             <p className="text-[14px] text-ink-500 mb-4">
               <span className="font-medium text-ink-900">{activeProfile.label}</span> is loaded
               &middot; {activeProfile.dataQuality.totalPosts} posts

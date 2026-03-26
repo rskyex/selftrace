@@ -102,7 +102,7 @@ export function PeriodComparisonPanel({ posts, periods }: PeriodComparisonPanelP
             <div className="flex gap-2">
               <div className="flex flex-wrap gap-1">
                 {comparison.topTopics.value.a.map(t => (
-                  <span key={t} className="pill text-[10px] bg-linen-200 text-charcoal-600">{t}</span>
+                  <span key={t} className="pill text-[10px] bg-linen-200 text-ink-500">{t}</span>
                 ))}
               </div>
               <span className="text-ink-300 text-[13px]">&rarr;</span>

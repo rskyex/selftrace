@@ -14,7 +14,7 @@ export function HowToRead({ children, label = 'How to read this' }: HowToReadPro
     <div className="my-6">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full text-left py-2.5 text-[13px] text-ink-400 hover:text-charcoal-600 flex items-center justify-between"
+        className="w-full text-left py-2.5 text-[13px] text-ink-400 hover:text-ink-600 flex items-center justify-between"
         aria-expanded={isOpen}
       >
         <span>{label}</span>

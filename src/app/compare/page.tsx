@@ -237,7 +237,7 @@ export default function ComparePage() {
         {/* Narrative interpretation */}
         <div className="card p-6 bg-linen-100/50">
           <h3 className="text-[16px] font-semibold text-ink-900 mb-3">What this pattern suggests</h3>
-          <div className="space-y-3 text-[14px] text-charcoal-600 leading-relaxed">
+          <div className="space-y-3 text-[14px] text-ink-500 leading-relaxed">
             {driftedFromEarly && (
               <p>
                 Your current topics have significantly shifted from your early

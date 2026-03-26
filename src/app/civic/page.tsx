@@ -51,7 +51,7 @@ export default function CivicPage() {
                   <p className="text-[11px] font-medium text-accent-700 uppercase tracking-wider mb-1">
                     Data connection
                   </p>
-                  <p className="text-[13px] text-charcoal-600 leading-relaxed">
+                  <p className="text-[13px] text-ink-500 leading-relaxed">
                     {q.dataConnection}
                   </p>
                 </div>
