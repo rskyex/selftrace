@@ -2,12 +2,17 @@ import Link from 'next/link';
 
 export default function AboutPage() {
   return (
-    <div className="reading-column px-6 pt-20 pb-24">
-      <h1 className="text-[32px] font-semibold tracking-tight text-ink-900 mb-4">
-        How SelfTrace works
-      </h1>
+    <div className="reading-column px-6 pt-24 pb-24">
+      <header className="mb-16">
+        <p className="font-sans text-[12px] text-ink-400 tracking-[0.2em] uppercase mb-5">
+          About
+        </p>
+        <h1 className="font-display text-[30px] md:text-[36px] tracking-tight text-ink-900 leading-[1.1]">
+          How SelfTrace works
+        </h1>
+      </header>
 
-      <div className="prose-body text-[17px] text-ink-500 leading-[1.8] mb-12">
+      <div className="prose-body text-[17px] text-ink-500 leading-[1.85] mb-16">
         <p>
           SelfTrace looks at your posting history and notices patterns —
           what you post about, how your tone has shifted, which topics
@@ -21,10 +26,10 @@ export default function AboutPage() {
         </p>
       </div>
 
-      <h2 className="text-[24px] font-semibold text-ink-900 tracking-tight mb-4">
+      <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-6">
         What we analyze
       </h2>
-      <div className="space-y-4 mb-12">
+      <div className="space-y-4 mb-16">
         {[
           { label: 'Topics', desc: 'What you post about, tracked over time using keyword matching. Transparent and auditable.' },
           { label: 'Topic variety', desc: 'How spread out your interests are each quarter. A declining measure means you\'re focusing on fewer subjects.' },
@@ -41,32 +46,32 @@ export default function AboutPage() {
         ))}
       </div>
 
-      <h2 className="text-[24px] font-semibold text-ink-900 tracking-tight mb-4">
+      <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-5">
         How confident are we?
       </h2>
-      <p className="text-[17px] text-ink-500 leading-relaxed mb-6">
+      <p className="text-[17px] text-ink-500 leading-[1.8] mb-7">
         Not all findings are equally certain. You&apos;ll see small colored
         dots throughout the tool:
       </p>
-      <div className="space-y-3 mb-12">
+      <div className="space-y-5 mb-16">
         <div className="flex items-start gap-3">
-          <span className="confidence-dot confidence-high mt-2" />
-          <p className="text-[15px] text-ink-500"><strong className="text-ink-700">Green</strong> — directly in your data. We&apos;re just counting.</p>
+          <span className="dot dot-counted mt-2" />
+          <p className="text-[16px] text-ink-700"><strong className="font-sans font-medium">Green</strong> — directly in your data. We&apos;re just counting.</p>
         </div>
         <div className="flex items-start gap-3">
-          <span className="confidence-dot confidence-medium mt-2" />
-          <p className="text-[15px] text-ink-500"><strong className="text-ink-700">Purple</strong> — a pattern we detected. Plausible but not certain.</p>
+          <span className="dot dot-patterned mt-2" />
+          <p className="text-[16px] text-ink-700"><strong className="font-sans font-medium">Umber</strong> — a pattern we detected. Plausible but not certain.</p>
         </div>
         <div className="flex items-start gap-3">
-          <span className="confidence-dot confidence-low mt-2" />
-          <p className="text-[15px] text-ink-500"><strong className="text-ink-700">Gray</strong> — one possible reading. You might interpret it differently.</p>
+          <span className="dot dot-interpretive mt-2" />
+          <p className="text-[16px] text-ink-700"><strong className="font-sans font-medium">Gray</strong> — one possible reading. You might interpret it differently.</p>
         </div>
       </div>
 
-      <h2 className="text-[24px] font-semibold text-ink-900 tracking-tight mb-4">
+      <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-5">
         What we can&apos;t tell you
       </h2>
-      <div className="prose-body text-[17px] text-ink-500 leading-[1.8] mb-12">
+      <div className="prose-body text-[17px] text-ink-500 leading-[1.85] mb-16">
         <p>
           We can&apos;t prove causation. If your topics shifted toward what gets
           engagement, we can show the pattern but not prove the engagement
@@ -82,7 +87,7 @@ export default function AboutPage() {
         </p>
       </div>
 
-      <div className="observation bg-warm-100">
+      <div className="observation-sage mb-12">
         <h3>Why this matters</h3>
         <p>
           Platforms shape the environment where you express yourself. Engagement
@@ -93,11 +98,9 @@ export default function AboutPage() {
         </p>
       </div>
 
-      <div className="mt-12">
-        <Link href="/start" className="font-sans text-[14px] text-violet-600 hover:text-violet-700 font-medium">
-          Try it yourself &rarr;
-        </Link>
-      </div>
+      <Link href="/start" className="text-link text-[15px]">
+        Try it yourself &rarr;
+      </Link>
     </div>
   );
 }

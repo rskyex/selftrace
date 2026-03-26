@@ -85,14 +85,19 @@ function StartInner() {
   // ── Data connection ───────────────────────────
   if (step === 'data') {
     return (
-      <div className="reading-column px-6 pt-28 pb-24">
-        <h1 className="text-[30px] font-bold tracking-tight text-ink-900 mb-3">
-          Let&apos;s start with your posts
-        </h1>
-        <p className="text-[17px] text-ink-500 leading-relaxed mb-12">
-          Upload a data export, or choose a fictional profile to see how this works.
-          Everything happens in your browser.
-        </p>
+      <div className="reading-column px-6 pt-24 pb-24">
+        <header className="mb-12">
+          <p className="font-sans text-[12px] text-ink-400 tracking-[0.2em] uppercase mb-5">
+            Getting started
+          </p>
+          <h1 className="font-display text-[28px] md:text-[34px] tracking-tight text-ink-900 leading-[1.1] mb-4">
+            Let&apos;s start with your posts
+          </h1>
+          <p className="text-[17px] text-ink-500 leading-[1.7]">
+            Upload a data export, or choose a fictional profile to see how this works.
+            Everything happens in your browser.
+          </p>
+        </header>
 
         <div className="observation text-center py-10 mb-8">
           <div className="border-2 border-dashed border-linen-300 rounded-2xl py-10 px-6 mx-4">
@@ -110,7 +115,7 @@ function StartInner() {
           </div>
         )}
 
-        <p className="font-sans text-[12px] text-ink-300 text-center mt-8">
+        <p className="font-sans text-[12px] text-ink-300 text-center mt-10">
           Your data is never sent anywhere. There is no server.
         </p>
       </div>
@@ -123,17 +128,17 @@ function StartInner() {
     const prompt = PROMPTS[qIdx];
 
     return (
-      <div className="narrow-column px-6 pt-36 pb-24">
+      <div className="narrow-column px-6 pt-32 pb-24">
         {qIdx === 0 && (
-          <p className="font-sans text-[13px] text-ink-400 mb-12">
+          <p className="font-sans text-[13px] text-ink-400 mb-12 tracking-wide">
             Before we look at your data, we&apos;d like to hear from you.
           </p>
         )}
 
-        <label className="block text-[22px] text-ink-900 leading-snug mb-4">
+        <label className="block font-display text-[22px] md:text-[24px] text-ink-900 leading-[1.2] mb-4">
           {prompt.question}
         </label>
-        <p className="text-[15px] text-ink-500 mb-8">
+        <p className="text-[15px] text-ink-500 leading-[1.7] mb-8">
           {prompt.context}
         </p>
 
@@ -154,9 +159,17 @@ function StartInner() {
           </button>
         </div>
 
-        <p className="font-sans text-[12px] text-ink-300 mt-24 text-center">
-          {qIdx + 1} of {PROMPTS.length}
-        </p>
+        {/* Progress indicator */}
+        <div className="mt-20 flex justify-center gap-1.5">
+          {PROMPTS.map((_, i) => (
+            <div
+              key={i}
+              className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${
+                i <= qIdx ? 'bg-umber-500' : 'bg-linen-300'
+              }`}
+            />
+          ))}
+        </div>
       </div>
     );
   }
@@ -165,7 +178,7 @@ function StartInner() {
   return (
     <div className="flex items-center justify-center min-h-[70vh]">
       <div className="text-center max-w-md px-6">
-        <p className={`text-[19px] text-ink-500 leading-relaxed transition-opacity duration-300 ${loadingFade ? 'opacity-100' : 'opacity-0'}`}>
+        <p className={`font-display text-[20px] text-ink-500 leading-relaxed transition-opacity duration-300 ${loadingFade ? 'opacity-100' : 'opacity-0'}`}>
           {LOADING_LINES[loadingLine]}
         </p>
       </div>
