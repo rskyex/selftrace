@@ -44,6 +44,12 @@ export function TopNav() {
               {link.label}
             </Link>
           ))}
+          <Link href="/social"
+            className={`font-sans text-[13px] px-3 py-1.5 rounded-lg ${
+              pathname.startsWith('/social') ? 'text-umber-600 font-medium' : 'text-ink-400 hover:text-ink-700 hover:bg-linen-100'
+            }`}>
+            Connect account
+          </Link>
           <Link href="/how-it-works"
             className={`font-sans text-[13px] px-3 py-1.5 rounded-lg ${
               pathname === '/how-it-works' ? 'text-ink-700 font-medium' : 'text-ink-300 hover:text-ink-500 hover:bg-linen-100'
@@ -74,6 +80,7 @@ export function TopNav() {
               {link.label}
             </Link>
           ))}
+          <Link href="/social" onClick={() => setOpen(false)} className={`block font-sans text-[15px] py-3 border-b border-linen-100 ${pathname.startsWith('/social') ? 'text-umber-600 font-medium' : 'text-ink-500'}`}>Connect account</Link>
           <Link href="/how-it-works" onClick={() => setOpen(false)} className="block font-sans text-[15px] py-3 text-ink-400">How it works</Link>
           {!isLoaded && (
             <Link href="/start" onClick={() => setOpen(false)} className="block text-center mt-4 btn-primary w-full">Begin</Link>
