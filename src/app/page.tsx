@@ -1,124 +1,149 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { ScrollReveal } from '@/components/landing/ScrollReveal';
+import { HeroInteractive } from '@/components/landing/HeroInteractive';
 
 export default function HomePage() {
   return (
     <div>
       {/* ── Hero ─────────────────────────────────────────── */}
-      <section className="hero-column px-6 pt-16 pb-20 md:pt-24 md:pb-28 lg:pt-28 lg:pb-36">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center">
-          {/* Left: Copy */}
-          <div className="max-w-xl order-2 lg:order-1">
-            <p className="font-sans text-[12px] text-ink-400 tracking-[0.2em] uppercase mb-8 animate-fade-up">
-              Memory &middot; Identity &middot; Drift
-            </p>
-            <h1 className="font-display text-[36px] sm:text-[44px] md:text-[52px] lg:text-[58px] text-ink-900 leading-[1.06] tracking-[-0.02em] mb-7 animate-fade-up animation-delay-100">
-              You&apos;ve been becoming yourself online for years.
-            </h1>
-            <p className="text-[18px] md:text-[20px] text-ink-500 leading-[1.75] mb-10 animate-fade-up animation-delay-200">
-              Do you know which parts were yours — and which were shaped
-              by the quiet architecture of the platforms around you?
-            </p>
-            <div className="flex flex-col sm:flex-row items-start gap-4 animate-fade-up animation-delay-300">
-              <Link href="/start" className="btn-primary">
-                Begin
-              </Link>
-              <Link href="/start?demo=true" className="btn-secondary">
-                Try a fictional profile
-              </Link>
-            </div>
-            <div className="mt-5 animate-fade-up animation-delay-400">
-              <Link href="#how" className="btn-tertiary">
-                How it works &darr;
-              </Link>
-            </div>
-          </div>
+      <section className="hero-column px-6 pt-16 pb-16 md:pt-24 md:pb-24 lg:pt-28 lg:pb-28">
+        {/* Tagline */}
+        <p className="font-sans text-[12px] text-ink-400 tracking-[0.2em] uppercase mb-8 animate-fade-up">
+          Memory &middot; Identity &middot; Drift
+        </p>
 
-          {/* Right: Hero image */}
-          <div className="relative order-1 lg:order-2 animate-fade-in animation-delay-200">
-            <div className="relative aspect-[16/10] lg:aspect-[4/3] rounded-2xl lg:rounded-3xl overflow-hidden shadow-[0_8px_40px_rgba(42,36,32,0.08)]">
-              <Image
-                src="/selftrace-1.png"
-                alt="Layered paper-cut profiles representing the sedimented layers of digital identity"
-                fill
-                className="object-cover"
-                priority
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-            </div>
+        {/* Headline — narrow for impact */}
+        <h1 className="font-display text-[34px] sm:text-[44px] md:text-[52px] lg:text-[58px] text-ink-900 leading-[1.06] tracking-[-0.02em] max-w-3xl mb-6 animate-fade-up animation-delay-100">
+          Trace how social media shaped the person you became online.
+        </h1>
+
+        {/* Supporting text */}
+        <p className="text-[17px] md:text-[19px] text-ink-500 leading-[1.7] max-w-xl mb-10 animate-fade-up animation-delay-200">
+          Connect your accounts or try a demo profile to explore recurring themes, rewarded traits, and identity shifts.
+        </p>
+
+        {/* CTA hierarchy */}
+        <div className="flex flex-col sm:flex-row items-start gap-4 animate-fade-up animation-delay-300">
+          <Link href="/start" className="btn-primary">
+            Connect your social media
+          </Link>
+          <Link href="/start?demo=true" className="btn-secondary">
+            Try demo
+          </Link>
+        </div>
+
+        {/* Privacy + tertiary link */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 mt-5 animate-fade-up animation-delay-400">
+          <span className="font-sans text-[13px] text-ink-400 flex items-center gap-1.5">
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none" className="text-ink-400 shrink-0">
+              <path d="M10 2a5 5 0 0 0-5 5v3H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1h-1V7a5 5 0 0 0-5-5zm-3 5a3 3 0 1 1 6 0v3H7V7z" fill="currentColor"/>
+            </svg>
+            Private by design. Your data stays in your browser.
+          </span>
+          <Link href="#how" className="btn-tertiary">
+            How it works &darr;
+          </Link>
+        </div>
+
+        {/* Interactive section */}
+        <HeroInteractive />
+      </section>
+
+      {/* ── How It Works ─────────────────────────────────── */}
+      <section id="how" className="py-20 md:py-28 border-t border-linen-200">
+        <div className="content-column px-6">
+          <ScrollReveal>
+            <p className="font-sans text-[12px] text-ink-400 tracking-[0.2em] uppercase mb-14 text-center">
+              How it works
+            </p>
+          </ScrollReveal>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 lg:gap-10">
+            <ScrollReveal delay={0}>
+              <div className="text-center md:text-left">
+                <span className="font-display text-[36px] text-ink-300 leading-none block mb-4">1</span>
+                <h3 className="font-sans text-[17px] font-semibold text-ink-900 mb-3">
+                  Connect or upload
+                </h3>
+                <p className="text-[15px] text-ink-500 leading-[1.75]">
+                  Bring in your social media data, or begin with a fictional profile.
+                </p>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal delay={100}>
+              <div className="text-center md:text-left">
+                <span className="font-display text-[36px] text-ink-300 leading-none block mb-4">2</span>
+                <h3 className="font-sans text-[17px] font-semibold text-ink-900 mb-3">
+                  Trace recurring patterns
+                </h3>
+                <p className="text-[15px] text-ink-500 leading-[1.75]">
+                  See which themes, behaviours, and signals keep resurfacing across your online expression.
+                </p>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal delay={200}>
+              <div className="text-center md:text-left">
+                <span className="font-display text-[36px] text-ink-300 leading-none block mb-4">3</span>
+                <h3 className="font-sans text-[17px] font-semibold text-ink-900 mb-3">
+                  Explore your narrative shifts
+                </h3>
+                <p className="text-[15px] text-ink-500 leading-[1.75]">
+                  Understand what your environment rewarded, what changed, and what remained constant.
+                </p>
+              </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>
 
-      {/* ── Quiet transition ─────────────────────────────── */}
-      <div className="py-8 md:py-12">
-        <div className="section-rule" />
-      </div>
+      {/* ── Result Preview ───────────────────────────────── */}
+      <section className="py-20 md:py-28">
+        <div className="content-column px-6">
+          <ScrollReveal>
+            <p className="font-sans text-[12px] text-ink-400 tracking-[0.2em] uppercase mb-6 text-center">
+              What you&apos;ll see
+            </p>
+            <p className="text-[16px] md:text-[17px] text-ink-500 leading-[1.75] max-w-md mx-auto text-center mb-12">
+              A structured reading of your online self — patterns you can see are patterns you can choose.
+            </p>
+          </ScrollReveal>
 
-      {/* ── The Observation ──────────────────────────────── */}
-      <section id="how" className="py-20 md:py-28">
-        <div className="hero-column px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
-            {/* Narrow side accent */}
-            <div className="hidden lg:block lg:col-span-4">
-              <ScrollReveal>
-                <div className="relative aspect-[3/4] rounded-2xl overflow-hidden">
-                  <Image
-                    src="/selftrace-3.png"
-                    alt=""
-                    fill
-                    className="object-cover opacity-60"
-                    sizes="340px"
-                  />
-                  {/* Bottom fade */}
-                  <div className="absolute inset-0 pointer-events-none"
-                    style={{
-                      background: 'linear-gradient(to top, var(--color-linen-50) 0%, transparent 30%)'
-                    }}
-                  />
+          <ScrollReveal delay={80}>
+            <div className="max-w-lg mx-auto">
+              <div className="card p-8 md:p-10">
+                <div className="space-y-5">
+                  {[
+                    { label: 'Dominant theme', value: 'self-discipline', accent: 'bg-umber-600' },
+                    { label: 'Rewarded trait', value: 'vulnerability', accent: 'bg-trace-500' },
+                    { label: 'Stable core', value: 'ambition', accent: 'bg-sage-600' },
+                    { label: 'Narrative shift', value: 'certainty → openness', accent: 'bg-umber-600' },
+                    { label: 'Emotional pattern', value: 'reflective persistence', accent: 'bg-trace-500' },
+                  ].map((item) => (
+                    <div key={item.label} className="flex items-baseline justify-between gap-6 pb-4 border-b border-linen-200 last:border-0 last:pb-0">
+                      <span className="font-sans text-[13px] text-ink-400 shrink-0 flex items-center gap-2">
+                        <span className={`inline-block w-[6px] h-[6px] rounded-full ${item.accent}`} />
+                        {item.label}
+                      </span>
+                      <span className="font-display text-[15px] md:text-[16px] text-ink-900 text-right">
+                        {item.value}
+                      </span>
+                    </div>
+                  ))}
                 </div>
-              </ScrollReveal>
-            </div>
-
-            {/* Main text */}
-            <div className="lg:col-span-7 lg:col-start-6">
-              <ScrollReveal>
-                <p className="font-sans text-[12px] text-ink-400 tracking-[0.2em] uppercase mb-8">
-                  The quiet process
+                <p className="font-sans text-[12px] text-ink-400 mt-6 text-center italic">
+                  Fictional sample — your results will reflect your own data.
                 </p>
-              </ScrollReveal>
-              <div className="prose-body space-y-0">
-                <ScrollReveal delay={80}>
-                  <p className="text-[18px] md:text-[19px] text-ink-700 leading-[1.85] mb-6">
-                    Every platform you post on has a quiet influence — rewarding some
-                    things, ignoring others, surfacing certain patterns back to you.
-                    Over time, that shapes which version of yourself becomes easiest
-                    to inhabit.
-                  </p>
-                </ScrollReveal>
-                <ScrollReveal delay={160}>
-                  <p className="text-[18px] md:text-[19px] text-ink-700 leading-[1.85] mb-6">
-                    Memory is not perfectly retrieved; it&apos;s reassembled. Identity is not
-                    statically stored; it&apos;s narratively maintained. In digital environments,
-                    that reconstruction process now has computational participants inside it.
-                  </p>
-                </ScrollReveal>
-                <ScrollReveal delay={240}>
-                  <p className="text-[17px] text-ink-500 leading-[1.85]">
-                    SelfTrace helps you see how. Not to alarm you. Not to tell you
-                    what to fix. To give you visibility into a process that has been
-                    happening quietly, so you can decide what it means for yourself.
-                  </p>
-                </ScrollReveal>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* ── What It Shows ────────────────────────────────── */}
-      <section className="py-20 md:py-28">
+      <section className="py-20 md:py-28 border-t border-linen-200">
         <div className="hero-column px-6">
           <ScrollReveal>
             <p className="font-sans text-[12px] text-ink-400 tracking-[0.2em] uppercase mb-14 text-center">
@@ -175,6 +200,67 @@ export default function HomePage() {
                 </p>
               </div>
             </ScrollReveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ── The Observation ──────────────────────────────── */}
+      <section className="py-20 md:py-28">
+        <div className="hero-column px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
+            {/* Narrow side accent */}
+            <div className="hidden lg:block lg:col-span-4">
+              <ScrollReveal>
+                <div className="relative aspect-[3/4] rounded-2xl overflow-hidden">
+                  <Image
+                    src="/selftrace-3.png"
+                    alt=""
+                    fill
+                    className="object-cover opacity-60"
+                    sizes="340px"
+                  />
+                  {/* Bottom fade */}
+                  <div className="absolute inset-0 pointer-events-none"
+                    style={{
+                      background: 'linear-gradient(to top, var(--color-linen-50) 0%, transparent 30%)'
+                    }}
+                  />
+                </div>
+              </ScrollReveal>
+            </div>
+
+            {/* Main text */}
+            <div className="lg:col-span-7 lg:col-start-6">
+              <ScrollReveal>
+                <p className="font-sans text-[12px] text-ink-400 tracking-[0.2em] uppercase mb-8">
+                  The quiet process
+                </p>
+              </ScrollReveal>
+              <div className="prose-body space-y-0">
+                <ScrollReveal delay={80}>
+                  <p className="text-[18px] md:text-[19px] text-ink-700 leading-[1.85] mb-6">
+                    Every platform you post on has a quiet influence — rewarding some
+                    things, ignoring others, surfacing certain patterns back to you.
+                    Over time, that shapes which version of yourself becomes easiest
+                    to inhabit.
+                  </p>
+                </ScrollReveal>
+                <ScrollReveal delay={160}>
+                  <p className="text-[18px] md:text-[19px] text-ink-700 leading-[1.85] mb-6">
+                    Memory is not perfectly retrieved; it&apos;s reassembled. Identity is not
+                    statically stored; it&apos;s narratively maintained. In digital environments,
+                    that reconstruction process now has computational participants inside it.
+                  </p>
+                </ScrollReveal>
+                <ScrollReveal delay={240}>
+                  <p className="text-[17px] text-ink-500 leading-[1.85]">
+                    SelfTrace helps you see how. Not to alarm you. Not to tell you
+                    what to fix. To give you visibility into a process that has been
+                    happening quietly, so you can decide what it means for yourself.
+                  </p>
+                </ScrollReveal>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -245,10 +331,10 @@ export default function HomePage() {
                 </p>
                 <div className="flex flex-col sm:flex-row items-center lg:items-start gap-4">
                   <Link href="/start" className="btn-primary">
-                    Begin
+                    Connect your social media
                   </Link>
                   <Link href="/start?demo=true" className="btn-secondary">
-                    Try with a fictional profile
+                    Try demo
                   </Link>
                 </div>
               </div>
