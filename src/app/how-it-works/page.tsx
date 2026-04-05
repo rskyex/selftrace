@@ -91,11 +91,12 @@ export default function HowItWorksPage() {
         Your privacy
       </h2>
       <div className="observation-sage mb-12">
-        <h3>There is no server</h3>
+        <h3>Private by design</h3>
         <p>
-          Your data is processed entirely in your browser. It&apos;s held in memory while
-          you&apos;re looking at it and released when you close the tab. There is no database.
-          There is no account. There is nothing to delete because nothing was ever stored.
+          All analysis runs entirely in your browser. When you use a demo profile,
+          nothing is sent to any server. If you connect a social account, only the
+          connection handshake passes through our server &mdash; your content is fetched
+          and processed locally, then released when you close the tab.
         </p>
         <p className="mt-4">
           We built it this way because what this product shows you is personal in a way

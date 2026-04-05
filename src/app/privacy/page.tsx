@@ -12,21 +12,24 @@ export default function PrivacyPage() {
 
       <div className="prose-body text-[17px] text-ink-500 leading-[1.85] mb-16">
         <p>
-          There is no &ldquo;trust us&rdquo; here. This tool has no server.
-          Your data is processed entirely in your browser and exists only
-          in memory. When you close the tab, it&apos;s gone.
+          All analysis runs entirely in your browser. Your posting data is
+          processed locally and exists only in memory &mdash; when you close the tab,
+          it&apos;s gone. If you connect a social account, only the authentication
+          handshake passes through our server; your content is never stored on it.
         </p>
       </div>
 
       {/* Architecture */}
       <div className="observation text-center py-8 mb-16">
-        <div className="inline-flex items-center gap-6 font-sans text-[15px] text-ink-700">
+        <div className="inline-flex flex-wrap items-center justify-center gap-4 md:gap-6 font-sans text-[15px] text-ink-700">
           <div className="card px-6 py-3 font-medium">Your Browser</div>
           <span className="text-[20px] text-ink-300" aria-hidden="true">&harr;</span>
           <div className="card px-6 py-3 font-medium">Your Data</div>
+          <span className="text-[20px] text-ink-300 hidden md:inline" aria-hidden="true">&harr;</span>
+          <div className="card px-6 py-3 font-medium text-ink-400">Auth only (OAuth)</div>
         </div>
         <p className="mt-6 text-[15px] text-ink-400">
-          That&apos;s the entire architecture. There is nothing else.
+          Analysis is local. Server involvement is limited to the authentication handshake when connecting accounts.
         </p>
       </div>
 
@@ -38,7 +41,7 @@ export default function PrivacyPage() {
           'Your posting data',
           'Analytics or usage telemetry',
           'Cookies or tracking data',
-          'Anything sent to any server',
+          'Your content sent to or stored on any server',
           'Anything stored after you close the tab',
           'Anything shared with any third party',
         ].map(item => (
@@ -51,9 +54,10 @@ export default function PrivacyPage() {
       <div className="observation-sage">
         <h3>Privacy is the architecture, not a feature</h3>
         <p>
-          We didn&apos;t add privacy protections to a server-based tool. We built
-          a tool that has no server to protect against. The source code is
-          available for inspection — every claim on this page can be verified.
+          All analysis happens in your browser. The only server-side component
+          is the OAuth handshake when connecting a social account &mdash; we never
+          receive, store, or process your content. The source code is available
+          for inspection — every claim on this page can be verified.
         </p>
       </div>
     </div>

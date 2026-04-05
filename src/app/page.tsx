@@ -42,7 +42,7 @@ export default function HomePage() {
                 <svg width="14" height="14" viewBox="0 0 20 20" fill="none" className="text-ink-400 shrink-0">
                   <path d="M10 2a5 5 0 0 0-5 5v3H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1h-1V7a5 5 0 0 0-5-5zm-3 5a3 3 0 1 1 6 0v3H7V7z" fill="currentColor"/>
                 </svg>
-                Private by design. Your data stays in your browser.
+                Private by design. Analysis runs in your browser.
               </span>
               <Link href="#how" className="btn-tertiary">
                 How it works &darr;
@@ -373,11 +373,12 @@ export default function HomePage() {
                   </svg>
                 </div>
                 <h3 className="font-display text-[24px] md:text-[28px] text-ink-900 leading-[1.2] mb-5">
-                  Your data never leaves your browser
+                  Private by design
                 </h3>
                 <p className="text-[16px] md:text-[17px] text-ink-500 leading-[1.8] max-w-md mx-auto">
-                  There is no server, no account, and no way for anyone — including
-                  us — to see what you upload. Everything runs locally.
+                  All analysis runs in your browser. If you connect a social account,
+                  the connection is handled securely and your content is never stored
+                  on our servers. You can also use demo profiles with no sign-in at all.
                 </p>
                 <Link href="/how-it-works" className="text-link inline-block mt-5 text-[14px]">
                   How it works &rarr;

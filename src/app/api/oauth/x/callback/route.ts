@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { createServerSupabase } from '@/lib/supabase/server';
+import { isSupabaseConfigured, createServerSupabase, createServiceClient } from '@/lib/supabase/server';
 import { getConnector } from '@/lib/platforms/registry';
-import { createServiceClient } from '@/lib/supabase/server';
+import { getAppUrl } from '@/lib/platforms/env';
 
 export async function GET(request: NextRequest) {
+  const appUrl = getAppUrl();
   const url = new URL(request.url);
   const code = url.searchParams.get('code');
   const state = url.searchParams.get('state');
   const error = url.searchParams.get('error');
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL!;
 
   // Handle denial or errors from X
   if (error) {
@@ -20,12 +20,23 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${appUrl}/start?error=missing_params`);
   }
 
+  // Guard: infrastructure must be configured
+  if (!isSupabaseConfigured()) {
+    console.error('[oauth/x/callback] Supabase is not configured.');
+    return NextResponse.redirect(`${appUrl}/start?error=oauth_not_configured`);
+  }
+
   // Validate state
   const cookieStore = await cookies();
   const savedState = cookieStore.get('x_oauth_state')?.value;
   const codeVerifier = cookieStore.get('x_code_verifier')?.value;
 
   if (!savedState || state !== savedState || !codeVerifier) {
+    console.error('[oauth/x/callback] State mismatch or missing verifier.', {
+      hasState: !!savedState,
+      stateMatch: state === savedState,
+      hasVerifier: !!codeVerifier,
+    });
     return NextResponse.redirect(`${appUrl}/start?error=invalid_state`);
   }
 
@@ -73,13 +84,13 @@ export async function GET(request: NextRequest) {
       );
 
     if (dbError) {
-      console.error('Failed to save connected account:', dbError);
+      console.error('[oauth/x/callback] Failed to save connected account:', dbError);
       return NextResponse.redirect(`${appUrl}/start?error=save_failed`);
     }
 
     return NextResponse.redirect(`${appUrl}/start?connected=x&username=${profile.username}`);
   } catch (err) {
-    console.error('X OAuth callback error:', err);
+    console.error('[oauth/x/callback] Error:', err);
     const message = err instanceof Error ? err.message : 'unknown_error';
     return NextResponse.redirect(`${appUrl}/start?error=${encodeURIComponent(message)}`);
   }

@@ -35,7 +35,7 @@ export function Footer() {
 
         <div className="mt-12 pt-8 border-t border-linen-200/60 text-center">
           <p className="font-sans text-[12px] text-ink-300">
-            Your data never leaves your browser. There is no server.
+            Private by design. All analysis runs locally in your browser.
           </p>
         </div>
       </div>

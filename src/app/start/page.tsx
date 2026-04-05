@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { ProfileSwitcher } from '@/components/shared/ProfileSwitcher';
 import { useData } from '@/lib/data/context';
 import type { SelfPortrait } from '@/lib/data/context';
-import { createClient } from '@/lib/supabase/client';
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client';
 import { platformMeta } from '@/lib/platforms/registry';
 import type { PlatformId } from '@/lib/platforms/types';
 import Link from 'next/link';
@@ -314,8 +314,9 @@ function DataStep({ isLoaded, onContinue, searchParams }: {
     }
   }, [searchParams]);
 
-  // Fetch connected accounts
+  // Fetch connected accounts (only if Supabase is configured)
   useEffect(() => {
+    if (!isSupabaseConfigured()) return;
     async function load() {
       try {
         const supabase = createClient();
@@ -325,7 +326,7 @@ function DataStep({ isLoaded, onContinue, searchParams }: {
           .order('connected_at', { ascending: false });
         setAccounts(data ?? []);
       } catch {
-        // Supabase not configured — silently ignore
+        // Supabase query failed — silently ignore
       }
     }
     load();
@@ -459,7 +460,7 @@ function DataStep({ isLoaded, onContinue, searchParams }: {
       )}
 
       <p className="font-sans text-[12px] text-ink-300 text-center mt-10">
-        Your data is never sent anywhere. There is no server.
+        Private by design. All analysis runs locally in your browser.
       </p>
     </div>
   );
@@ -504,6 +505,7 @@ function decodeOAuthError(error: string): string {
     not_authenticated: 'You must be logged in to connect an account.',
     save_failed: 'Failed to save your connection. Please try again.',
     EXPIRED_TOKEN: 'Your access token has expired. Please reconnect.',
+    oauth_not_configured: 'Social connection is not yet available in this deployment. Try a fictional profile instead.',
   };
   return messages[error] ?? `Connection error: ${error}`;
 }
