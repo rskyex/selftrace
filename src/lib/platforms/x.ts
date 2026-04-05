@@ -3,6 +3,7 @@
 // Requires X_CLIENT_ID and X_CLIENT_SECRET environment variables.
 
 import type { PlatformConnector, OAuthTokens, PlatformProfile, RawPost } from './types';
+import { getAppUrl } from './env';
 
 const X_AUTH_URL = 'https://twitter.com/i/oauth2/authorize';
 const X_TOKEN_URL = 'https://api.twitter.com/2/oauth2/token';
@@ -11,7 +12,7 @@ const X_API_BASE = 'https://api.twitter.com/2';
 const SCOPES = ['tweet.read', 'users.read', 'offline.access'];
 
 function getCallbackUrl(): string {
-  return `${process.env.NEXT_PUBLIC_APP_URL}/api/oauth/x/callback`;
+  return `${getAppUrl()}/api/oauth/x/callback`;
 }
 
 export const xConnector: PlatformConnector = {
