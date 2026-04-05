@@ -13,11 +13,11 @@ export async function GET(request: NextRequest) {
 
   // Handle denial or errors from X
   if (error) {
-    return NextResponse.redirect(`${appUrl}/connect?error=${encodeURIComponent(error)}`);
+    return NextResponse.redirect(`${appUrl}/start?error=${encodeURIComponent(error)}`);
   }
 
   if (!code || !state) {
-    return NextResponse.redirect(`${appUrl}/connect?error=missing_params`);
+    return NextResponse.redirect(`${appUrl}/start?error=missing_params`);
   }
 
   // Validate state
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
   const codeVerifier = cookieStore.get('x_code_verifier')?.value;
 
   if (!savedState || state !== savedState || !codeVerifier) {
-    return NextResponse.redirect(`${appUrl}/connect?error=invalid_state`);
+    return NextResponse.redirect(`${appUrl}/start?error=invalid_state`);
   }
 
   // Clear OAuth cookies
@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.redirect(`${appUrl}/connect?error=not_authenticated`);
+    return NextResponse.redirect(`${appUrl}/start?error=not_authenticated`);
   }
 
   try {
@@ -74,13 +74,13 @@ export async function GET(request: NextRequest) {
 
     if (dbError) {
       console.error('Failed to save connected account:', dbError);
-      return NextResponse.redirect(`${appUrl}/connect?error=save_failed`);
+      return NextResponse.redirect(`${appUrl}/start?error=save_failed`);
     }
 
-    return NextResponse.redirect(`${appUrl}/connect?connected=x&username=${profile.username}`);
+    return NextResponse.redirect(`${appUrl}/start?connected=x&username=${profile.username}`);
   } catch (err) {
     console.error('X OAuth callback error:', err);
     const message = err instanceof Error ? err.message : 'unknown_error';
-    return NextResponse.redirect(`${appUrl}/connect?error=${encodeURIComponent(message)}`);
+    return NextResponse.redirect(`${appUrl}/start?error=${encodeURIComponent(message)}`);
   }
 }
