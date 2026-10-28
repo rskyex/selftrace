@@ -15,6 +15,10 @@ Part of **The Govern the Human Project** by Risa Koyanagi.
 - **Demo Profiles** — Explore the platform without connecting an account.
 - **Privacy-First** — Analysis runs client-side. Row-Level Security ensures data isolation per user.
 
+## Result Export (gth-result/v1)
+
+`/results` has a "Download result (JSON)" button. It writes a counts-only `gth-result/v1` document (schema in the Govern the Human repository, `SCHEMA.md`): post count, date range, top topics, topics that were rewarded and rising, kept topics (the `/results` and `/kept` definitions), and topic diversity across quarters. Post text, phrases, self-descriptions, reflection answers and personality types are never included. The file is built in the browser (`src/lib/export/gth-result.ts`) and can be loaded into the Govern the Human Observatory.
+
 ## Tech Stack
 
 | Layer | Technology |

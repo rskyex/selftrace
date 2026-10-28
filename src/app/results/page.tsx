@@ -5,6 +5,7 @@ import { AreaChart } from '@/components/shared/AreaChart';
 import { ConfidenceDot } from '@/components/shared/ConfidenceDot';
 import { ProfileSwitcher } from '@/components/shared/ProfileSwitcher';
 import { useData } from '@/lib/data/context';
+import { summarizeResults, downloadGthResult } from '@/lib/export/gth-result';
 
 export default function ResultsPage() {
   const { activeProfile, analysis, isLoaded, selfPortrait } = useData();
@@ -25,21 +26,9 @@ export default function ResultsPage() {
   const startDate = new Date(profile.dataQuality.dateRange.start).toLocaleDateString('en', { month: 'long', year: 'numeric' });
   const endDate = new Date(profile.dataQuality.dateRange.end).toLocaleDateString('en', { month: 'long', year: 'numeric' });
 
-  // Top topics
-  const topicCounts: Record<string, number> = {};
-  for (const p of profile.posts) { if (p.derived) for (const t of p.derived.topics) topicCounts[t.topic] = (topicCounts[t.topic] || 0) + 1; }
-  const topTopics = Object.entries(topicCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
-
-  // Entropy direction
+  // Top topics, range, rewarded and kept topics (shared with the JSON export)
+  const { topTopics, narrowed, reinforced, kept } = summarizeResults(profile, analysis);
   const e = analysis.topicEntropy.value;
-  const eFirst = e[0]?.value ?? 0, eLast = e[e.length - 1]?.value ?? 0;
-  const narrowed = eLast < eFirst * 0.75;
-
-  // Engagement
-  const eng = analysis.engagementSensitivity;
-  const avgEng = eng ? eng.value.reduce((s, t) => s + t.averageEngagement, 0) / eng.value.length : 0;
-  const reinforced = eng?.value.filter(t => t.frequencyTrend === 'increasing' && t.averageEngagement > avgEng).slice(0, 3) ?? [];
-  const kept = eng?.value.filter(t => t.averageEngagement < avgEng * 0.5 && t.frequencyTrend !== 'decreasing').slice(0, 3) ?? [];
 
   return (
     <div className="reading-column px-6 pt-24 pb-24">
@@ -187,6 +176,25 @@ export default function ResultsPage() {
         <p className="font-display text-[18px] text-ink-400 italic">
           Patterns you can see are patterns you can choose.
         </p>
+      </section>
+
+      {/* ── Export ───────────────────────────────── */}
+      <section className="mt-16 border-t border-linen-200 pt-10" aria-labelledby="export-heading">
+        <h2 id="export-heading" className="font-sans text-[12px] text-ink-500 tracking-[0.15em] uppercase mb-3">
+          Export
+        </h2>
+        <p className="text-[15px] text-ink-500 leading-[1.8] mb-5">
+          Save the figures on this page as a JSON file in the shared Govern the Human
+          result format. It holds topic labels and counts only. Your posts, phrases and
+          reflection answers are not included. The file is created in your browser.
+        </p>
+        <button
+          type="button"
+          onClick={() => downloadGthResult(profile, analysis)}
+          className="font-sans text-[14px] px-5 py-3 rounded border border-ink-300 text-ink-700 hover:border-umber-600 hover:text-umber-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-umber-500"
+        >
+          Download result (JSON)
+        </button>
       </section>
 
       {/* ── Go deeper ────────────────────────────── */}
