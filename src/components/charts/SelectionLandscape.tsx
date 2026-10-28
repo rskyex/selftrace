@@ -1,6 +1,7 @@
 'use client';
 
 import type { TopicEngagement } from '@/lib/data/types';
+import { ChartDataTable, monthLabel } from '@/components/shared/ChartDataTable';
 
 /**
  * The Selection Landscape — a scatter field.
@@ -71,6 +72,8 @@ export function SelectionLandscape({ data }: { data: TopicEngagement[] }) {
         <text x={w / 2} y={h - 8} fill="#B5AEA5" fontSize={10} textAnchor="middle">frequency change</text>
         <text x={w - pad.r} y={h - 8} fill="#B5AEA5" fontSize={10} textAnchor="end">increased</text>
       </svg>
+      <ChartDataTable caption="Engagement and frequency change per topic" columns={['Topic', 'Average engagement', 'Posts', 'Frequency trend']}
+        rows={data.map(d => [d.topic, d.averageEngagement, d.postCount, d.frequencyTrend])} />
     </div>
   );
 }

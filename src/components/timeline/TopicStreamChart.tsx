@@ -1,6 +1,7 @@
 'use client';
 
 import type { TopicOverTime } from '@/lib/data/types';
+import { ChartDataTable, monthLabel } from '@/components/shared/ChartDataTable';
 
 const COLORS = ['#B5704D', '#6B8F71', '#C8B8A8', '#5C534A', '#8F5A35', '#D2E4D5', '#DDD5CA', '#8A8179'];
 
@@ -30,7 +31,7 @@ export function TopicStreamChart({ data }: { data: TopicOverTime[] }) {
         {months.map((date, i) => {
           if (i % step !== 0 && i !== months.length - 1) return null;
           const d = new Date(date);
-          return <text key={i} x={x(i)} y={h - 5} textAnchor="middle" fill="#B5AEA5" fontSize={10}>{`${d.toLocaleString('en', { month: 'short' })} '${d.getFullYear().toString().slice(2)}`}</text>;
+          return <text key={i} x={x(i)} y={h - 5} textAnchor="middle" fill="#B5AEA5" fontSize={10}>{`${d.toLocaleString('en', { timeZone: 'UTC', month: 'short' })} '${d.getFullYear().toString().slice(2)}`}</text>;
         })}
         {data.slice(0, 6).map((topic, i) => (
           <g key={topic.topic} transform={`translate(${w - pad.r + 10}, ${pad.t + i * 20})`}>
@@ -39,6 +40,8 @@ export function TopicStreamChart({ data }: { data: TopicOverTime[] }) {
           </g>
         ))}
       </svg>
+      <ChartDataTable caption="Topic distribution (posts per month)" columns={['Month', ...data.map(t => t.topic)]}
+        rows={(data[0]?.series ?? []).map((p, i) => [monthLabel(p.date), ...data.map(t => t.series[i]?.value ?? 0)])} />
     </div>
   );
 }

@@ -23,8 +23,8 @@ export default function ResultsPage() {
   }
 
   const profile = activeProfile!;
-  const startDate = new Date(profile.dataQuality.dateRange.start).toLocaleDateString('en', { month: 'long', year: 'numeric' });
-  const endDate = new Date(profile.dataQuality.dateRange.end).toLocaleDateString('en', { month: 'long', year: 'numeric' });
+  const startDate = new Date(profile.dataQuality.dateRange.start).toLocaleDateString('en', { timeZone: 'UTC', month: 'long', year: 'numeric' });
+  const endDate = new Date(profile.dataQuality.dateRange.end).toLocaleDateString('en', { timeZone: 'UTC', month: 'long', year: 'numeric' });
 
   // Top topics, range, rewarded and kept topics (shared with the JSON export)
   const { topTopics, narrowed, reinforced, kept } = summarizeResults(profile, analysis);

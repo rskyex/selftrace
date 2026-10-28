@@ -1,5 +1,7 @@
 'use client';
 
+import { SOCIAL_CONNECT_ENABLED } from '@/lib/features';
+import { SocialConnectDisabled } from '@/components/shared/SocialConnectDisabled';
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { PageHeader } from '@/components/shared/PageHeader';
@@ -239,6 +241,7 @@ function Stat({ label, value }: { label: string; value: string | number }) {
 }
 
 export default function ImportPreviewPage() {
+  if (!SOCIAL_CONNECT_ENABLED) return <SocialConnectDisabled />;
   return (
     <Suspense fallback={null}>
       <ImportPreviewInner />

@@ -1,6 +1,7 @@
 'use client';
 
 import type { TimeSeriesPoint } from '@/lib/data/types';
+import { ChartDataTable, monthLabel } from '@/components/shared/ChartDataTable';
 
 export function TimelineBand({ data }: { data: TimeSeriesPoint[] }) {
   if (data.length === 0) return null;
@@ -21,9 +22,11 @@ export function TimelineBand({ data }: { data: TimeSeriesPoint[] }) {
         {data.map((d, i) => {
           if (i % step !== 0 && i !== data.length - 1) return null;
           const dt = new Date(d.date);
-          return <text key={i} x={x(i)} y={h - 3} textAnchor="middle" fill="#B5AEA5" fontSize={10}>{`${dt.toLocaleString('en', { month: 'short' })} '${dt.getFullYear().toString().slice(2)}`}</text>;
+          return <text key={i} x={x(i)} y={h - 3} textAnchor="middle" fill="#B5AEA5" fontSize={10}>{`${dt.toLocaleString('en', { timeZone: 'UTC', month: 'short' })} '${dt.getFullYear().toString().slice(2)}`}</text>;
         })}
       </svg>
+      <ChartDataTable caption="Posting density" columns={['Month', 'Posts']}
+        rows={data.map(d => [monthLabel(d.date), d.value])} />
     </div>
   );
 }

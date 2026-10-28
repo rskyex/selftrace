@@ -1,3 +1,4 @@
+import { SOCIAL_CONNECT_ENABLED, socialConnectDisabledResponse } from '@/lib/features';
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { isSupabaseConfigured, createServerSupabase, createServiceClient } from '@/lib/supabase/server';
@@ -5,6 +6,7 @@ import { getConnector } from '@/lib/platforms/registry';
 import { getAppUrl } from '@/lib/platforms/env';
 
 export async function GET(request: NextRequest) {
+  if (!SOCIAL_CONNECT_ENABLED) return socialConnectDisabledResponse();
   const appUrl = getAppUrl();
   const url = new URL(request.url);
   const code = url.searchParams.get('code');

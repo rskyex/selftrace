@@ -1,6 +1,7 @@
 'use client';
 
 import type { MemoryEvent } from '@/lib/data/types';
+import { ChartDataTable, monthLabel } from '@/components/shared/ChartDataTable';
 
 /**
  * The Echo Map — recurring phrases plotted on a timeline.
@@ -78,9 +79,11 @@ export function EchoMap({ events }: { events: MemoryEvent[] }) {
         {[0, 0.25, 0.5, 0.75, 1].map(f => {
           const ts = minDate + f * dateRange;
           const dt = new Date(ts);
-          return <text key={f} x={x(ts)} y={h - 4} textAnchor="middle" fill="#B5AEA5" fontSize={10}>{`${dt.toLocaleString('en', { month: 'short' })} '${dt.getFullYear().toString().slice(2)}`}</text>;
+          return <text key={f} x={x(ts)} y={h - 4} textAnchor="middle" fill="#B5AEA5" fontSize={10}>{`${dt.toLocaleString('en', { timeZone: 'UTC', month: 'short' })} '${dt.getFullYear().toString().slice(2)}`}</text>;
         })}
       </svg>
+      <ChartDataTable caption="Phrases that recurred across time" columns={['Phrase', 'Earlier', 'Later', 'Days apart']}
+        rows={sorted.flatMap(([phrase, evts]) => evts.map(ev => [phrase, monthLabel(ev.earlierDate), monthLabel(ev.laterDate), ev.daysBetween]))} />
     </div>
   );
 }

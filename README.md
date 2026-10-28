@@ -8,12 +8,12 @@ Part of **The Govern the Human Project** by Risa Koyanagi.
 
 ## Features
 
-- **Social Account Connection** — OAuth 2.0 integration with X (Twitter). YouTube, TikTok, and Instagram support planned.
-- **Post Import & Analysis** — Fetches your post history and runs linguistic analysis on patterns, topics, and tone.
+- **Social Account Connection (off by default)** — OAuth 2.0 integration with X (Twitter), enabled with `NEXT_PUBLIC_ENABLE_SOCIAL_CONNECT=true`. This path is not browser-only: it stores OAuth tokens (plain text), imported post text and raw post JSON in Supabase and runs the analysis on the server, and the privacy pages say so when the flag is on. With the flag off (the default) the connect option is hidden and the `/api/oauth` and `/api/social` routes return 404. YouTube, TikTok, and Instagram support planned.
+- **Post Import & Analysis** — With social connect enabled, fetches your post history and runs linguistic analysis on patterns, topics, and tone.
 - **Epistemic Labeling** — Every insight is labeled as _observed_, _inferred_, or _speculative_, so you always know how confident the analysis is.
 - **Multi-Dimensional Dashboards** — Explore your data across dimensions including drift, identity shifts, reinforcement patterns, recurring themes, and more.
 - **Demo Profiles** — Explore the platform without connecting an account.
-- **Privacy-First** — Analysis runs client-side. Row-Level Security ensures data isolation per user.
+- **Privacy-First** — In the default build, demo profiles are generated and analysed in the browser and nothing is sent to a server. With social connect enabled, Row-Level Security isolates each user's stored data.
 
 ## Result Export (gth-result/v1)
 

@@ -66,7 +66,7 @@ export const INSTRUMENT_VERSION = process.env.NEXT_PUBLIC_INSTRUMENT_VERSION || 
 
 const r2 = (n: number) => Math.round(n * 100) / 100;
 const monthLabel = (iso: string) =>
-  new Date(iso).toLocaleDateString('en', { month: 'long', year: 'numeric' });
+  new Date(iso).toLocaleDateString('en', { timeZone: 'UTC', month: 'long', year: 'numeric' });
 
 export function buildGthResult(profile: DatasetProfile, analysis: AnalysisResult) {
   const s = summarizeResults(profile, analysis);

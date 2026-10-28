@@ -2,6 +2,7 @@
 
 import type { TimeSeriesPoint } from '@/lib/data/types';
 import { ConfidenceDot } from './ConfidenceDot';
+import { ChartDataTable, monthLabel } from '@/components/shared/ChartDataTable';
 
 interface AreaChartProps {
   data: TimeSeriesPoint[];
@@ -44,10 +45,12 @@ export function AreaChart({ data, caption, confidence, height = 180, color = 'um
           {data.map((d, i) => {
             if (i % step !== 0 && i !== data.length - 1) return null;
             const dt = new Date(d.date);
-            return <text key={i} x={x(i)} y={height - 4} textAnchor="middle" fill="#B5AEA5" fontSize={11}>{`${dt.toLocaleString('en', { month: 'short' })} '${dt.getFullYear().toString().slice(2)}`}</text>;
+            return <text key={i} x={x(i)} y={height - 4} textAnchor="middle" fill="#B5AEA5" fontSize={11}>{`${dt.toLocaleString('en', { timeZone: 'UTC', month: 'short' })} '${dt.getFullYear().toString().slice(2)}`}</text>;
           })}
         </svg>
       </div>
+      <ChartDataTable caption={caption || 'Chart data'} columns={['Period', 'Value']}
+        rows={data.map(d => [monthLabel(d.date), d.value])} />
       {(caption || confidence) && (
         <div className="flex items-center gap-2 mt-2.5 px-1">
           {confidence && <ConfidenceDot level={confidence} />}

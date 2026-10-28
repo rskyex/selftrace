@@ -28,9 +28,9 @@ export default function ImportPage() {
         {/* Privacy assurance */}
         <div className="border-l border-teal-200 pl-5 mb-12">
           <p className="text-[14px] text-ink-500 leading-relaxed">
-            All processing happens in your browser. Nothing is uploaded to
-            any server. Nothing persists after you close this tab. There is
-            no backend, no database, no analytics telemetry.
+            All processing happens in your browser. This page sends nothing to a
+            server and stores nothing: there are no analytics scripts and no
+            database writes, and the profile is gone when you reload or close the tab.
           </p>
         </div>
 

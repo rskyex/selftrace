@@ -67,7 +67,7 @@ export default function ReturningPage() {
             {narrativeRepetition.value.slice(0, 8).map(ph => (
               <div key={ph.phrase} className="observation py-5 px-6">
                 <p className="text-[17px] text-ink-700 italic leading-snug">&ldquo;{ph.phrase}&rdquo;</p>
-                <p className="font-sans text-[12px] text-ink-400 mt-2">{ph.occurrences} times &middot; {ph.temporalSpread} &middot; first: {new Date(ph.firstAppearance).toLocaleDateString('en', { month: 'short', year: 'numeric' })}</p>
+                <p className="font-sans text-[12px] text-ink-400 mt-2">{ph.occurrences} times &middot; {ph.temporalSpread} &middot; first: {new Date(ph.firstAppearance).toLocaleDateString('en', { timeZone: 'UTC', month: 'short', year: 'numeric' })}</p>
               </div>
             ))}
           </div>

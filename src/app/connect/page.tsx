@@ -22,7 +22,7 @@ function ConnectInner() {
     <div>
       <PageHeader
         title="Connect your data"
-        subtitle="Upload an export or try a demo profile to see your patterns."
+        subtitle="Try a demo profile to see the patterns SelfTrace looks for."
       />
 
       <div className="wide-column px-6 pb-24">
@@ -30,27 +30,12 @@ function ConnectInner() {
         <div className="grid md:grid-cols-2 gap-8 mb-16">
           <div className="card p-8">
             <h2 className="font-display text-[20px] text-ink-900 mb-3">
-              Upload an export
+              Import an export file
             </h2>
-            <p className="text-[14px] text-ink-500 leading-relaxed mb-6">
-              Upload your data export from Twitter/X, Instagram, or LinkedIn.
-              Everything is processed locally — your data never leaves this device.
+            <p className="text-[14px] text-ink-500 leading-relaxed">
+              Importing a data export from Twitter/X, Instagram or LinkedIn is not
+              available yet. For now, SelfTrace runs on the fictional demo profiles.
             </p>
-            <div className="border-2 border-dashed border-linen-300 rounded-xl p-8 text-center">
-              <p className="text-[14px] text-ink-400 mb-2">
-                Drag and drop your export file here
-              </p>
-              <p className="text-[12px] text-ink-300">
-                .json or .zip &middot; Twitter/X, Instagram, LinkedIn
-              </p>
-              <button className="mt-4 text-[13px] font-medium text-accent-600 hover:text-accent-700 px-4 py-2 border border-accent-200 rounded-lg">
-                Browse files
-              </button>
-            </div>
-            <div className="flex items-center gap-2 mt-4">
-              <span className="inline-block w-2 h-2 rounded-full bg-sage-500" aria-hidden="true" />
-              <span className="text-[12px] text-ink-400">100% local processing — zero data transmission</span>
-            </div>
           </div>
 
           <div className="card p-8 bg-accent-50 border-accent-200">
@@ -102,30 +87,33 @@ function ConnectInner() {
           </p>
           <div className="space-y-4">
             <div>
-              <label className="block text-[13px] font-medium text-ink-700 mb-1.5">
+              <label htmlFor="self-topics" className="block text-[13px] font-medium text-ink-700 mb-1.5">
                 What topics do you think you post about most?
               </label>
               <input
+                id="self-topics"
                 type="text"
                 placeholder="e.g., technology, cooking, politics, music..."
                 className="w-full px-4 py-2.5 text-[14px] border border-linen-200 rounded-lg bg-white placeholder:text-ink-300 focus:outline-none focus:border-accent-500"
               />
             </div>
             <div>
-              <label className="block text-[13px] font-medium text-ink-700 mb-1.5">
+              <label htmlFor="self-voice" className="block text-[13px] font-medium text-ink-700 mb-1.5">
                 How would you describe your online voice?
               </label>
               <input
+                id="self-voice"
                 type="text"
                 placeholder="e.g., casual, analytical, passionate, measured..."
                 className="w-full px-4 py-2.5 text-[14px] border border-linen-200 rounded-lg bg-white placeholder:text-ink-300 focus:outline-none focus:border-accent-500"
               />
             </div>
             <div>
-              <label className="block text-[13px] font-medium text-ink-700 mb-1.5">
+              <label htmlFor="self-value" className="block text-[13px] font-medium text-ink-700 mb-1.5">
                 What do you value most about the way you present yourself online?
               </label>
               <input
+                id="self-value"
                 type="text"
                 placeholder="e.g., authenticity, expertise, humor, community..."
                 className="w-full px-4 py-2.5 text-[14px] border border-linen-200 rounded-lg bg-white placeholder:text-ink-300 focus:outline-none focus:border-accent-500"
@@ -133,8 +121,8 @@ function ConnectInner() {
             </div>
           </div>
           <p className="mt-4 text-[12px] text-ink-300">
-            These answers are stored only in your browser session and are used
-            solely for the self-vs-persona comparison.
+            These answers are not saved or sent anywhere, and this version does
+            not use them in the analysis yet.
           </p>
         </div>
       </div>

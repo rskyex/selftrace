@@ -177,9 +177,9 @@ export default function IdentityPage() {
                   </p>
                   {events.slice(0, 2).map((ev, i) => (
                     <p key={i} className="text-[12px] text-ink-400">
-                      {new Date(ev.earlierDate).toLocaleDateString('en', { month: 'short', year: 'numeric' })}
+                      {new Date(ev.earlierDate).toLocaleDateString('en', { timeZone: 'UTC', month: 'short', year: 'numeric' })}
                       {' → '}
-                      {new Date(ev.laterDate).toLocaleDateString('en', { month: 'short', year: 'numeric' })}
+                      {new Date(ev.laterDate).toLocaleDateString('en', { timeZone: 'UTC', month: 'short', year: 'numeric' })}
                       <span className="ml-2 text-ink-300">({ev.daysBetween} days apart)</span>
                     </p>
                   ))}

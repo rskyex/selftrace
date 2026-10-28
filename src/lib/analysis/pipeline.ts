@@ -27,7 +27,7 @@ function computePostingFrequency(posts: Post[]): FramedTimeSeries {
 
   for (const post of posts) {
     const d = new Date(post.createdAt);
-    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`;
+    const key = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-01`;
     monthly[key] = (monthly[key] || 0) + 1;
   }
 
@@ -54,7 +54,7 @@ function computeTopicDistribution(posts: Post[]): FramedInsight<TopicOverTime[]>
   for (const post of posts) {
     if (!post.derived) continue;
     const d = new Date(post.createdAt);
-    const monthKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`;
+    const monthKey = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-01`;
 
     for (const ta of post.derived.topics) {
       if (!topicsByMonth[monthKey]) topicsByMonth[monthKey] = {};
@@ -101,8 +101,8 @@ function computeTopicEntropy(posts: Post[]): FramedTimeSeries {
 
   for (const post of posts) {
     const d = new Date(post.createdAt);
-    const q = Math.floor(d.getMonth() / 3) + 1;
-    const key = `${d.getFullYear()}-${String(q * 3 - 2).padStart(2, '0')}-01`;
+    const q = Math.floor(d.getUTCMonth() / 3) + 1;
+    const key = `${d.getUTCFullYear()}-${String(q * 3 - 2).padStart(2, '0')}-01`;
     if (!postsByQuarter[key]) postsByQuarter[key] = [];
     postsByQuarter[key].push(post);
   }
@@ -205,8 +205,8 @@ function computeToneTrends(posts: Post[]): FramedInsight<{
   for (const post of posts) {
     if (!post.derived) continue;
     const d = new Date(post.createdAt);
-    const q = Math.floor(d.getMonth() / 3) + 1;
-    const key = `${d.getFullYear()}-${String(q * 3 - 2).padStart(2, '0')}-01`;
+    const q = Math.floor(d.getUTCMonth() / 3) + 1;
+    const key = `${d.getUTCFullYear()}-${String(q * 3 - 2).padStart(2, '0')}-01`;
     if (!byQuarter[key]) byQuarter[key] = { a: [], e: [], f: [], u: [] };
     byQuarter[key].a.push(post.derived.tone.assertiveness);
     byQuarter[key].e.push(post.derived.tone.emotionality);
@@ -371,8 +371,8 @@ function computeReinforcementCorrelation(posts: Post[]): FramedTimeSeries | null
   const byQuarter: Record<string, Post[]> = {};
   for (const post of posts) {
     const d = new Date(post.createdAt);
-    const q = Math.floor(d.getMonth() / 3) + 1;
-    const key = `${d.getFullYear()}-${String(q * 3 - 2).padStart(2, '0')}-01`;
+    const q = Math.floor(d.getUTCMonth() / 3) + 1;
+    const key = `${d.getUTCFullYear()}-${String(q * 3 - 2).padStart(2, '0')}-01`;
     if (!byQuarter[key]) byQuarter[key] = [];
     byQuarter[key].push(post);
   }
@@ -676,8 +676,8 @@ export function computePeriodComparison(
     };
   };
 
-  const labelA = `${new Date(startA).toLocaleDateString('en', { month: 'short', year: '2-digit' })} – ${new Date(endA).toLocaleDateString('en', { month: 'short', year: '2-digit' })}`;
-  const labelB = `${new Date(startB).toLocaleDateString('en', { month: 'short', year: '2-digit' })} – ${new Date(endB).toLocaleDateString('en', { month: 'short', year: '2-digit' })}`;
+  const labelA = `${new Date(startA).toLocaleDateString('en', { month: 'short', year: '2-digit', timeZone: 'UTC' })} – ${new Date(endA).toLocaleDateString('en', { month: 'short', year: '2-digit', timeZone: 'UTC' })}`;
+  const labelB = `${new Date(startB).toLocaleDateString('en', { month: 'short', year: '2-digit', timeZone: 'UTC' })} – ${new Date(endB).toLocaleDateString('en', { month: 'short', year: '2-digit', timeZone: 'UTC' })}`;
 
   return {
     periodA: { label: labelA, start: startA, end: endA },

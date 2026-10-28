@@ -2,6 +2,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ScrollReveal } from '@/components/landing/ScrollReveal';
 import { HeroInteractive } from '@/components/landing/HeroInteractive';
+import { SOCIAL_CONNECT_ENABLED } from '@/lib/features';
+import { PRIVACY_SHORT, PRIVACY_HOME } from '@/lib/privacy-copy';
 
 export default function HomePage() {
   return (
@@ -23,17 +25,27 @@ export default function HomePage() {
 
             {/* Supporting text */}
             <p className="text-[17px] md:text-[19px] text-ink-500 leading-[1.7] mb-10 animate-fade-up animation-delay-200">
-              Connect your accounts or try a demo profile to explore recurring themes, rewarded traits, and identity shifts.
+              {SOCIAL_CONNECT_ENABLED
+                ? 'Connect your accounts or try a demo profile to explore recurring themes, rewarded traits, and identity shifts.'
+                : 'Try a fictional demo profile to explore recurring themes, rewarded traits, and identity shifts.'}
             </p>
 
             {/* CTA hierarchy */}
             <div className="flex flex-col sm:flex-row items-start gap-4 animate-fade-up animation-delay-300">
-              <Link href="/start" className="btn-primary">
-                Connect your social media
-              </Link>
-              <Link href="/start?demo=true" className="btn-secondary">
-                Try demo
-              </Link>
+              {SOCIAL_CONNECT_ENABLED ? (
+                <>
+                  <Link href="/start" className="btn-primary">
+                    Connect your social media
+                  </Link>
+                  <Link href="/start?demo=true" className="btn-secondary">
+                    Try demo
+                  </Link>
+                </>
+              ) : (
+                <Link href="/start?demo=true" className="btn-primary">
+                  Try a demo profile
+                </Link>
+              )}
             </div>
 
             {/* Privacy + tertiary link */}
@@ -42,7 +54,7 @@ export default function HomePage() {
                 <svg width="14" height="14" viewBox="0 0 20 20" fill="none" className="text-ink-400 shrink-0">
                   <path d="M10 2a5 5 0 0 0-5 5v3H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1h-1V7a5 5 0 0 0-5-5zm-3 5a3 3 0 1 1 6 0v3H7V7z" fill="currentColor"/>
                 </svg>
-                Private by design. Analysis runs in your browser.
+                {PRIVACY_SHORT}
               </span>
               <Link href="#how" className="btn-tertiary">
                 How it works &darr;
@@ -87,10 +99,12 @@ export default function HomePage() {
                     <span className="font-display text-[36px] text-ink-300 leading-none shrink-0">1</span>
                     <div>
                       <h3 className="font-sans text-[17px] font-semibold text-ink-900 mb-2">
-                        Connect or upload
+                        {SOCIAL_CONNECT_ENABLED ? 'Connect or choose a profile' : 'Choose a profile'}
                       </h3>
                       <p className="text-[15px] text-ink-500 leading-[1.75]">
-                        Bring in your social media data, or begin with a fictional profile.
+                        {SOCIAL_CONNECT_ENABLED
+                          ? 'Connect your X account, or begin with a fictional profile.'
+                          : 'Begin with a fictional profile. Connecting your own account is not available in this version.'}
                       </p>
                     </div>
                   </div>
@@ -376,9 +390,7 @@ export default function HomePage() {
                   Private by design
                 </h3>
                 <p className="text-[16px] md:text-[17px] text-ink-500 leading-[1.8] max-w-md mx-auto">
-                  All analysis runs in your browser. If you connect a social account,
-                  the connection is handled securely and your content is never stored
-                  on our servers. You can also use demo profiles with no sign-in at all.
+                  {PRIVACY_HOME}
                 </p>
                 <Link href="/how-it-works" className="text-link inline-block mt-5 text-[14px]">
                   How it works &rarr;
@@ -416,12 +428,20 @@ export default function HomePage() {
                   You might notice something you hadn&apos;t seen before.
                 </p>
                 <div className="flex flex-col sm:flex-row items-center lg:items-start gap-4">
-                  <Link href="/start" className="btn-primary">
-                    Connect your social media
-                  </Link>
-                  <Link href="/start?demo=true" className="btn-secondary">
-                    Try demo
-                  </Link>
+                  {SOCIAL_CONNECT_ENABLED ? (
+                    <>
+                      <Link href="/start" className="btn-primary">
+                        Connect your social media
+                      </Link>
+                      <Link href="/start?demo=true" className="btn-secondary">
+                        Try demo
+                      </Link>
+                    </>
+                  ) : (
+                    <Link href="/start?demo=true" className="btn-primary">
+                      Try a demo profile
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>

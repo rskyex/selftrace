@@ -34,8 +34,9 @@ export default function AlgorithmInfluencePage() {
     );
   }
 
-  const { sensitivityScore, patterns, engagementOptimization, echoChamber, platformSignals } = algorithmInfluence;
+  const { sensitivityScore, indexComponents: c, patterns, engagementOptimization, echoChamber, platformSignals } = algorithmInfluence;
   const scorePercent = Math.round(sensitivityScore * 100);
+  const fmt = (v: number) => v.toFixed(2);
 
   return (
     <div className="reading-column px-6 pt-24 pb-24">
@@ -56,12 +57,12 @@ export default function AlgorithmInfluencePage() {
       {/* ── Sensitivity Overview ──────────────────── */}
       <section className="mb-20">
         <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 tracking-tight mb-6">
-          Overall influence sensitivity
+          Influence index
         </h2>
         <div className="observation py-8 px-8">
           <div className="flex items-center gap-6 mb-5">
             <div className="relative w-20 h-20 flex-shrink-0">
-              <svg viewBox="0 0 80 80" className="w-20 h-20 -rotate-90">
+              <svg viewBox="0 0 80 80" className="w-20 h-20 -rotate-90" aria-hidden="true">
                 <circle cx="40" cy="40" r="34" fill="none" stroke="var(--color-linen-200)" strokeWidth="6" />
                 <circle
                   cx="40" cy="40" r="34" fill="none"
@@ -71,27 +72,41 @@ export default function AlgorithmInfluencePage() {
                 />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="font-sans text-[18px] font-semibold text-ink-900">{scorePercent}%</span>
+                <span className="font-sans text-[18px] font-semibold text-ink-900">{fmt(sensitivityScore)}</span>
               </div>
             </div>
             <div>
               <p className="font-sans text-[14px] font-medium text-ink-700 mb-1">
-                Algorithm sensitivity score
+                Influence index (0 to 1)
               </p>
               <p className="text-[15px] text-ink-500 leading-[1.7]">
                 {scorePercent < 25
-                  ? 'Low sensitivity. Your posting patterns show few signs of algorithmic influence.'
+                  ? 'Low. Your posting patterns show few of the signals counted here.'
                   : scorePercent < 50
-                  ? 'Moderate sensitivity. Some patterns are consistent with algorithmic shaping.'
+                  ? 'Moderate. Some patterns are consistent with algorithmic shaping.'
                   : scorePercent < 75
-                  ? 'Notable sensitivity. Multiple patterns suggest the platform environment influenced your content direction.'
-                  : 'High sensitivity. Strong signals that algorithmic environments shaped your expression.'}
+                  ? 'Notable. Several of the signals counted here are present.'
+                  : 'High. Most of the signals counted here are present.'}
               </p>
             </div>
           </div>
+          <div className="mb-5 font-sans text-[13px] text-ink-500 leading-[1.7]" data-testid="influence-formula">
+            <p className="font-mono text-[12px] text-ink-700">
+              index = min(1, 0.3&middot;E + 0.3&middot;T + 0.2&middot;V + 0.2&middot;N)
+              {' '}= min(1, 0.3&middot;{c.engagementShift} + 0.3&middot;{fmt(c.topicConcentration)} + 0.2&middot;{fmt(c.vocabularyConvergence)} + 0.2&middot;{fmt(c.toneNarrowing)})
+              {' '}= {fmt(sensitivityScore)}
+            </p>
+            <ul className="mt-2 space-y-0.5">
+              <li>E = 1 if the engagement-driven shift below is detected, otherwise 0</li>
+              <li>T = topic concentration: relative drop in topic entropy from the first to the last quarter</li>
+              <li>V = vocabulary convergence: fading words &divide; (fading + emerging words)</li>
+              <li>N = tone narrowing: average narrowing of the four tone ranges in the later half</li>
+            </ul>
+            <p className="mt-2">It is an index of these signals, not a percentage or a probability.</p>
+          </div>
           <p className="text-[13px] text-ink-400 leading-[1.6]">
             This is not a verdict. Correlation is not causation. Many of these patterns could
-            reflect natural evolution, life changes, or deliberate choices. The score aggregates
+            reflect natural evolution, life changes, or deliberate choices. The index aggregates
             observable signals — you decide what they mean.
           </p>
         </div>

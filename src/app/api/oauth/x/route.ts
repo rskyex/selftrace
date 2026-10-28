@@ -1,3 +1,4 @@
+import { SOCIAL_CONNECT_ENABLED, socialConnectDisabledResponse } from '@/lib/features';
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { isSupabaseConfigured, createServerSupabase } from '@/lib/supabase/server';
@@ -6,6 +7,7 @@ import { isXOAuthConfigured, getAppUrl } from '@/lib/platforms/env';
 import crypto from 'crypto';
 
 export async function GET() {
+  if (!SOCIAL_CONNECT_ENABLED) return socialConnectDisabledResponse();
   const appUrl = getAppUrl();
 
   // Guard: check that OAuth infrastructure is configured

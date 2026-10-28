@@ -1,8 +1,10 @@
+import { SOCIAL_CONNECT_ENABLED, socialConnectDisabledResponse } from '@/lib/features';
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerSupabase, createServiceClient } from '@/lib/supabase/server';
 import { analyzeSocialPosts } from '@/lib/analysis/social';
 
 export async function POST(request: NextRequest) {
+  if (!SOCIAL_CONNECT_ENABLED) return socialConnectDisabledResponse();
   const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
 

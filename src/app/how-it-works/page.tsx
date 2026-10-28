@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { PRIVACY_HOW_IT_WORKS } from '@/lib/privacy-copy';
 
 const ANALYSES = [
   { l: 'Recurring phrases and themes', d: 'What you return to \u2014 the formulations, ideas, and framings that appear in multiple posts across time.' },
@@ -92,12 +93,7 @@ export default function HowItWorksPage() {
       </h2>
       <div className="observation-sage mb-12">
         <h3>Private by design</h3>
-        <p>
-          All analysis runs entirely in your browser. When you use a demo profile,
-          nothing is sent to any server. If you connect a social account, only the
-          connection handshake passes through our server &mdash; your content is fetched
-          and processed locally, then released when you close the tab.
-        </p>
+        <p>{PRIVACY_HOW_IT_WORKS}</p>
         <p className="mt-4">
           We built it this way because what this product shows you is personal in a way
           most apps never are. It&apos;s not your preferences or your purchase history &mdash;

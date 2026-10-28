@@ -80,8 +80,8 @@ export default function PortraitPage() {
   const topDescs = Object.entries(descCounts).sort((a, b) => b[1] - a[1]).slice(0, 3);
 
   // Date range
-  const startDate = new Date(profile.dataQuality.dateRange.start).toLocaleDateString('en', { month: 'long', year: 'numeric' });
-  const endDate = new Date(profile.dataQuality.dateRange.end).toLocaleDateString('en', { month: 'long', year: 'numeric' });
+  const startDate = new Date(profile.dataQuality.dateRange.start).toLocaleDateString('en', { timeZone: 'UTC', month: 'long', year: 'numeric' });
+  const endDate = new Date(profile.dataQuality.dateRange.end).toLocaleDateString('en', { timeZone: 'UTC', month: 'long', year: 'numeric' });
 
   return (
     <div className="reading-column px-6 pt-24 pb-24">

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { PRIVACY_SHORT } from '@/lib/privacy-copy';
 
 export function Footer() {
   return (
@@ -35,7 +36,7 @@ export function Footer() {
 
         <div className="mt-12 pt-8 border-t border-linen-200/60 text-center">
           <p className="font-sans text-[12px] text-ink-300">
-            Private by design. All analysis runs locally in your browser.
+            {PRIVACY_SHORT}
           </p>
         </div>
       </div>

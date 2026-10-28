@@ -9,6 +9,8 @@ import { createClient, isSupabaseConfigured } from '@/lib/supabase/client';
 import { platformMeta } from '@/lib/platforms/registry';
 import type { PlatformId } from '@/lib/platforms/types';
 import Link from 'next/link';
+import { SOCIAL_CONNECT_ENABLED } from '@/lib/features';
+import { PRIVACY_SHORT } from '@/lib/privacy-copy';
 
 const MBTI_TYPES = [
   'INTJ', 'INTP', 'ENTJ', 'ENTP',
@@ -37,17 +39,6 @@ const REFLECTION_PROMPTS: { key: keyof SelfPortrait; question: string; context: 
   { key: 'changedBeliefs', question: 'Are there things you believe or care about differently now than you used to?', context: 'This one is worth sitting with for a moment.', type: 'text' },
 ];
 
-const LOADING_LINES = [
-  'Reading through what you wrote.',
-  'Noticing what kept coming back.',
-  'Tracking how things shifted over time.',
-  'Comparing what got attention with what didn\u2019t.',
-  'Looking at what you kept doing anyway.',
-  'Analyzing patterns of algorithmic influence.',
-  'Placing all of this beside what you told us about yourself.',
-  'One more moment.',
-];
-
 function StartInner() {
   const { isLoaded, loadProfile, setSelfPortrait } = useData();
   const router = useRouter();
@@ -61,31 +52,18 @@ function StartInner() {
     hasChanged: '', changedBeliefs: '', platformInfluence: '',
     consumptionPattern: '', mbti: '', enneagram: '', offlineVsOnline: '',
   });
-  const [loadingLine, setLoadingLine] = useState(0);
-  const [loadingFade, setLoadingFade] = useState(true);
 
   useEffect(() => {
     if (searchParams.get('demo') === 'true' && !isLoaded) loadProfile('demo-intellectual');
   }, [searchParams, isLoaded, loadProfile]);
 
+  // The analysis runs when a profile is loaded, so it is already complete by
+  // the time this step is reached: announce that and open the results.
   useEffect(() => {
     if (step !== 'loading') return;
-    const timer = setInterval(() => {
-      setLoadingFade(false);
-      setTimeout(() => {
-        setLoadingLine(prev => {
-          if (prev >= LOADING_LINES.length - 1) {
-            clearInterval(timer);
-            setTimeout(() => router.push('/results'), 1200);
-            return prev;
-          }
-          return prev + 1;
-        });
-        setLoadingFade(true);
-      }, 300);
-    }, loadingLine === 5 ? 3200 : 2700);
-    return () => clearInterval(timer);
-  }, [step, loadingLine, router]);
+    const timer = setTimeout(() => router.push('/results'), 800);
+    return () => clearTimeout(timer);
+  }, [step, router]);
 
   const setAnswer = (key: string, val: string) => setAnswers(prev => ({ ...prev, [key]: val }));
 
@@ -131,8 +109,8 @@ function StartInner() {
             Tell us a little about yourself
           </h1>
           <p className="text-[17px] text-ink-500 leading-[1.7]">
-            This helps us compare your self-understanding with what the traces show.
-            Everything here is optional.
+            Your types are shown next to your results so you can read the two side by side.
+            They are not analysed or compared with your posts. Everything here is optional.
           </p>
         </header>
 
@@ -140,14 +118,16 @@ function StartInner() {
         <div className="mb-10">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <p className="font-sans text-[14px] font-medium text-ink-700">MBTI type</p>
-              <p className="text-[14px] text-ink-400 leading-[1.5]">If you know yours, we&apos;ll compare it with your posting patterns.</p>
+              <p id="mbti-label" className="font-sans text-[14px] font-medium text-ink-700">MBTI type</p>
+              <p className="text-[14px] text-ink-400 leading-[1.5]">If you know yours, it is shown next to your results. It is not used in the analysis.</p>
             </div>
           </div>
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-4 gap-2" role="group" aria-labelledby="mbti-label">
             {MBTI_TYPES.map(type => (
               <button
                 key={type}
+                type="button"
+                aria-pressed={answers.mbti === type}
                 onClick={() => setAnswer('mbti', answers.mbti === type ? '' : type)}
                 className={`py-2.5 px-3 rounded-xl font-sans text-[13px] font-medium transition-all ${
                   answers.mbti === type
@@ -164,15 +144,17 @@ function StartInner() {
         {/* Enneagram */}
         <div className="mb-10">
           <div className="mb-4">
-            <p className="font-sans text-[14px] font-medium text-ink-700">Enneagram type</p>
-            <p className="text-[14px] text-ink-400 leading-[1.5]">Optional. Adds depth to the self-analysis.</p>
+            <p id="enneagram-label" className="font-sans text-[14px] font-medium text-ink-700">Enneagram type</p>
+            <p className="text-[14px] text-ink-400 leading-[1.5]">Optional. Shown next to your results; not used in the analysis.</p>
           </div>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 gap-2" role="group" aria-labelledby="enneagram-label">
             {ENNEAGRAM_TYPES.map(type => {
               const num = type.split(' ')[0];
               return (
                 <button
                   key={type}
+                  type="button"
+                  aria-pressed={answers.enneagram === num}
                   onClick={() => setAnswer('enneagram', answers.enneagram === num ? '' : num)}
                   className={`py-2.5 px-3 rounded-xl font-sans text-[12px] font-medium text-left transition-all ${
                     answers.enneagram === num
@@ -189,6 +171,8 @@ function StartInner() {
 
         {/* Toggle for more */}
         <button
+          type="button"
+          aria-expanded={showPersonality}
           onClick={() => setShowPersonality(!showPersonality)}
           className="font-sans text-[13px] text-ink-400 hover:text-ink-600 mb-6"
         >
@@ -199,9 +183,8 @@ function StartInner() {
           <div className="observation mb-10">
             <p className="text-[15px] text-ink-500 leading-[1.7]">
               Personality frameworks are imperfect, but they capture something about how you
-              understand yourself. By comparing your self-identified type with the patterns
-              in your posting data, we can surface interesting gaps — places where the
-              platform environment may have amplified or dampened particular tendencies.
+              understand yourself. SelfTrace does not analyse them or compare them with your
+              posts: your type is shown next to the results, and any comparison is yours to make.
             </p>
           </div>
         )}
@@ -230,14 +213,16 @@ function StartInner() {
           </p>
         )}
 
-        <label className="block font-display text-[22px] md:text-[24px] text-ink-900 leading-[1.2] mb-4">
+        <label htmlFor={`reflection-${prompt.key}`} className="block font-display text-[22px] md:text-[24px] text-ink-900 leading-[1.2] mb-4">
           {prompt.question}
         </label>
-        <p className="text-[15px] text-ink-500 leading-[1.7] mb-8">
+        <p id={`reflection-${prompt.key}-context`} className="text-[15px] text-ink-500 leading-[1.7] mb-8">
           {prompt.context}
         </p>
 
         <input
+          id={`reflection-${prompt.key}`}
+          aria-describedby={`reflection-${prompt.key}-context`}
           type="text"
           value={answers[prompt.key]}
           onChange={e => setAnswer(prompt.key, e.target.value)}
@@ -255,7 +240,7 @@ function StartInner() {
         </div>
 
         {/* Progress indicator */}
-        <div className="mt-20 flex justify-center gap-1.5">
+        <div className="mt-20 flex justify-center gap-1.5" role="img" aria-label={`Question ${reflectionIndex + 1} of ${REFLECTION_PROMPTS.length}`}>
           {REFLECTION_PROMPTS.map((_, i) => (
             <div
               key={i}
@@ -269,12 +254,12 @@ function StartInner() {
     );
   }
 
-  // ── Loading threshold ─────────────────────────
+  // ── Opening results ───────────────────────────
   return (
     <div className="flex items-center justify-center min-h-[70vh]">
-      <div className="text-center max-w-md px-6">
-        <p className={`font-display text-[20px] text-ink-500 leading-relaxed transition-opacity duration-300 ${loadingFade ? 'opacity-100' : 'opacity-0'}`}>
-          {LOADING_LINES[loadingLine]}
+      <div className="text-center max-w-md px-6" role="status" aria-live="polite">
+        <p className="font-display text-[20px] text-ink-500 leading-relaxed">
+          Analysis complete. Opening your results.
         </p>
       </div>
     </div>
@@ -314,9 +299,9 @@ function DataStep({ isLoaded, onContinue, searchParams }: {
     }
   }, [searchParams]);
 
-  // Fetch connected accounts (only if Supabase is configured)
+  // Fetch connected accounts (only if social connect is enabled and Supabase is configured)
   useEffect(() => {
-    if (!isSupabaseConfigured()) return;
+    if (!SOCIAL_CONNECT_ENABLED || !isSupabaseConfigured()) return;
     async function load() {
       try {
         const supabase = createClient();
@@ -366,7 +351,9 @@ function DataStep({ isLoaded, onContinue, searchParams }: {
           Let&apos;s start with your posts
         </h1>
         <p className="text-[17px] text-ink-500 leading-[1.7]">
-          Connect your social account, or choose a fictional profile to see how this works.
+          {SOCIAL_CONNECT_ENABLED
+            ? 'Connect your X account, or choose a fictional profile to see how this works.'
+            : 'Choose a fictional profile to see how this works. Connecting your own account is not available in this version.'}
         </p>
       </header>
 
@@ -382,6 +369,7 @@ function DataStep({ isLoaded, onContinue, searchParams }: {
       )}
 
       {/* Platform list */}
+      {SOCIAL_CONNECT_ENABLED && (
       <div className="observation py-6 px-6 mb-8">
         <div className="space-y-3">
           {(Object.entries(platformMeta) as [PlatformId, typeof platformMeta[PlatformId]][]).map(
@@ -446,11 +434,14 @@ function DataStep({ isLoaded, onContinue, searchParams }: {
         </div>
         <div className="flex items-center gap-2 mt-4 px-1">
           <span className="inline-block w-2 h-2 rounded-full bg-sage-500" aria-hidden="true" />
-          <span className="text-[12px] text-ink-400">Official OAuth only — we never ask for your password</span>
+          <span className="text-[12px] text-ink-400">Official OAuth only — we never ask for your password. Imported posts and access tokens are stored on our server; see <Link href="/privacy" className="underline">Privacy</Link>.</span>
         </div>
       </div>
+      )}
 
-      <p className="font-sans text-[13px] text-ink-400 text-center mb-6">or explore with a fictional profile:</p>
+      {SOCIAL_CONNECT_ENABLED && (
+        <p className="font-sans text-[13px] text-ink-400 text-center mb-6">or explore with a fictional profile:</p>
+      )}
       <ProfileSwitcher />
 
       {isLoaded && (
@@ -460,7 +451,7 @@ function DataStep({ isLoaded, onContinue, searchParams }: {
       )}
 
       <p className="font-sans text-[12px] text-ink-300 text-center mt-10">
-        Private by design. All analysis runs locally in your browser.
+        {PRIVACY_SHORT}
       </p>
     </div>
   );

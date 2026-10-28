@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { SOCIAL_CONNECT_ENABLED } from '@/lib/features';
 
 const traceOptions = [
   {
@@ -110,7 +111,7 @@ export function HeroInteractive() {
                   </span>
                 </div>
 
-                {platform.available ? (
+                {platform.available && SOCIAL_CONNECT_ENABLED ? (
                   <Link
                     href="/start"
                     className="px-4 py-1.5 bg-ink-900 hover:bg-ink-700 text-linen-50 text-[13px] font-sans font-medium rounded-full transition-colors"
@@ -118,7 +119,7 @@ export function HeroInteractive() {
                     Connect
                   </Link>
                 ) : (
-                  <span className="text-[12px] text-ink-300 font-sans italic px-2">Coming soon</span>
+                  <span className="text-[12px] text-ink-300 font-sans italic px-2">{SOCIAL_CONNECT_ENABLED ? 'Coming soon' : 'Not available yet'}</span>
                 )}
               </div>
             ))}

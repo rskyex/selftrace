@@ -1,6 +1,7 @@
 'use client';
 
 import type { TimeSeriesPoint } from '@/lib/data/types';
+import { ChartDataTable, monthLabel } from '@/components/shared/ChartDataTable';
 
 /**
  * The Corridor — epistemic range over time.
@@ -45,9 +46,11 @@ export function CorridorChart({ data }: { data: TimeSeriesPoint[] }) {
         {data.map((d, i) => {
           if (i % step !== 0 && i !== data.length - 1) return null;
           const dt = new Date(d.date);
-          return <text key={i} x={x(i)} y={h - 4} textAnchor="middle" fill="#B5AEA5" fontSize={10}>{`${dt.toLocaleString('en', { month: 'short' })} '${dt.getFullYear().toString().slice(2)}`}</text>;
+          return <text key={i} x={x(i)} y={h - 4} textAnchor="middle" fill="#B5AEA5" fontSize={10}>{`${dt.toLocaleString('en', { timeZone: 'UTC', month: 'short' })} '${dt.getFullYear().toString().slice(2)}`}</text>;
         })}
       </svg>
+      <ChartDataTable caption="Your epistemic range over time" columns={['Period', 'Value']}
+        rows={data.map(d => [monthLabel(d.date), d.value])} />
     </div>
   );
 }

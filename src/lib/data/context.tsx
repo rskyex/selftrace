@@ -31,8 +31,21 @@ export interface SelfPortrait {
 }
 
 export interface AlgorithmInfluence {
-  /** Overall algorithm sensitivity score 0-1 */
+  /**
+   * Influence index, 0-1: min(1, 0.3·E + 0.3·T + 0.2·V + 0.2·N) with the
+   * components below. An index of signals, not a percentage or probability.
+   */
   sensitivityScore: number;
+  indexComponents: {
+    /** E: 1 if the engagement-driven shift pattern is detected, else 0 */
+    engagementShift: number;
+    /** T: relative drop in topic entropy, first to last quarter */
+    topicConcentration: number;
+    /** V: fading terms / (fading + emerging terms) */
+    vocabularyConvergence: number;
+    /** N: average narrowing of tone ranges */
+    toneNarrowing: number;
+  };
   /** Detected influence patterns */
   patterns: AlgorithmPattern[];
   /** Content homogeneity trend */
@@ -90,7 +103,7 @@ const DataContext = createContext<DataContextValue>({
   setSelfPortrait: () => {},
 });
 
-function computeAlgorithmInfluence(profile: DatasetProfile, analysis: AnalysisResult): AlgorithmInfluence {
+export function computeAlgorithmInfluence(profile: DatasetProfile, analysis: AnalysisResult): AlgorithmInfluence {
   const posts = profile.posts;
   const eng = analysis.engagementSensitivity;
   const entropy = analysis.topicEntropy.value;
@@ -114,7 +127,10 @@ function computeAlgorithmInfluence(profile: DatasetProfile, analysis: AnalysisRe
   const drift = analysis.vocabularyDrift.value;
   const emergingCount = drift.filter(t => t.direction === 'emerging').length;
   const fadingCount = drift.filter(t => t.direction === 'fading').length;
-  const vocabConvergence = drift.length > 0 ? fadingCount / drift.length : 0;
+  // Share of directional drift that is fading (stable terms excluded), so it
+  // is above 0.5 exactly when more words faded than emerged.
+  const vocabConvergence = fadingCount + emergingCount > 0 ? fadingCount / (fadingCount + emergingCount) : 0;
+  const vocabNarrowed = fadingCount > emergingCount;
 
   // 3. Tone narrowing
   const tones = analysis.toneTrends.value;
@@ -160,12 +176,12 @@ function computeAlgorithmInfluence(profile: DatasetProfile, analysis: AnalysisRe
     });
   }
 
-  if (vocabConvergence > 0.3) {
+  if (vocabNarrowed) {
     patterns.push({
       name: 'Vocabulary convergence',
       description: 'More words faded from your writing than emerged. Your linguistic range may have narrowed.',
       evidence: `${fadingCount} words fading vs ${emergingCount} emerging.`,
-      strength: vocabConvergence > 0.5 ? 'strong' : 'moderate',
+      strength: vocabConvergence > 0.75 ? 'strong' : 'moderate',
       category: 'echo_chamber',
     });
   }
@@ -209,8 +225,8 @@ function computeAlgorithmInfluence(profile: DatasetProfile, analysis: AnalysisRe
     },
     {
       signal: 'Vocabulary narrowing',
-      description: 'Range of vocabulary contracted over the posting period',
-      observed: vocabConvergence > 0.3,
+      description: 'More words faded from your writing than emerged over the posting period',
+      observed: vocabNarrowed,
     },
     {
       signal: 'Tone conformity',
@@ -226,6 +242,12 @@ function computeAlgorithmInfluence(profile: DatasetProfile, analysis: AnalysisRe
 
   return {
     sensitivityScore,
+    indexComponents: {
+      engagementShift: engOptDetected ? 1 : 0,
+      topicConcentration,
+      vocabularyConvergence: vocabConvergence,
+      toneNarrowing,
+    },
     patterns,
     homogeneityTrend: topicConcentration > 0.2 ? 'increasing' : topicConcentration < -0.1 ? 'decreasing' : 'stable',
     engagementOptimization: {

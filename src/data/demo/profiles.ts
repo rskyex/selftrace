@@ -2,6 +2,7 @@
 // Three fictional profiles that exercise different analytical patterns.
 // All data is synthetic. No real person is represented.
 // Uses a seeded PRNG so profiles are identical across page reloads.
+// Dates are built in UTC so data and exports are identical in every time zone.
 
 import type {
   DatasetProfile,
@@ -18,7 +19,7 @@ import { createSeededRandom } from '@/lib/util/random';
 // ── Constants ────────────────────────────────────────────────────────────────
 
 function makeDate(year: number, month: number, day: number): string {
-  return new Date(year, month - 1, day).toISOString();
+  return new Date(Date.UTC(year, month - 1, day)).toISOString();
 }
 
 function generateId(prefix: string, i: number): string {
@@ -461,24 +462,24 @@ function buildQuarterlyPeriods(posts: Post[]): TimePeriod[] {
   const periods: TimePeriod[] = [];
   const startDate = new Date(posts[0].createdAt);
   const endDate = new Date(posts[posts.length - 1].createdAt);
-  let current = new Date(startDate.getFullYear(), Math.floor(startDate.getMonth() / 3) * 3, 1);
+  let current = new Date(Date.UTC(startDate.getUTCFullYear(), Math.floor(startDate.getUTCMonth() / 3) * 3, 1));
   let periodIndex = 0;
 
   while (current <= endDate) {
-    const periodEnd = new Date(current.getFullYear(), current.getMonth() + 3, 0);
+    const periodEnd = new Date(Date.UTC(current.getUTCFullYear(), current.getUTCMonth() + 3, 0));
     const periodPosts = posts.filter(p => {
       const d = new Date(p.createdAt);
       return d >= current && d <= periodEnd;
     });
-    const qNum = Math.floor(current.getMonth() / 3) + 1;
+    const qNum = Math.floor(current.getUTCMonth() / 3) + 1;
     periods.push({
       id: `period-${periodIndex}`,
-      label: `Q${qNum} ${current.getFullYear()}`,
+      label: `Q${qNum} ${current.getUTCFullYear()}`,
       start: current.toISOString(),
       end: periodEnd.toISOString(),
       postCount: periodPosts.length,
     });
-    current = new Date(current.getFullYear(), current.getMonth() + 3, 1);
+    current = new Date(Date.UTC(current.getUTCFullYear(), current.getUTCMonth() + 3, 1));
     periodIndex++;
   }
   return periods;
