@@ -25,6 +25,10 @@ export interface FramedMetric extends FramedInsight<number> {
 export interface TimeSeriesPoint {
   date: string;
   value: number;
+  /** Sample size behind the point, where it matters (e.g. topics in a correlation). */
+  n?: number;
+  /** True when the point is left blank because the sample is too small. */
+  missing?: boolean;
 }
 
 export interface FramedTimeSeries extends FramedInsight<TimeSeriesPoint[]> {
@@ -41,6 +45,22 @@ export interface Post {
   content: PostContent;
   engagement: EngagementMetrics | null;
   derived: DerivedPostData | null;
+  /**
+   * Demo profiles only: what the generator planted (its topic label, tone
+   * curve, self-description schedule and engagement multiplier), kept so the
+   * recovery test can compare it with what the pipeline derives from the text.
+   */
+  planted?: PlantedPostData;
+}
+
+export interface PlantedPostData {
+  topic: string;
+  tone: ToneMarkers;
+  selfDescriptions: SelfDescriptionMarker[];
+  /** Topic engagement multiplier used by the generator (1 = none). */
+  engagementBoost: number;
+  /** Generator month index (0 = first month). */
+  month: number;
 }
 
 export interface PostContent {
@@ -162,9 +182,49 @@ export interface RecurringPhrase {
 
 export interface TopicEngagement {
   topic: string;
+  /** Raw mean engagement (likes + 2 × shares), not time-adjusted. */
   averageEngagement: number;
   postCount: number;
-  frequencyTrend: 'increasing' | 'stable' | 'decreasing';
+  /** From share change between equal-time halves; see src/lib/analysis/definitions.ts. */
+  frequencyTrend: 'increasing' | 'stable' | 'decreasing' | 'insufficient';
+  /** Median of post engagement ÷ its month's median engagement (time-adjusted). */
+  rewardRatio: number;
+  earlyRewardRatio: number | null;
+  lateRewardRatio: number | null;
+  earlyCount: number;
+  lateCount: number;
+  /** Share of posts in each half that carry the topic, 0-1. */
+  earlyShare: number;
+  lateShare: number;
+  /** lateShare − earlyShare, in percentage points, with a bootstrap 95% interval. */
+  shareChangePp: number;
+  shareChangeCI: [number, number];
+  rewarded: boolean;
+  kept: boolean;
+  resistedReward: boolean;
+  faded: boolean;
+}
+
+export interface TimeHalves {
+  /** Midpoint in time between the first and last post. */
+  split: string;
+  earlyPosts: number;
+  latePosts: number;
+  /** Both halves have at least the minimum number of posts. */
+  sufficient: boolean;
+}
+
+export interface NarrowingResult {
+  windowMonths: number;
+  early: { start: string; end: string; posts: number; topics: number; entropy: number };
+  late: { start: string; end: string; posts: number; topics: number; entropy: number };
+  /** (late − early) ÷ early, Miller–Madow-corrected entropy. */
+  relativeChange: number;
+  /** Bootstrap 95% interval of relativeChange. */
+  ci: [number, number];
+  sufficient: boolean;
+  narrowed: boolean;
+  broadened: boolean;
 }
 
 export interface PeriodComparison {
@@ -215,6 +275,8 @@ export interface AnalysisResult {
   }>;
   engagementSensitivity: FramedInsight<TopicEngagement[]> | null;
   reinforcementCorrelation: FramedTimeSeries | null;
+  halves: TimeHalves;
+  narrowing: FramedInsight<NarrowingResult>;
   memoryEvents: FramedInsight<MemoryEvent[]>;
   civicQuestions: FramedInsight<CivicQuestion[]>;
 }

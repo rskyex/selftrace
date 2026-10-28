@@ -6,6 +6,8 @@ import { ConfidenceDot } from '@/components/shared/ConfidenceDot';
 import { SelectionLandscape } from '@/components/charts/SelectionLandscape';
 import { ProfileSwitcher } from '@/components/shared/ProfileSwitcher';
 import { useData } from '@/lib/data/context';
+import { topicLine } from '@/lib/analysis/describe';
+import { isRewardedAndRising } from '@/lib/analysis/definitions';
 
 export default function RewardedPage() {
   const { analysis, isLoaded } = useData();
@@ -31,9 +33,8 @@ export default function RewardedPage() {
   }
 
   const data = engagementSensitivity.value;
-  const avgEng = data.reduce((s, t) => s + t.averageEngagement, 0) / data.length;
-  const reinforced = data.filter(t => t.frequencyTrend === 'increasing' && t.averageEngagement > avgEng);
-  const faded = data.filter(t => t.frequencyTrend === 'decreasing' && t.averageEngagement < avgEng);
+  const reinforced = data.filter(isRewardedAndRising);
+  const faded = data.filter(t => t.faded);
 
   // Tone-reward: check if assertive posts got more engagement
   const tA = toneTrends.value.assertiveness;
@@ -57,8 +58,9 @@ export default function RewardedPage() {
           The selection landscape
         </h2>
         <p className="text-[16px] text-ink-500 leading-[1.8] mb-2">
-          Each dot is a topic. Its position shows whether it got more or less engagement
-          than average, and whether you posted about it more or less over time.
+          Each dot is a topic. Its height is engagement compared with the typical post of
+          the same month (1× is typical), and its position across is how much its share of
+          your posts changed between the two halves of the period.
         </p>
 
         <SelectionLandscape data={data} />
@@ -66,7 +68,7 @@ export default function RewardedPage() {
         <p className="text-[15px] text-ink-500 leading-[1.8] mt-4">
           The upper-right quadrant shows topics that received more attention and became
           more frequent &mdash; the <em>reinforced self</em>. The lower-right shows topics
-          you kept posting about despite low engagement &mdash; the <em>self-governed self</em>.
+          you kept posting about despite engagement below the typical level &mdash; the <em>self-governed self</em>.
           The lower-left shows what faded quietly.
         </p>
         <div className="mt-2"><ConfidenceDot level="interpretive" /></div>
@@ -79,14 +81,15 @@ export default function RewardedPage() {
             Patterns that appeared to be reinforced
           </h2>
           <p className="text-[16px] text-ink-500 leading-[1.8] mb-6">
-            These topics got above-average response and became more frequent over time. That
+            These topics got more response than the typical post of the same month, and took up
+            a larger share of your posts over time. That
             doesn&apos;t prove the attention caused the increase. But the correlation is there, and
             it&apos;s the kind of pattern that platforms are designed to create.
           </p>
           {reinforced.map(t => (
             <div key={t.topic} className="observation-umber mb-3">
               <h3>{t.topic}</h3>
-              <p className="font-sans text-[13px]">{t.postCount} posts &middot; above-average engagement &middot; frequency increased</p>
+              <p className="font-sans text-[13px]">{topicLine(t)}</p>
             </div>
           ))}
           <div className="mt-2"><ConfidenceDot level="interpretive" /></div>
@@ -100,14 +103,14 @@ export default function RewardedPage() {
             What faded quietly
           </h2>
           <p className="text-[16px] text-ink-500 leading-[1.8] mb-6">
-            Low engagement, and you posted about these less over time. Something that
+            Engagement below the month&apos;s typical level, and you posted about these less over time. Something that
             was part of your expression and then wasn&apos;t. Could be a natural shift in
             interest. Could be the environment making space for other things instead.
           </p>
           {faded.slice(0, 4).map(t => (
             <div key={t.topic} className="observation mb-3" style={{ opacity: 0.7 }}>
               <h3>{t.topic}</h3>
-              <p className="font-sans text-[13px]">{t.postCount} posts &middot; below-average engagement &middot; frequency decreased</p>
+              <p className="font-sans text-[13px]">{topicLine(t)}</p>
             </div>
           ))}
           <div className="mt-2"><ConfidenceDot level="interpretive" /></div>
@@ -125,7 +128,7 @@ export default function RewardedPage() {
             This is our least certain analysis. The correlation exists in the data, but
             many things besides engagement could explain it.
           </p>
-          <AreaChart data={reinforcementCorrelation.value} confidence="interpretive" color="trace" caption="Engagement-frequency correlation by quarter" />
+          <AreaChart data={reinforcementCorrelation.value} confidence="interpretive" color="trace" caption="Correlation of time-adjusted engagement in one quarter with topic share in the next (blank where too few posts)" />
         </section>
       )}
 

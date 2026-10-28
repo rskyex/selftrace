@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ConfidenceDot } from '@/components/shared/ConfidenceDot';
 import { ProfileSwitcher } from '@/components/shared/ProfileSwitcher';
 import { useData } from '@/lib/data/context';
+import { topicLine } from '@/lib/analysis/describe';
 
 export default function KeptPage() {
   const { activeProfile, analysis, isLoaded, selfPortrait } = useData();
@@ -19,17 +20,11 @@ export default function KeptPage() {
   }
 
   const { engagementSensitivity, selfDescriptionShift, narrativeRepetition } = analysis;
-  const avgEng = engagementSensitivity ? engagementSensitivity.value.reduce((s, t) => s + t.averageEngagement, 0) / engagementSensitivity.value.length : 0;
-
-  // Persistent topics: low engagement, didn't decrease
+  // Kept and resisted reward, as defined in src/lib/analysis/definitions.ts
   const persistent = engagementSensitivity?.value
-    .filter(t => t.averageEngagement < avgEng * 0.6 && t.frequencyTrend !== 'decreasing')
+    .filter(t => t.kept)
     .sort((a, b) => b.postCount - a.postCount) ?? [];
-
-  // Counter-trend: high engagement but didn't increase (resisted reward)
-  const resisted = engagementSensitivity?.value
-    .filter(t => t.averageEngagement > avgEng * 1.3 && t.frequencyTrend !== 'increasing')
-    .slice(0, 3) ?? [];
+  const resisted = engagementSensitivity?.value.filter(t => t.resistedReward) ?? [];
 
   // Stable self-descriptions
   const earlyDescs = new Set(selfDescriptionShift.value.early.map(d => d.phrase));
@@ -57,7 +52,7 @@ export default function KeptPage() {
             Kept without encouragement
           </h2>
           <p className="text-[16px] text-ink-500 leading-[1.8] mb-8">
-            Below-average engagement, but you kept returning. The environment wasn&apos;t
+            Engagement below the month&apos;s typical level in both halves, but you kept returning. The environment wasn&apos;t
             rewarding these &mdash; you continued because they mattered to you.
           </p>
 
@@ -65,7 +60,7 @@ export default function KeptPage() {
             {persistent.map(t => (
               <div key={t.topic} className="observation-sage py-6 px-7">
                 <p className="text-[19px] text-ink-900 font-semibold font-sans tracking-tight">{t.topic}</p>
-                <p className="font-sans text-[13px] text-ink-500 mt-2">{t.postCount} posts &middot; below-average engagement &middot; you kept going</p>
+                <p className="font-sans text-[13px] text-ink-500 mt-2">{topicLine(t)}</p>
               </div>
             ))}
           </div>
@@ -80,13 +75,13 @@ export default function KeptPage() {
             Resisted reward
           </h2>
           <p className="text-[16px] text-ink-500 leading-[1.8] mb-6">
-            These topics got above-average engagement but you didn&apos;t post about them
-            more. The environment was rewarding these, and you didn&apos;t follow the signal.
+            These topics got more engagement than the typical post of the same month, but
+            you didn&apos;t post about them more. The environment was rewarding these, and you didn&apos;t follow the signal.
           </p>
           {resisted.map(t => (
             <div key={t.topic} className="observation-sage mb-3 py-4 px-6">
               <p className="font-sans text-[14px] text-ink-700">{t.topic}</p>
-              <p className="font-sans text-[12px] text-ink-400">{t.postCount} posts &middot; above-average engagement &middot; frequency didn&apos;t increase</p>
+              <p className="font-sans text-[12px] text-ink-400">{topicLine(t)}</p>
             </div>
           ))}
           <div className="mt-3"><ConfidenceDot level="patterned" /></div>

@@ -1,6 +1,8 @@
 import { PageHeader } from '@/components/shared/PageHeader';
 import { EpistemicBadge } from '@/components/shared/EpistemicBadge';
 import { SectionDivider } from '@/components/shared/SectionDivider';
+import { TAXONOMY, TAXONOMY_SOURCE } from '@/lib/analysis/text/taxonomy';
+import { DefinitionsTable, RecoveryPanel } from './RecoveryPanel';
 
 const METHODS = [
   {
@@ -10,13 +12,13 @@ const METHODS = [
   },
   {
     name: 'Topic Classification',
-    plain: 'Each post is assigned one or more topics based on keyword matching against a predefined taxonomy. This is transparent keyword matching, not machine learning — every assignment can be audited by examining the taxonomy and the post text.',
-    technical: 'Tokenization with stopword removal. Keyword hit counting against a topic taxonomy. Co-occurrence boosting (multiple keywords from the same topic increase confidence). Threshold filtering at confidence > 0.3.',
+    plain: 'Each post is assigned every topic whose keywords appear in its text. Topics are concepts from the IPTC Media Topics vocabulary, a published news taxonomy; the keyword lists are SelfTrace\'s own and are listed at the end of this page. This is transparent keyword matching, not machine learning — every assignment can be audited. Posts that match no keyword are left unclassified and out of topic counts.',
+    technical: 'Lower-cased text, punctuation stripped. A keyword is a word, a word prefix ending in *, or a phrase. A post carries every concept with at least one matching keyword (multi-label); confidence is the concept\'s share of matched keywords. IPTC Media Topics, CC BY 4.0, release 2026-09-30.',
   },
   {
     name: 'Topic Entropy',
-    plain: 'Shannon entropy measures how evenly distributed your topics are. Higher entropy means more diverse topics; lower entropy means concentration. Declining entropy is common in any sustained activity and may be entirely intentional.',
-    technical: 'H = -Σ p(topic) · log₂(p(topic)), computed per quarter. Bounded between 0 (single topic) and log₂(n) (uniform distribution over n topics).',
+    plain: 'Shannon entropy measures how evenly distributed your topics are. Higher entropy means more diverse topics; lower entropy means concentration. "Narrowed" compares the first and last six months, not single quarters, and only when each window has enough posts. Declining entropy is common in any sustained activity and may be entirely intentional.',
+    technical: 'H = -Σ p(topic) · log₂(p(topic)). The quarterly chart shows plain H per quarter. Narrowing uses H with the Miller–Madow correction, H + (K − 1) / (2N ln 2), over the first and last windows of equal length, with a bootstrap 95% interval of the relative change.',
   },
   {
     name: 'Vocabulary Drift',
@@ -25,13 +27,23 @@ const METHODS = [
   },
   {
     name: 'Tone Heuristics',
-    plain: 'Approximate measures of assertiveness, emotionality, formality, and urgency based on linguistic markers. These are rough directional signals, not precise measurements, and are culturally dependent.',
-    technical: 'Assertiveness: imperative sentence ratio + modal verb density. Emotionality: exclamation density + intensifier ratio + all-caps word ratio. Formality: avg sentence length × contraction inverse ratio. Urgency: temporal marker density + imperative density.',
+    plain: 'Approximate measures of assertiveness, emotionality, formality, and urgency, computed from the words of each post. These are rough directional signals, not precise measurements, and are culturally dependent. The recovery test below shows they do not reproduce the tone curves planted in the demo profiles.',
+    technical: 'Assertiveness: 0.5 + 0.5 · (boosters − hedges) / (boosters + hedges + 1), Hyland\'s booster and hedge lists. Emotionality: |VADER compound| (VADER lexicon, MIT licence). Formality: 1 − informal markers per 10 words. Urgency: urgency markers per 10 words, capped at 1. Vulnerability is not measured (always 0).',
+  },
+  {
+    name: 'Time-Adjusted Engagement',
+    plain: 'Engagement is compared with the typical post of the same month, so growth or decline that affects every post (a growing audience, a platform change) does not make later topics look rewarded. A topic is rewarded when its posts typically got more than their month\'s typical engagement.',
+    technical: 'Engagement = likes + 2 × shares. Ratio = post engagement ÷ median engagement of its UTC month (quarter if the month has fewer than 10 posts). A topic\'s reward ratio is the median ratio over its posts. Limitation: when one group of topics makes up most of a month, the month median moves with it and part of a real reward is absorbed (see the recovery test).',
+  },
+  {
+    name: 'Equal-Time Halves',
+    plain: 'Changes over time compare two halves of equal duration, split at the midpoint between the first and last post, rather than two halves with the same number of posts. A trend is only reported when both halves have enough posts.',
+    technical: 'Rising: later share ≥ 1.3 × earlier share, change ≥ 2 percentage points, and the bootstrap 95% interval of the change above 0 (1000 resamples within each half, fixed seed). Falling is the mirror image; otherwise stable. Fewer than 20 posts in either half: insufficient.',
   },
   {
     name: 'Engagement–Frequency Correlation',
-    plain: 'Measures whether topics that received higher engagement in one quarter appear more frequently in the next quarter. This is a correlation — it cannot establish that engagement caused the change in posting behavior.',
-    technical: 'Pearson correlation between topic-level average engagement in quarter N and topic-level posting frequency in quarter N+1. Computed per consecutive quarter pair. Labeled "speculative" regardless of statistical significance because of the causal ambiguity inherent in the measure.',
+    plain: 'Measures whether topics that received higher engagement in one quarter appear more frequently in the next quarter. This is a correlation — it cannot establish that engagement caused the change in posting behavior. Quarters with too few posts or topics are left blank rather than drawn as zero.',
+    technical: 'Pearson correlation between topic-level mean time-adjusted engagement in quarter N and topic share in quarter N+1, over topics with at least 3 posts in quarter N. Plotted only with at least 5 topics and 30 posts; n (topics compared) is shown in the data table. Labeled "speculative" regardless of statistical significance because of the causal ambiguity inherent in the measure.',
   },
   {
     name: 'Phrase Recurrence',
@@ -183,6 +195,26 @@ export default function MethodologyPage() {
 
         <SectionDivider />
 
+        {/* Definitions */}
+        <h2 className="text-[22px] text-ink-900 mb-6">
+          Definitions
+        </h2>
+        <p className="text-[14px] text-ink-500 leading-relaxed mb-6">
+          Every page and the JSON export use these definitions. They are set in one file, so a
+          change there changes every count shown.
+        </p>
+        <DefinitionsTable />
+
+        <SectionDivider />
+
+        {/* Recovery test */}
+        <h2 className="text-[22px] text-ink-900 mb-6">
+          Recovery Test
+        </h2>
+        <RecoveryPanel />
+
+        <SectionDivider />
+
         {/* Assumptions */}
         <h2 className="text-[22px] text-ink-900 mb-6">
           Assumptions
@@ -223,6 +255,29 @@ export default function MethodologyPage() {
             </div>
           ))}
         </div>
+
+        <SectionDivider />
+
+        {/* Taxonomy */}
+        <h2 className="text-[22px] text-ink-900 mb-4">
+          Topic Keywords
+        </h2>
+        <p className="text-[14px] text-ink-500 leading-relaxed mb-6">
+          Concepts from <a className="underline" href={TAXONOMY_SOURCE.url}>{TAXONOMY_SOURCE.name}</a>{' '}
+          ({TAXONOMY_SOURCE.licence}, release {TAXONOMY_SOURCE.release}). IPTC publishes the concepts;
+          the keywords are SelfTrace&apos;s own.
+        </p>
+        <details className="mb-6">
+          <summary className="font-sans text-[11px] text-teal-700 cursor-pointer tracking-wide">Show all {TAXONOMY.length} concepts and keywords</summary>
+          <dl className="mt-4 space-y-3">
+            {TAXONOMY.map(c => (
+              <div key={c.id}>
+                <dt className="text-[13px] text-ink-900">{c.label} <span className="font-mono text-[11px] text-ink-400">{c.id}</span></dt>
+                <dd className="text-[12px] text-ink-500 leading-relaxed">{c.keywords.join(', ')}</dd>
+              </div>
+            ))}
+          </dl>
+        </details>
 
         <SectionDivider />
 

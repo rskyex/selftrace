@@ -27,9 +27,10 @@ export default function DriftPage() {
 
   const { vocabularyDrift, topicEntropy, toneTrends } = analysis;
   const entropy = topicEntropy.value;
-  const firstE = entropy[0]?.value ?? 0;
-  const lastE = entropy[entropy.length - 1]?.value ?? 0;
-  const narrowed = lastE < firstE * 0.75;
+  // Narrowing compares the first and last windows (src/lib/analysis/definitions.ts)
+  const firstE = analysis.narrowing.value.early.entropy;
+  const lastE = analysis.narrowing.value.late.entropy;
+  const narrowed = analysis.narrowing.value.narrowed;
 
   return (
     <div>
@@ -73,7 +74,7 @@ export default function DriftPage() {
         <p className="text-[15px] text-ink-400 leading-relaxed mb-2">
           How spread out your interests were each quarter.
           {narrowed
-            ? ` Yours declined from ${firstE.toFixed(1)} to ${lastE.toFixed(1)} — a noticeable narrowing.`
+            ? ` Yours declined from ${firstE.toFixed(1)} bits in the first ${analysis.narrowing.value.windowMonths} months to ${lastE.toFixed(1)} in the last — a noticeable narrowing.`
             : ` Yours stayed relatively stable.`
           }
         </p>

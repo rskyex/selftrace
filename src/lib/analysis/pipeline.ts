@@ -2,6 +2,8 @@
 // Pure functions that transform a DatasetProfile into AnalysisResult.
 // All outputs are wrapped in FramedInsight<T> with epistemic labels.
 // Runs entirely in the browser. No server calls.
+// Thresholds come from ./definitions; time-adjusted engagement, equal-time
+// halves, bootstrap intervals and corrected entropy from ./stats.
 
 import type {
   DatasetProfile,
@@ -18,7 +20,14 @@ import type {
   MemoryEvent,
   CivicQuestion,
   PeriodComparison,
+  TimeHalves,
+  NarrowingResult,
 } from '@/lib/data/types';
+import { DEFINITIONS, classifyTopic, isRewardedAndRising, type TopicStats } from './definitions';
+import {
+  median, engagementScore, engagementRatios, splitHalves, topicsOf, topicShares, topicCounts,
+  bootstrapShareChange, bootstrapEntropyChange, entropyMillerMadow, addMonthsUTC, pearson, quarterKey,
+} from './stats';
 
 // ── Posting Frequency ────────────────────────────────────────────────────────
 
@@ -56,9 +65,9 @@ function computeTopicDistribution(posts: Post[]): FramedInsight<TopicOverTime[]>
     const d = new Date(post.createdAt);
     const monthKey = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-01`;
 
-    for (const ta of post.derived.topics) {
+    for (const topic of topicsOf(post)) {
       if (!topicsByMonth[monthKey]) topicsByMonth[monthKey] = {};
-      topicsByMonth[monthKey][ta.topic] = (topicsByMonth[monthKey][ta.topic] || 0) + 1;
+      topicsByMonth[monthKey][topic] = (topicsByMonth[monthKey][topic] || 0) + 1;
     }
   }
 
@@ -88,9 +97,9 @@ function computeTopicDistribution(posts: Post[]): FramedInsight<TopicOverTime[]>
   return {
     value: result.slice(0, 8), // Top 8 topics
     status: 'inferred',
-    evidence: `Topic assignments based on keyword matching across ${posts.length} posts.`,
-    caveat: 'Topics are assigned through keyword heuristics, which may miscategorize posts with ambiguous content. A post may address multiple topics.',
-    method: 'Keyword-based topic classification, aggregated monthly.',
+    evidence: `IPTC Media Topics assigned from the text of ${posts.length} posts.`,
+    caveat: 'Topics are IPTC Media Topics concepts assigned by SelfTrace\'s published keyword list, which may miss or miscategorize posts with ambiguous wording. A post can carry several topics; posts with no keyword match are left unclassified.',
+    method: 'Keyword matching against IPTC Media Topics concepts (src/lib/analysis/text/taxonomy.ts), aggregated monthly (UTC).',
   };
 }
 
@@ -113,9 +122,8 @@ function computeTopicEntropy(posts: Post[]): FramedTimeSeries {
       const topicCounts: Record<string, number> = {};
       let total = 0;
       for (const p of quarterPosts) {
-        if (!p.derived) continue;
-        for (const ta of p.derived.topics) {
-          topicCounts[ta.topic] = (topicCounts[ta.topic] || 0) + 1;
+        for (const topic of topicsOf(p)) {
+          topicCounts[topic] = (topicCounts[topic] || 0) + 1;
           total++;
         }
       }
@@ -145,9 +153,7 @@ function computeTopicEntropy(posts: Post[]): FramedTimeSeries {
 // ── Vocabulary Drift ─────────────────────────────────────────────────────────
 
 function computeVocabularyDrift(posts: Post[]): FramedInsight<DriftingTerm[]> {
-  const midpoint = Math.floor(posts.length / 2);
-  const earlyPosts = posts.slice(0, midpoint);
-  const latePosts = posts.slice(midpoint);
+  const { early: earlyPosts, late: latePosts } = splitHalves(posts);
 
   const countTerms = (subset: Post[]): Record<string, number> => {
     const counts: Record<string, number> = {};
@@ -167,8 +173,8 @@ function computeVocabularyDrift(posts: Post[]): FramedInsight<DriftingTerm[]> {
   const drifting: DriftingTerm[] = [];
 
   for (const term of allTerms) {
-    const earlyFreq = ((earlyCounts[term] || 0) / earlyPosts.length) * 100;
-    const lateFreq = ((lateCounts[term] || 0) / latePosts.length) * 100;
+    const earlyFreq = ((earlyCounts[term] || 0) / Math.max(earlyPosts.length, 1)) * 100;
+    const lateFreq = ((lateCounts[term] || 0) / Math.max(latePosts.length, 1)) * 100;
     const diff = lateFreq - earlyFreq;
 
     if (Math.abs(diff) < 0.5) continue; // Filter noise
@@ -186,9 +192,9 @@ function computeVocabularyDrift(posts: Post[]): FramedInsight<DriftingTerm[]> {
   return {
     value: drifting.slice(0, 12),
     status: 'inferred',
-    evidence: `Vocabulary frequency comparison between first ${earlyPosts.length} and last ${latePosts.length} posts.`,
+    evidence: `Vocabulary frequency compared between the earlier half of the period (${earlyPosts.length} posts) and the later half (${latePosts.length} posts).`,
     caveat: 'Vocabulary change may reflect evolving interests, audience adaptation, platform trends, or many other factors. Frequency differences do not indicate causation.',
-    method: 'Term frequency per 100 posts, compared between first and second halves of the dataset.',
+    method: 'Term frequency per 100 posts, compared between two halves of equal duration (split at the time midpoint).',
   };
 }
 
@@ -290,73 +296,81 @@ function computeSelfDescriptionShift(posts: Post[]): FramedInsight<{
   early: SelfDescriptionMarker[];
   late: SelfDescriptionMarker[];
 }> {
-  const midpoint = Math.floor(posts.length / 2);
-  const earlyDescs: SelfDescriptionMarker[] = [];
-  const lateDescs: SelfDescriptionMarker[] = [];
-
-  for (let i = 0; i < posts.length; i++) {
-    const post = posts[i];
-    if (!post.derived) continue;
-    const target = i < midpoint ? earlyDescs : lateDescs;
-    target.push(...post.derived.selfDescriptions);
-  }
+  const { early, late } = splitHalves(posts);
+  const collect = (ps: Post[]) => ps.flatMap(p => p.derived?.selfDescriptions ?? []);
 
   return {
-    value: { early: earlyDescs, late: lateDescs },
+    value: { early: collect(early), late: collect(late) },
     status: 'observed',
-    evidence: `Self-description markers extracted from ${posts.length} posts.`,
-    caveat: 'Self-descriptions are identified through pattern matching ("as a...", "I am a...") which may miss non-standard forms or misidentify rhetorical uses.',
-    method: 'Regex-based extraction of role claims, identity statements, and expertise signals.',
+    evidence: `Self-description phrases found in the text of ${posts.length} posts, compared between two halves of equal duration.`,
+    caveat: 'Self-descriptions are identified through pattern matching ("as a...", "I am a...", "in my experience...") which may miss non-standard forms or misidentify rhetorical uses.',
+    method: 'Regex extraction of role claims, identity statements and expertise signals from post text; halves split at the time midpoint.',
   };
 }
 
 // ── Engagement Sensitivity ───────────────────────────────────────────────────
 
-function computeEngagementSensitivity(posts: Post[]): FramedInsight<TopicEngagement[]> | null {
+function computeHalves(posts: Post[]): TimeHalves {
+  const { split, early, late } = splitHalves(posts);
+  return {
+    split,
+    earlyPosts: early.length,
+    latePosts: late.length,
+    sufficient: early.length >= DEFINITIONS.minPostsPerHalf && late.length >= DEFINITIONS.minPostsPerHalf,
+  };
+}
+
+function computeEngagementSensitivity(posts: Post[], halves: TimeHalves): FramedInsight<TopicEngagement[]> | null {
   const hasEngagement = posts.some(p => p.engagement?.likes != null);
   if (!hasEngagement) return null;
 
-  const topicStats: Record<string, { totalEngagement: number; count: number; earlyCount: number; lateCount: number }> = {};
-  const midpoint = Math.floor(posts.length / 2);
+  const ratios = engagementRatios(posts);
+  const { early, late } = splitHalves(posts);
+  const earlyIds = new Set(early.map(p => p.id));
+  const earlyShares = topicShares(early);
+  const lateShares = topicShares(late);
 
-  for (let i = 0; i < posts.length; i++) {
-    const post = posts[i];
-    if (!post.derived || !post.engagement) continue;
-
-    for (const ta of post.derived.topics) {
-      if (!topicStats[ta.topic]) {
-        topicStats[ta.topic] = { totalEngagement: 0, count: 0, earlyCount: 0, lateCount: 0 };
-      }
-      topicStats[ta.topic].totalEngagement += (post.engagement.likes ?? 0) + (post.engagement.shares ?? 0) * 2;
-      topicStats[ta.topic].count++;
-      if (i < midpoint) topicStats[ta.topic].earlyCount++;
-      else topicStats[ta.topic].lateCount++;
-    }
+  const byTopic = new Map<string, Post[]>();
+  for (const p of posts) for (const t of new Set(topicsOf(p))) {
+    const list = byTopic.get(t);
+    if (list) list.push(p);
+    else byTopic.set(t, [p]);
   }
+  const topics = [...byTopic].filter(([, ps]) => ps.length >= 3).map(([t]) => t);
+  const intervals = bootstrapShareChange(early, late, topics);
 
-  const result: TopicEngagement[] = Object.entries(topicStats)
-    .filter(([, stats]) => stats.count >= 3)
-    .map(([topic, stats]) => {
-      const earlyRate = stats.earlyCount / midpoint;
-      const lateRate = stats.lateCount / (posts.length - midpoint);
-      const trend = lateRate > earlyRate * 1.3 ? 'increasing' as const :
-                    lateRate < earlyRate * 0.7 ? 'decreasing' as const : 'stable' as const;
-
-      return {
-        topic,
-        averageEngagement: Math.round(stats.totalEngagement / stats.count),
-        postCount: stats.count,
-        frequencyTrend: trend,
-      };
-    })
-    .sort((a, b) => b.averageEngagement - a.averageEngagement);
+  const result: TopicEngagement[] = topics.map(topic => {
+    const ps = byTopic.get(topic)!;
+    const withRatio = ps.filter(p => ratios.has(p.id));
+    const earlyR = withRatio.filter(p => earlyIds.has(p.id)).map(p => ratios.get(p.id)!);
+    const lateR = withRatio.filter(p => !earlyIds.has(p.id)).map(p => ratios.get(p.id)!);
+    const r2 = (v: number) => Math.round(v * 100) / 100;
+    const stats: TopicStats = {
+      postCount: ps.length,
+      rewardRatio: r2(median(withRatio.map(p => ratios.get(p.id)!))),
+      earlyRewardRatio: earlyR.length ? r2(median(earlyR)) : null,
+      lateRewardRatio: lateR.length ? r2(median(lateR)) : null,
+      earlyCount: ps.filter(p => earlyIds.has(p.id)).length,
+      lateCount: ps.filter(p => !earlyIds.has(p.id)).length,
+      earlyShare: earlyShares.get(topic) ?? 0,
+      lateShare: lateShares.get(topic) ?? 0,
+      shareChangePp: r2(((lateShares.get(topic) ?? 0) - (earlyShares.get(topic) ?? 0)) * 100),
+      shareChangeCI: (intervals.get(topic) ?? [0, 0]).map(r2) as [number, number],
+    };
+    return {
+      topic,
+      averageEngagement: Math.round(ps.reduce((s, p) => s + engagementScore(p), 0) / ps.length),
+      ...stats,
+      ...classifyTopic(stats, halves.sufficient),
+    };
+  }).sort((a, b) => b.rewardRatio - a.rewardRatio);
 
   return {
     value: result,
     status: 'inferred',
-    evidence: `Engagement metrics correlated with topic assignments across ${posts.length} posts.`,
+    evidence: `Time-adjusted engagement and posting share per topic across ${posts.length} posts, compared between two halves of equal duration (${halves.earlyPosts} and ${halves.latePosts} posts).`,
     caveat: 'Correlation between engagement and content patterns does not establish that engagement caused those patterns. Multiple explanations are possible, including shared external events, evolving interests, and deliberate strategy.',
-    method: 'Average engagement (likes + 2×shares) per topic, compared between first and second halves of the dataset.',
+    method: `Each post's engagement (${DEFINITIONS.engagementFormula}) is divided by the median engagement of its month, which removes growth that affects every topic. A topic's reward ratio is the median of those values. Share change between halves has a bootstrap 95% interval (${DEFINITIONS.bootstrapResamples} resamples). Thresholds: src/lib/analysis/definitions.ts.`,
   };
 }
 
@@ -366,89 +380,96 @@ function computeReinforcementCorrelation(posts: Post[]): FramedTimeSeries | null
   const hasEngagement = posts.some(p => p.engagement?.likes != null);
   if (!hasEngagement) return null;
 
-  // For each quarter, compute correlation between a topic's prior engagement
-  // and its current posting frequency
-  const byQuarter: Record<string, Post[]> = {};
+  // For each quarter Q, correlate each topic's time-adjusted mean engagement in
+  // Q−1 with its share of posts in Q.
+  const ratios = engagementRatios(posts);
+  const byQuarter = new Map<string, Post[]>();
   for (const post of posts) {
-    const d = new Date(post.createdAt);
-    const q = Math.floor(d.getUTCMonth() / 3) + 1;
-    const key = `${d.getUTCFullYear()}-${String(q * 3 - 2).padStart(2, '0')}-01`;
-    if (!byQuarter[key]) byQuarter[key] = [];
-    byQuarter[key].push(post);
+    const key = quarterKey(post.createdAt);
+    const list = byQuarter.get(key);
+    if (list) list.push(post);
+    else byQuarter.set(key, [post]);
   }
-
-  const quarters = Object.keys(byQuarter).sort();
+  const quarters = [...byQuarter.keys()].sort();
+  const quarterDate = (q: string) => `${q.slice(0, 4)}-${String((Number(q.slice(6)) - 1) * 3 + 1).padStart(2, '0')}-01`;
   const series: TimeSeriesPoint[] = [];
 
   for (let i = 1; i < quarters.length; i++) {
-    const prevPosts = byQuarter[quarters[i - 1]];
-    const currPosts = byQuarter[quarters[i]];
-
-    // Prior engagement per topic
-    const priorEngagement: Record<string, number> = {};
-    for (const p of prevPosts) {
-      if (!p.derived || !p.engagement) continue;
-      for (const ta of p.derived.topics) {
-        if (!priorEngagement[ta.topic]) priorEngagement[ta.topic] = 0;
-        priorEngagement[ta.topic] += (p.engagement.likes ?? 0);
+    const prev = byQuarter.get(quarters[i - 1])!;
+    const curr = byQuarter.get(quarters[i])!;
+    const prevRatios = new Map<string, number[]>();
+    for (const p of prev) {
+      if (!ratios.has(p.id)) continue;
+      for (const t of topicsOf(p)) {
+        const list = prevRatios.get(t);
+        if (list) list.push(ratios.get(p.id)!);
+        else prevRatios.set(t, [ratios.get(p.id)!]);
       }
     }
-
-    // Current frequency per topic
-    const currentFreq: Record<string, number> = {};
-    for (const p of currPosts) {
-      if (!p.derived) continue;
-      for (const ta of p.derived.topics) {
-        currentFreq[ta.topic] = (currentFreq[ta.topic] || 0) + 1;
-      }
-    }
-
-    // Compute simple correlation
-    const topics = Object.keys(priorEngagement).filter(t => currentFreq[t] !== undefined);
-    if (topics.length < 3) {
-      series.push({ date: quarters[i], value: 0 });
+    const currShare = topicShares(curr);
+    const topics = [...prevRatios].filter(([, r]) => r.length >= DEFINITIONS.correlationMinTopicPosts).map(([t]) => t);
+    const nPosts = prev.length + curr.length;
+    const date = quarterDate(quarters[i]);
+    if (topics.length < DEFINITIONS.correlationMinTopics || nPosts < DEFINITIONS.correlationMinPosts) {
+      series.push({ date, value: 0, n: topics.length, missing: true });
       continue;
     }
-
-    const engValues = topics.map(t => priorEngagement[t]);
-    const freqValues = topics.map(t => currentFreq[t]);
-
-    const correlation = pearsonCorrelation(engValues, freqValues);
-    series.push({ date: quarters[i], value: Math.round(correlation * 100) / 100 });
+    const x = topics.map(t => prevRatios.get(t)!.reduce((s, v) => s + v, 0) / prevRatios.get(t)!.length);
+    const y = topics.map(t => currShare.get(t) ?? 0);
+    series.push({ date, value: Math.round(pearson(x, y) * 100) / 100, n: topics.length });
   }
 
   return {
     value: series,
     status: 'speculative',
-    evidence: 'Correlation between prior-quarter engagement and current-quarter posting frequency, per topic.',
+    evidence: `Correlation, per quarter, between each topic's time-adjusted engagement in the previous quarter and its share of posts in the quarter (n = topics compared). Quarters with fewer than ${DEFINITIONS.correlationMinTopics} topics or ${DEFINITIONS.correlationMinPosts} posts are left blank.`,
     caveat: 'A positive correlation does not establish that engagement caused subsequent posting patterns. Shared interests, trending topics, and many other factors may produce the same correlation without any behavioral reinforcement.',
-    method: 'Pearson correlation between topic-level engagement in quarter N and topic-level posting frequency in quarter N+1.',
+    method: 'Pearson correlation between topic-level mean (post engagement ÷ month median) in quarter N−1 and topic share of posts in quarter N.',
     xLabel: 'Quarter',
     yLabel: 'Correlation (r)',
   };
 }
 
-function pearsonCorrelation(x: number[], y: number[]): number {
-  const n = x.length;
-  if (n < 3) return 0;
+// ── Narrowing ────────────────────────────────────────────────────────────────
 
-  const meanX = x.reduce((s, v) => s + v, 0) / n;
-  const meanY = y.reduce((s, v) => s + v, 0) / n;
+function computeNarrowing(posts: Post[]): FramedInsight<NarrowingResult> {
+  const months = DEFINITIONS.narrowingWindowMonths;
+  const first = posts[0]?.createdAt ?? new Date(0).toISOString();
+  const last = posts[posts.length - 1]?.createdAt ?? first;
+  const earlyEnd = addMonthsUTC(first, months);
+  const lateStart = addMonthsUTC(last, -months);
+  const t = (iso: string) => new Date(iso).getTime();
+  const early = posts.filter(p => t(p.createdAt) < t(earlyEnd));
+  const late = posts.filter(p => t(p.createdAt) > t(lateStart));
+  const window = (ps: Post[], start: string, end: string) => {
+    const counts = topicCounts(ps);
+    return { start, end, posts: ps.length, topics: counts.size, entropy: Math.round(entropyMillerMadow([...counts.values()]) * 100) / 100 };
+  };
+  const e = window(early, first, earlyEnd);
+  const l = window(late, lateStart, last);
+  const sufficient = early.length >= DEFINITIONS.narrowingMinPostsPerWindow && late.length >= DEFINITIONS.narrowingMinPostsPerWindow
+    && t(lateStart) >= t(earlyEnd);
+  const he = entropyMillerMadow([...topicCounts(early).values()]);
+  const hl = entropyMillerMadow([...topicCounts(late).values()]);
+  const relativeChange = he > 0 ? Math.round(((hl - he) / he) * 100) / 100 : 0;
+  const ci = sufficient ? bootstrapEntropyChange(early, late).map(v => Math.round(v * 100) / 100) as [number, number] : [0, 0] as [number, number];
 
-  let num = 0;
-  let denX = 0;
-  let denY = 0;
-
-  for (let i = 0; i < n; i++) {
-    const dx = x[i] - meanX;
-    const dy = y[i] - meanY;
-    num += dx * dy;
-    denX += dx * dx;
-    denY += dy * dy;
-  }
-
-  const den = Math.sqrt(denX * denY);
-  return den === 0 ? 0 : num / den;
+  return {
+    value: {
+      windowMonths: months,
+      early: e,
+      late: l,
+      relativeChange,
+      ci,
+      sufficient,
+      narrowed: sufficient && relativeChange <= -DEFINITIONS.narrowedDrop && ci[1] < 0,
+      broadened: sufficient && relativeChange >= DEFINITIONS.narrowedDrop && ci[0] > 0,
+    },
+    status: 'inferred',
+    evidence: `Topic entropy in the first ${months} months (${early.length} posts) and the last ${months} months (${late.length} posts).`,
+    caveat: 'A narrower topic range may reflect deepening expertise, intentional focus, life circumstances, or platform reinforcement. This tool does not determine which.',
+    method: `Shannon entropy of topic counts with the Miller–Madow correction (H + (K−1)/(2N ln 2)), compared between equal-length windows; bootstrap 95% interval of the relative change (${DEFINITIONS.bootstrapResamples} resamples).`,
+  };
 }
 
 // ── Memory & Recirculation ────────────────────────────────────────────────────
@@ -527,7 +548,7 @@ function computeMemoryEvents(posts: Post[]): FramedInsight<MemoryEvent[]> {
 // ── Civic Questions ──────────────────────────────────────────────────────────
 
 function computeCivicQuestions(posts: Post[], analysis: {
-  topicEntropy: FramedTimeSeries;
+  narrowing: FramedInsight<NarrowingResult>;
   engagementSensitivity: FramedInsight<TopicEngagement[]> | null;
   toneTrends: FramedInsight<{ assertiveness: TimeSeriesPoint[]; emotionality: TimeSeriesPoint[] }>;
   selfDescriptionShift: FramedInsight<{ early: SelfDescriptionMarker[]; late: SelfDescriptionMarker[] }>;
@@ -535,32 +556,31 @@ function computeCivicQuestions(posts: Post[], analysis: {
   const questions: CivicQuestion[] = [];
 
   // Question 1: Topic narrowing → discourse diversity
-  const entropy = analysis.topicEntropy.value;
-  if (entropy.length >= 2) {
-    const firstQ = entropy[0].value;
-    const lastQ = entropy[entropy.length - 1].value;
-    const declined = lastQ < firstQ * 0.7;
+  const nr = analysis.narrowing.value;
+  if (nr.sufficient) {
+    const firstQ = nr.early.entropy;
+    const lastQ = nr.late.entropy;
+    const declined = nr.narrowed;
 
     questions.push({
       question: 'If platforms reward legible identities, does public discourse lose access to ambiguity?',
       context: 'Democratic deliberation often requires people to hold uncertainty, change positions, and resist categorization. If platform incentives favor consistent, recognizable self-presentation, the space for productive ambiguity may narrow.',
       dataConnection: declined
-        ? `In this dataset, topic diversity declined from ${firstQ.toFixed(2)} to ${lastQ.toFixed(2)} bits over the observed period — a pattern consistent with narrowing focus, though not proof of platform causation.`
-        : `In this dataset, topic diversity remained relatively stable (${firstQ.toFixed(2)} → ${lastQ.toFixed(2)} bits), which may indicate resistance to narrowing pressures or simply a consistent range of interests.`,
+        ? `In this dataset, topic diversity declined from ${firstQ.toFixed(2)} to ${lastQ.toFixed(2)} bits between the first and last ${nr.windowMonths} months — a pattern consistent with narrowing focus, though not proof of platform causation.`
+        : `In this dataset, topic diversity did not narrow by the definition used here (${firstQ.toFixed(2)} → ${lastQ.toFixed(2)} bits between the first and last ${nr.windowMonths} months), which may indicate resistance to narrowing pressures or simply a consistent range of interests.`,
       status: 'speculative',
     });
   }
 
   // Question 2: Engagement-topic correlation → discourse homogeneity
   if (analysis.engagementSensitivity) {
-    const increasing = analysis.engagementSensitivity.value.filter(t => t.frequencyTrend === 'increasing');
-    const highEngIncreasing = increasing.filter(t => t.averageEngagement > (analysis.engagementSensitivity!.value.reduce((s, t) => s + t.averageEngagement, 0) / analysis.engagementSensitivity!.value.length));
+    const highEngIncreasing = analysis.engagementSensitivity.value.filter(isRewardedAndRising);
 
     questions.push({
       question: 'When engagement metrics shape what gets posted, who decides what public discourse looks like?',
       context: 'If engagement feedback loops influence topic selection at scale — across millions of users simultaneously — the aggregate effect may be a systematic narrowing of what is expressed publicly, toward what generates reaction.',
       dataConnection: highEngIncreasing.length > 0
-        ? `${highEngIncreasing.length} topic(s) in this dataset show both above-average engagement and increasing posting frequency: ${highEngIncreasing.map(t => t.topic).join(', ')}. This pattern is consistent with engagement sensitivity, though many other explanations exist.`
+        ? `${highEngIncreasing.length} topic(s) in this dataset are both rewarded (time-adjusted engagement above baseline) and rising in share: ${highEngIncreasing.map(t => t.topic).join(', ')}. This pattern is consistent with engagement sensitivity, though many other explanations exist.`
         : null,
       status: 'speculative',
     });
@@ -638,17 +658,15 @@ export function computePeriodComparison(
   const topicCountsB: Record<string, number> = {};
 
   for (const p of postsA) {
-    if (!p.derived) continue;
-    for (const t of p.derived.topics) {
-      topicsA.add(t.topic);
-      topicCountsA[t.topic] = (topicCountsA[t.topic] || 0) + 1;
+    for (const t of topicsOf(p)) {
+      topicsA.add(t);
+      topicCountsA[t] = (topicCountsA[t] || 0) + 1;
     }
   }
   for (const p of postsB) {
-    if (!p.derived) continue;
-    for (const t of p.derived.topics) {
-      topicsB.add(t.topic);
-      topicCountsB[t.topic] = (topicCountsB[t.topic] || 0) + 1;
+    for (const t of topicsOf(p)) {
+      topicsB.add(t);
+      topicCountsB[t] = (topicCountsB[t] || 0) + 1;
     }
   }
 
@@ -719,7 +737,9 @@ export function runAnalysis(profile: DatasetProfile): AnalysisResult {
   const { posts } = profile;
 
   const topicEntropy = computeTopicEntropy(posts);
-  const engagementSensitivity = computeEngagementSensitivity(posts);
+  const halves = computeHalves(posts);
+  const narrowing = computeNarrowing(posts);
+  const engagementSensitivity = computeEngagementSensitivity(posts, halves);
   const toneTrends = computeToneTrends(posts);
   const selfDescriptionShift = computeSelfDescriptionShift(posts);
 
@@ -734,9 +754,11 @@ export function runAnalysis(profile: DatasetProfile): AnalysisResult {
     selfDescriptionShift,
     engagementSensitivity,
     reinforcementCorrelation: computeReinforcementCorrelation(posts),
+    halves,
+    narrowing,
     memoryEvents: computeMemoryEvents(posts),
     civicQuestions: computeCivicQuestions(posts, {
-      topicEntropy,
+      narrowing,
       engagementSensitivity,
       toneTrends: toneTrends as FramedInsight<{ assertiveness: TimeSeriesPoint[]; emotionality: TimeSeriesPoint[] }>,
       selfDescriptionShift,

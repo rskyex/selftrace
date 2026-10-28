@@ -5,6 +5,7 @@ import { AreaChart } from '@/components/shared/AreaChart';
 import { ConfidenceDot } from '@/components/shared/ConfidenceDot';
 import { ProfileSwitcher } from '@/components/shared/ProfileSwitcher';
 import { useData } from '@/lib/data/context';
+import { topicLine } from '@/lib/analysis/describe';
 import { summarizeResults, downloadGthResult } from '@/lib/export/gth-result';
 
 export default function ResultsPage() {
@@ -128,14 +129,14 @@ export default function ResultsPage() {
             What the environment appeared to reward
           </h2>
           <p className="text-[16px] text-ink-500 leading-[1.8] mb-6">
-            These topics received more engagement than average, and you posted about
-            them more over time. The pattern is visible. Whether the attention caused
+            Compared with the typical post in the same month, these topics received
+            more engagement, and they took up a larger share of your posts later on. The pattern is visible. Whether the attention caused
             the increase is something only you can feel.
           </p>
           {reinforced.map(t => (
             <div key={t.topic} className="observation-umber mb-3">
               <h3>{t.topic}</h3>
-              <p className="font-sans text-[13px]">{t.postCount} posts &middot; above-average engagement &middot; frequency increased</p>
+              <p className="font-sans text-[13px]">{topicLine(t)}</p>
             </div>
           ))}
           <div className="mt-2"><ConfidenceDot level="interpretive" /></div>
@@ -153,14 +154,14 @@ export default function ResultsPage() {
             What you kept
           </h2>
           <p className="text-[16px] text-ink-500 leading-[1.8] mb-6">
-            Below-average engagement, but you kept going. That persistence &mdash; continuing
+            Engagement below the month&apos;s typical level in both halves of the period, but you kept going. That persistence &mdash; continuing
             to express something because it matters to you, not because the environment
             rewards it &mdash; may be the clearest trace of your own agency.
           </p>
           {kept.map(t => (
             <div key={t.topic} className="observation-sage mb-3">
               <h3>{t.topic}</h3>
-              <p className="font-sans text-[13px]">{t.postCount} posts &middot; low engagement &middot; you kept going</p>
+              <p className="font-sans text-[13px]">{topicLine(t)}</p>
             </div>
           ))}
           <div className="mt-2"><ConfidenceDot level="counted" /></div>

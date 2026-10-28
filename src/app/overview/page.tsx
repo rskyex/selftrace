@@ -7,6 +7,7 @@ import { AreaChart } from '@/components/shared/AreaChart';
 import { SparkLine } from '@/components/shared/SparkLine';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { useData } from '@/lib/data/context';
+import { isRewardedAndRising } from '@/lib/analysis/definitions';
 
 export default function OverviewPage() {
   const { activeProfile, analysis } = useData();
@@ -25,16 +26,18 @@ export default function OverviewPage() {
 
   const { dataQuality } = activeProfile;
   const entropy = analysis.topicEntropy.value;
-  const firstEntropy = entropy[0]?.value ?? 0;
-  const lastEntropy = entropy[entropy.length - 1]?.value ?? 0;
-  const entropyTrend = lastEntropy < firstEntropy * 0.85 ? 'down' : lastEntropy > firstEntropy * 1.15 ? 'up' : 'stable';
+  // Topic range: first vs last window (see src/lib/analysis/definitions.ts)
+  const narrowing = analysis.narrowing.value;
+  const firstEntropy = narrowing.early.entropy;
+  const lastEntropy = narrowing.late.entropy;
+  const entropyTrend = narrowing.narrowed ? 'down' : narrowing.broadened ? 'up' : 'stable';
 
   const toneAssert = analysis.toneTrends.value.assertiveness;
   const firstAssert = toneAssert[0]?.value ?? 0;
   const lastAssert = toneAssert[toneAssert.length - 1]?.value ?? 0;
   const assertTrend = lastAssert > firstAssert + 0.1 ? 'up' : lastAssert < firstAssert - 0.1 ? 'down' : 'stable';
 
-  const highEngTopics = analysis.engagementSensitivity?.value.filter(t => t.frequencyTrend === 'increasing') ?? [];
+  const highEngTopics = analysis.engagementSensitivity?.value.filter(isRewardedAndRising) ?? [];
 
   return (
     <div>
@@ -61,7 +64,7 @@ export default function OverviewPage() {
           <InsightCard
             label="Topic Diversity"
             value={lastEntropy.toFixed(1)}
-            detail={`${entropyTrend === 'down' ? 'Narrowing' : entropyTrend === 'up' ? 'Broadening' : 'Stable'} over time`}
+            detail={`${entropyTrend === 'down' ? 'Narrowed' : entropyTrend === 'up' ? 'Broadened' : 'No clear change'}: first vs last ${narrowing.windowMonths} months`}
             trend={entropyTrend}
             status="inferred"
           />
@@ -103,7 +106,7 @@ export default function OverviewPage() {
             </div>
             <p className="text-[12px] text-ink-400">
               {highEngTopics.length > 0
-                ? `${highEngTopics.length} topic${highEngTopics.length > 1 ? 's' : ''} show engagement-frequency correlation`
+                ? `${highEngTopics.length} topic${highEngTopics.length > 1 ? 's were' : ' was'} rewarded and rising`
                 : 'Explore engagement patterns'}
             </p>
           </Link>

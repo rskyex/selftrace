@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ConfidenceDot } from '@/components/shared/ConfidenceDot';
 import { ProfileSwitcher } from '@/components/shared/ProfileSwitcher';
 import { useData } from '@/lib/data/context';
+import { DEFINITIONS } from '@/lib/analysis/definitions';
 
 const CATEGORY_LABELS: Record<string, string> = {
   engagement: 'Engagement',
@@ -97,8 +98,8 @@ export default function AlgorithmInfluencePage() {
               {' '}= {fmt(sensitivityScore)}
             </p>
             <ul className="mt-2 space-y-0.5">
-              <li>E = 1 if the engagement-driven shift below is detected, otherwise 0</li>
-              <li>T = topic concentration: relative drop in topic entropy from the first to the last quarter</li>
+              <li>E = 1 if at least {Math.round(DEFINITIONS.engagementShiftMinShare * 100)}% of topics are rewarded and rising, otherwise 0</li>
+              <li>T = topic concentration: relative drop in Miller&ndash;Madow topic entropy from the first to the last {DEFINITIONS.narrowingWindowMonths} months (0 if it rose or a window has too few posts)</li>
               <li>V = vocabulary convergence: fading words &divide; (fading + emerging words)</li>
               <li>N = tone narrowing: average narrowing of the four tone ranges in the later half</li>
             </ul>

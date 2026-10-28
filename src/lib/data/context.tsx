@@ -4,6 +4,7 @@ import { createContext, useContext, useState, useCallback, useMemo } from 'react
 import type { DatasetProfile, AnalysisResult } from '@/lib/data/types';
 import { getDemoProfiles, getDemoProfile } from '@/data/demo/profiles';
 import { runAnalysis } from '@/lib/analysis/pipeline';
+import { DEFINITIONS, isRewardedAndRising } from '@/lib/analysis/definitions';
 
 export interface SelfPortrait {
   /** What parts of yourself matter most to you? */
@@ -106,23 +107,20 @@ const DataContext = createContext<DataContextValue>({
 export function computeAlgorithmInfluence(profile: DatasetProfile, analysis: AnalysisResult): AlgorithmInfluence {
   const posts = profile.posts;
   const eng = analysis.engagementSensitivity;
-  const entropy = analysis.topicEntropy.value;
 
-  // 1. Engagement optimization: do high-engagement topics increase over time?
+  // 1. Engagement optimization: share of topics that are rewarded and rising
   let engOptStrength: 'low' | 'medium' | 'high' = 'low';
   let engOptDetected = false;
-  if (eng) {
-    const avgEng = eng.value.reduce((s, t) => s + t.averageEngagement, 0) / eng.value.length;
-    const reinforced = eng.value.filter(t => t.frequencyTrend === 'increasing' && t.averageEngagement > avgEng);
-    const ratio = reinforced.length / eng.value.length;
-    engOptDetected = ratio > 0.15;
+  const reinforcedCount = eng ? eng.value.filter(isRewardedAndRising).length : 0;
+  if (eng && eng.value.length > 0) {
+    const ratio = reinforcedCount / eng.value.length;
+    engOptDetected = ratio >= DEFINITIONS.engagementShiftMinShare;
     engOptStrength = ratio > 0.35 ? 'high' : ratio > 0.2 ? 'medium' : 'low';
   }
 
-  // 2. Echo chamber: topic concentration + vocabulary convergence
-  const eFirst = entropy[0]?.value ?? 0;
-  const eLast = entropy[entropy.length - 1]?.value ?? 0;
-  const topicConcentration = eFirst > 0 ? Math.max(0, (eFirst - eLast) / eFirst) : 0;
+  // 2. Echo chamber: topic concentration (first vs last window) + vocabulary convergence
+  const narrowing = analysis.narrowing.value;
+  const topicConcentration = narrowing.sufficient ? Math.max(0, -narrowing.relativeChange) : 0;
 
   const drift = analysis.vocabularyDrift.value;
   const emergingCount = drift.filter(t => t.direction === 'emerging').length;
@@ -160,17 +158,17 @@ export function computeAlgorithmInfluence(profile: DatasetProfile, analysis: Ana
     patterns.push({
       name: 'Engagement-driven content shift',
       description: 'Topics that received more engagement became more frequent in your posting over time.',
-      evidence: `${eng?.value.filter(t => t.frequencyTrend === 'increasing' && t.averageEngagement > (eng.value.reduce((s, t2) => s + t2.averageEngagement, 0) / eng.value.length)).length} topics show this pattern.`,
+      evidence: `${reinforcedCount} of ${eng?.value.length ?? 0} topics were rewarded and rising.`,
       strength: engOptStrength === 'high' ? 'strong' : engOptStrength === 'medium' ? 'moderate' : 'subtle',
       category: 'engagement',
     });
   }
 
-  if (topicConcentration > 0.15) {
+  if (narrowing.narrowed) {
     patterns.push({
       name: 'Topic narrowing over time',
       description: 'Your range of subjects contracted. You engaged with fewer topics by the end of the period than at the start.',
-      evidence: `Topic diversity dropped by ${Math.round(topicConcentration * 100)}%.`,
+      evidence: `Topic diversity dropped by ${Math.round(topicConcentration * 100)}% between the first and last ${narrowing.windowMonths} months.`,
       strength: topicConcentration > 0.35 ? 'strong' : topicConcentration > 0.2 ? 'moderate' : 'subtle',
       category: 'echo_chamber',
     });
@@ -221,7 +219,7 @@ export function computeAlgorithmInfluence(profile: DatasetProfile, analysis: Ana
     {
       signal: 'Topic funnel effect',
       description: 'Content diversity decreased while posting remained active',
-      observed: topicConcentration > 0.15,
+      observed: narrowing.narrowed,
     },
     {
       signal: 'Vocabulary narrowing',

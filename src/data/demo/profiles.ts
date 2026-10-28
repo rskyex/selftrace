@@ -3,6 +3,11 @@
 // All data is synthetic. No real person is represented.
 // Uses a seeded PRNG so profiles are identical across page reloads.
 // Dates are built in UTC so data and exports are identical in every time zone.
+//
+// Recovery test: the generator plants topics, engagement boosts, tone curves
+// and self-description schedules. Those planted values are kept on each post
+// (post.planted); post.derived is computed from the post text only, by the
+// same code that would analyse a real archive. /methodology compares the two.
 
 import type {
   DatasetProfile,
@@ -15,6 +20,7 @@ import type {
   TimePeriod,
 } from '@/lib/data/types';
 import { createSeededRandom } from '@/lib/util/random';
+import { deriveFromText } from '@/lib/analysis/text/derive';
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
@@ -226,6 +232,7 @@ function generatePostsForProfile(
   selfDescCurve: (month: number) => SelfDescriptionMarker[],
   civicCurve: (month: number, topic: string) => CivicMarker[],
   memoryCurve: (month: number) => MemoryReference[],
+  plantedBoost: (month: number, topic: string) => number,
 ): Post[] {
   const posts: Post[] = [];
   let postIndex = 0;
@@ -247,6 +254,15 @@ function generatePostsForProfile(
       const id = generateId(profileId, postIndex);
       postIndex++;
 
+      // Generator calls stay in their original order so every post (and the
+      // random sequence) is identical to earlier versions of the demo.
+      const engagement = engagementCurve(m, topic);
+      rng.random(); // formerly the planted topic confidence
+      const plantedTone = toneCurve(m);
+      const plantedSelf = selfDescCurve(m).map(sd => ({ ...sd, postId: id }));
+      const civicMarkers = civicCurve(m, topic);
+      const memoryReferences = m > 12 ? memoryCurve(m) : [];
+
       posts.push({
         id,
         platformId: platform,
@@ -260,20 +276,58 @@ function generatePostsForProfile(
           isRepost: false,
           repostOfId: null,
         },
-        engagement: engagementCurve(m, topic),
-        derived: {
-          topics: [{ topic, confidence: 0.8 + rng.random() * 0.2 }],
-          tone: toneCurve(m),
-          selfDescriptions: selfDescCurve(m).map(sd => ({ ...sd, postId: id })),
-          civicMarkers: civicCurve(m, topic),
-          memoryReferences: m > 12 ? memoryCurve(m) : [],
-          vocabularyFingerprint: text.toLowerCase().split(/\s+/).filter(w => w.length > 4).slice(0, 5),
-        },
+        engagement,
+        derived: deriveFromText(text, id, { civicMarkers, memoryReferences }),
+        planted: { topic, tone: plantedTone, selfDescriptions: plantedSelf, engagementBoost: plantedBoost(m, topic), month: m },
       });
     }
   }
 
   posts.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+  return posts;
+}
+
+// ── Planted kept topic ───────────────────────────────────────────────────────
+
+const KEPT_TOPIC = 'running-club';
+const KEPT_TEXTS = [
+  'Saturday long run with the run club. Eleven miles at an easy pace.',
+  'Half marathon training is going better than expected. Tired legs, good mood.',
+  'Run club tonight. Six miles and a lot of laughing.',
+  'Signed up for the autumn half marathon. Training starts now.',
+  'Recovery week, so only short and easy running.',
+  'Long run in the rain this morning. Twelve miles, slow and steady.',
+];
+
+/** Running-club posts at a fixed share of each month's posts, with low engagement. */
+function generateKeptStream(
+  seed: number, profileId: string, platform: string,
+  monthCounts: number[], startYear: number, startMonth: number,
+  share: number, engagementFactor: number, toneCurve: (month: number) => ToneMarkers,
+): Post[] {
+  const rng = createSeededRandom(seed);
+  const posts: Post[] = [];
+  let i = 0;
+  for (let m = 0; m < monthCounts.length; m++) {
+    const n = Math.max(1, Math.round(share * monthCounts[m]));
+    for (let k = 0; k < n; k++) {
+      const year = startYear + Math.floor((startMonth - 1 + m) / 12);
+      const month = ((startMonth - 1 + m) % 12) + 1;
+      const day = rng.between(1, 28);
+      const text = rng.pick(KEPT_TEXTS);
+      const base = rng.between(8, 30) * engagementFactor;
+      const id = generateId(`${profileId}-kept`, i++);
+      posts.push({
+        id,
+        platformId: platform,
+        createdAt: makeDate(year, month, day),
+        content: { text, mediaType: 'text', wordCount: text.split(/\s+/).length, hashtags: [], mentions: [], isRepost: false, repostOfId: null },
+        engagement: { likes: Math.round(base), shares: Math.round(base * 0.4), replies: Math.round(base * 0.25), views: Math.round(base * 15) },
+        derived: deriveFromText(text, id, { civicMarkers: [], memoryReferences: [] }),
+        planted: { topic: KEPT_TOPIC, tone: toneCurve(m), selfDescriptions: [], engagementBoost: engagementFactor, month: m },
+      });
+    }
+  }
   return posts;
 }
 
@@ -321,6 +375,7 @@ function buildIntellectualProfile(): DatasetProfile {
     },
     () => [],
     (m) => m > 18 && rng.random() > 0.7 ? [{ type: 'narrative_callback' as const, referencedPostId: null, temporalDistance: rng.between(90, 300) }] : [],
+    (_m, topic) => (['tech-ethics', 'AI-governance', 'platform-accountability'].includes(topic) ? 3.5 : 1),
   );
 
   return buildProfileShell('demo-intellectual', 'The Emerging Public Intellectual',
@@ -377,7 +432,22 @@ function buildPoliticalProfile(): DatasetProfile {
       return [{ type: 'political_opinion' as const, intensity }];
     },
     (m) => m > 20 && rng.random() > 0.6 ? [{ type: 'self_quote' as const, referencedPostId: null, temporalDistance: rng.between(60, 200) }] : [],
+    (m, topic) => (['national-politics', 'institutional-critique', 'electoral', 'rights-claims', 'local-politics'].includes(topic) ? (m > 10 ? 3.5 : 1.5) : 1),
   );
+
+  // Planted persistent low-reward topic for the "kept" test: a running club,
+  // about 8% of each month's posts all through the period, with engagement at
+  // 0.6× the profile's base. Generated from its own seed so the posts above are
+  // unchanged.
+  const monthCounts = Array.from({ length: 36 }, (_, m) => posts.filter(p => p.planted?.month === m).length);
+  posts.push(...generateKeptStream(42_102, 'political', 'twitter', monthCounts, 2021, 1, 0.08, 0.6, (m) => ({
+    assertiveness: Math.min(0.25 + m * 0.018, 0.9),
+    emotionality: Math.min(0.2 + m * 0.02, 0.85),
+    formality: Math.max(0.6 - m * 0.01, 0.25),
+    urgency: Math.min(0.1 + m * 0.022, 0.88),
+    vulnerability: Math.max(0.35 - m * 0.008, 0.08),
+  })));
+  posts.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
 
   return buildProfileShell('demo-political', 'The Politically Reactive Voice',
     'A community organizer whose posting begins with local events and personal reflections, gradually becoming dominated by national political commentary with increasing emotional intensity.',
@@ -427,6 +497,7 @@ function buildExpertiseProfile(): DatasetProfile {
     },
     () => [],
     (m) => m > 16 && rng.random() > 0.5 ? [{ type: 'repost_own' as const, referencedPostId: null, temporalDistance: rng.between(30, 150) }] : [],
+    (m, topic) => (['marketing-strategy', 'leadership', 'thought-leadership', 'personal-brand'].includes(topic) ? (m > 12 ? 4 : 2) : 1),
   );
 
   return buildProfileShell('demo-expertise', 'The Expertise Brand-Builder',

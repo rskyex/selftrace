@@ -24,8 +24,9 @@ export default function TrendsPage() {
 
   const { vocabularyDrift, topicEntropy, toneTrends } = analysis;
   const e = topicEntropy.value;
-  const eFirst = e[0]?.value ?? 0, eLast = e[e.length - 1]?.value ?? 0;
-  const narrowed = eLast < eFirst * 0.75;
+  // Narrowing compares the first and last windows (src/lib/analysis/definitions.ts)
+  const eFirst = analysis.narrowing.value.early.entropy, eLast = analysis.narrowing.value.late.entropy;
+  const narrowed = analysis.narrowing.value.narrowed;
 
   return (
     <div>

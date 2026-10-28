@@ -7,6 +7,8 @@ import { SparkLine } from '@/components/shared/SparkLine';
 import { ConfidenceDot } from '@/components/shared/ConfidenceDot';
 import { ProfileSwitcher } from '@/components/shared/ProfileSwitcher';
 import { useData } from '@/lib/data/context';
+import { topicLine } from '@/lib/analysis/describe';
+import { isRewardedAndRising } from '@/lib/analysis/definitions';
 
 export default function PortraitPage() {
   const { activeProfile, analysis, isLoaded, selfPortrait } = useData();
@@ -61,17 +63,8 @@ export default function PortraitPage() {
   const assertLast = toneA[toneA.length - 1]?.value ?? 0;
 
   // Engagement
-  const highEngTopics = analysis.engagementSensitivity?.value
-    .filter(t => t.frequencyTrend === 'increasing')
-    .sort((a, b) => b.averageEngagement - a.averageEngagement)
-    .slice(0, 3) ?? [];
-
-  const avgEng = analysis.engagementSensitivity
-    ? analysis.engagementSensitivity.value.reduce((s, t) => s + t.averageEngagement, 0) / analysis.engagementSensitivity.value.length
-    : 0;
-  const keptAnyway = analysis.engagementSensitivity?.value
-    .filter(t => t.averageEngagement < avgEng * 0.5 && t.frequencyTrend !== 'decreasing')
-    .slice(0, 3) ?? [];
+  const highEngTopics = analysis.engagementSensitivity?.value.filter(isRewardedAndRising).slice(0, 3) ?? [];
+  const keptAnyway = analysis.engagementSensitivity?.value.filter(t => t.kept).slice(0, 3) ?? [];
 
   // Self-descriptions
   const lateDescs = analysis.selfDescriptionShift.value.late;
@@ -174,15 +167,15 @@ export default function PortraitPage() {
             What got attention
           </h2>
           <p className="text-[15px] text-ink-400 leading-relaxed mb-6">
-            These topics earned above-average engagement — and you posted
-            about them more over time. That correlation is worth noticing,
+            These topics earned more engagement than the typical post of the
+            same month — and took up a larger share of your posts over time. That correlation is worth noticing,
             even if it doesn&apos;t prove the attention caused it.
           </p>
           {highEngTopics.map(topic => (
             <div key={topic.topic} className="observation mb-4">
               <h3>{topic.topic}</h3>
               <p className="font-sans text-[14px] text-ink-400">
-                {topic.postCount} posts &middot; above-average engagement &middot; frequency increased
+                {topicLine(topic)}
               </p>
             </div>
           ))}
@@ -197,15 +190,15 @@ export default function PortraitPage() {
             What you kept anyway
           </h2>
           <p className="text-[15px] text-ink-400 leading-relaxed mb-6">
-            These topics persisted in your posting despite getting below-average
-            engagement. They suggest something that matters to you independent
+            These topics held their share of your posts despite engagement below
+            the month&apos;s typical level. They suggest something that matters to you independent
             of external feedback.
           </p>
           {keptAnyway.map(topic => (
             <div key={topic.topic} className="observation mb-4 bg-sage-100 border-sage-200">
               <h3>{topic.topic}</h3>
               <p className="font-sans text-[14px] text-ink-400">
-                {topic.postCount} posts &middot; low engagement &middot; kept posting
+                {topicLine(topic)}
               </p>
             </div>
           ))}

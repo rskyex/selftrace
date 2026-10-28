@@ -9,6 +9,7 @@ import { GovernanceBlock } from '@/components/shared/GovernanceBlock';
 import { SectionDivider } from '@/components/shared/SectionDivider';
 import { ProfileSwitcher } from '@/components/shared/ProfileSwitcher';
 import { useData } from '@/lib/data/context';
+import { splitHalves, topicsOf } from '@/lib/analysis/stats';
 
 export default function ComparePage() {
   const { activeProfile, analysis, isLoaded } = useData();
@@ -37,16 +38,15 @@ export default function ComparePage() {
 
   // Compute the three personas
   const personas = useMemo(() => {
-    const halfPoint = Math.floor(posts.length / 2);
-    const earlyPosts = posts.slice(0, halfPoint);
-    const latePosts = posts.slice(halfPoint);
+    // Equal-time halves, the same split the pipeline uses
+    const { early: earlyPosts, late: latePosts } = splitHalves(posts);
 
     // Early self: topics and tone from first half
     const earlyTopics: Record<string, number> = {};
     for (const p of earlyPosts) {
       if (!p.derived) continue;
-      for (const t of p.derived.topics) {
-        earlyTopics[t.topic] = (earlyTopics[t.topic] || 0) + 1;
+      for (const t of topicsOf(p)) {
+        earlyTopics[t] = (earlyTopics[t] || 0) + 1;
       }
     }
     const earlyTopTopics = Object.entries(earlyTopics)
@@ -62,8 +62,8 @@ export default function ComparePage() {
     const lateTopics: Record<string, number> = {};
     for (const p of latePosts) {
       if (!p.derived) continue;
-      for (const t of p.derived.topics) {
-        lateTopics[t.topic] = (lateTopics[t.topic] || 0) + 1;
+      for (const t of topicsOf(p)) {
+        lateTopics[t] = (lateTopics[t] || 0) + 1;
       }
     }
     const lateTopTopics = Object.entries(lateTopics)
@@ -75,10 +75,10 @@ export default function ComparePage() {
       formality: latePosts.reduce((s, p) => s + (p.derived?.tone.formality ?? 0), 0) / latePosts.length,
     };
 
-    // Rewarded self: topics that got above-average engagement
+    // Rewarded self: the five topics with the highest time-adjusted engagement
     const rewardedTopics = engagementSensitivity
-      ? engagementSensitivity.value
-          .sort((a, b) => b.averageEngagement - a.averageEngagement)
+      ? [...engagementSensitivity.value]
+          .sort((a, b) => b.rewardRatio - a.rewardRatio)
           .slice(0, 5)
           .map(t => t.topic)
       : [];
@@ -100,7 +100,7 @@ export default function ComparePage() {
   }, [posts, engagementSensitivity]);
 
   // Determine divergences
-  const topicNarrowed = personas.current.topicCount < personas.early.topicCount * 0.7;
+  const topicNarrowed = analysis.narrowing.value.narrowed;
   const alignedWithReward = personas.currentRewardedOverlap >= 3;
   const driftedFromEarly = personas.earlyCurrentOverlap <= 2;
 
@@ -122,8 +122,8 @@ export default function ComparePage() {
         <HowToRead>
           We split your posting history in half to create an &ldquo;early
           self&rdquo; and a &ldquo;current self.&rdquo; The &ldquo;rewarded
-          self&rdquo; is derived from which topics earned above-average
-          engagement. You can see where these three versions align — and
+          self&rdquo; is the five topics with the highest engagement compared
+          with the typical post of the same month. You can see where these three versions align — and
           where they diverge.
         </HowToRead>
 
@@ -256,9 +256,10 @@ export default function ComparePage() {
             )}
             {topicNarrowed && (
               <p>
-                Your topic range narrowed over time. You went from posting
-                about {personas.early.topicCount} distinct topics to{' '}
-                {personas.current.topicCount}. Narrowing is common in
+                Your topic range narrowed over time: topic diversity fell from{' '}
+                {analysis.narrowing.value.early.entropy.toFixed(1)} to{' '}
+                {analysis.narrowing.value.late.entropy.toFixed(1)} bits between the first
+                and last {analysis.narrowing.value.windowMonths} months. Narrowing is common in
                 sustained activity and may be entirely intentional.
               </p>
             )}

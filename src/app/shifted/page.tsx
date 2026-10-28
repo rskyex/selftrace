@@ -24,8 +24,7 @@ export default function ShiftedPage() {
 
   const { postingFrequency, topicEntropy, topicDistribution, vocabularyDrift, toneTrends } = analysis;
   const e = topicEntropy.value;
-  const eFirst = e[0]?.value ?? 0, eLast = e[e.length - 1]?.value ?? 0;
-  const narrowed = eLast < eFirst * 0.75;
+  const narrowed = analysis.narrowing.value.narrowed;
 
   return (
     <div>

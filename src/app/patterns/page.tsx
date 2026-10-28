@@ -6,6 +6,8 @@ import { AreaChart } from '@/components/shared/AreaChart';
 import { ConfidenceDot } from '@/components/shared/ConfidenceDot';
 import { ProfileSwitcher } from '@/components/shared/ProfileSwitcher';
 import { useData } from '@/lib/data/context';
+import { topicLine } from '@/lib/analysis/describe';
+import { isRewardedAndRising } from '@/lib/analysis/definitions';
 
 export default function PatternsPage() {
   const { activeProfile, analysis, isLoaded } = useData();
@@ -24,16 +26,8 @@ export default function PatternsPage() {
 
   const { engagementSensitivity, reinforcementCorrelation, narrativeRepetition, memoryEvents } = analysis;
 
-  const avgEng = engagementSensitivity
-    ? engagementSensitivity.value.reduce((s, t) => s + t.averageEngagement, 0) / engagementSensitivity.value.length
-    : 0;
-
-  const reinforced = engagementSensitivity?.value
-    .filter(t => t.frequencyTrend === 'increasing' && t.averageEngagement > avgEng)
-    .sort((a, b) => b.averageEngagement - a.averageEngagement) ?? [];
-
-  const persistent = engagementSensitivity?.value
-    .filter(t => t.averageEngagement < avgEng * 0.5 && t.frequencyTrend !== 'decreasing') ?? [];
+  const reinforced = engagementSensitivity?.value.filter(isRewardedAndRising) ?? [];
+  const persistent = engagementSensitivity?.value.filter(t => t.kept) ?? [];
 
   // Memory echoes
   const echoes = useMemo(() => {
@@ -64,17 +58,14 @@ export default function PatternsPage() {
             Patterns that got rewarded
           </h2>
           <p className="text-[15px] text-ink-400 leading-relaxed mb-6">
-            These topics got more engagement than average — and you posted
-            about them more over time. That doesn&apos;t prove the engagement
+            These topics got more engagement than the typical post of the same
+            month — and took up a larger share of your posts over time. That doesn&apos;t prove the engagement
             caused it. But the pattern is there.
           </p>
           {reinforced.map(topic => (
             <div key={topic.topic} className="observation mb-4">
               <h3>{topic.topic}</h3>
-              <p>
-                {topic.postCount} posts. Above-average engagement. Your posting frequency
-                for this topic increased over time.
-              </p>
+              <p className="font-sans text-[14px]">{topicLine(topic)}</p>
             </div>
           ))}
           <div className="mb-8"><ConfidenceDot level="interpretive" /></div>
@@ -88,16 +79,14 @@ export default function PatternsPage() {
             What you kept without reward
           </h2>
           <p className="text-[15px] text-ink-400 leading-relaxed mb-6">
-            These topics got below-average engagement, but you kept posting
-            about them. That persistence suggests something meaningful —
+            These topics got less engagement than the typical post of the same
+            month, in both halves of the period, but you kept posting about them. That persistence suggests something meaningful —
             interests or values that the engagement metric doesn&apos;t capture.
           </p>
           {persistent.map(topic => (
             <div key={topic.topic} className="observation mb-4 bg-sage-100 border-sage-200">
               <h3>{topic.topic}</h3>
-              <p>
-                {topic.postCount} posts. Below-average engagement. You kept going anyway.
-              </p>
+              <p className="font-sans text-[14px]">{topicLine(topic)}</p>
             </div>
           ))}
           <div className="mb-8"><ConfidenceDot level="counted" /></div>
@@ -166,7 +155,7 @@ export default function PatternsPage() {
             a feedback loop — but many other things could explain it too.
             This is the most uncertain analysis we show.
           </p>
-          <AreaChart data={reinforcementCorrelation.value} confidence="interpretive" color="umber" caption="Engagement-frequency correlation by quarter" />
+          <AreaChart data={reinforcementCorrelation.value} confidence="interpretive" color="umber" caption="Correlation of time-adjusted engagement in one quarter with topic share in the next (blank where too few posts)" />
         </>
       )}
 

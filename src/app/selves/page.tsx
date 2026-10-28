@@ -5,6 +5,7 @@ import { SparkLine } from '@/components/shared/SparkLine';
 import { ConfidenceDot } from '@/components/shared/ConfidenceDot';
 import { ProfileSwitcher } from '@/components/shared/ProfileSwitcher';
 import { useData } from '@/lib/data/context';
+import { topicLine } from '@/lib/analysis/describe';
 
 export default function SelvesPage() {
   const { activeProfile, analysis, isLoaded, selfPortrait } = useData();
@@ -34,8 +35,7 @@ export default function SelvesPage() {
   const topDescs = Object.entries(descCounts).sort((a, b) => b[1] - a[1]).slice(0, 4);
 
   // Engagement-based "rewarded self"
-  const avgEng = engagementSensitivity ? engagementSensitivity.value.reduce((s, t) => s + t.averageEngagement, 0) / engagementSensitivity.value.length : 0;
-  const rewardedTopics = engagementSensitivity?.value.filter(t => t.averageEngagement > avgEng * 1.3).sort((a, b) => b.averageEngagement - a.averageEngagement).slice(0, 4) ?? [];
+  const rewardedTopics = engagementSensitivity?.value.filter(t => t.rewarded).slice(0, 4) ?? [];
 
   // Tone
   const toneLabels: Record<string, string> = { assertiveness: 'assertive', emotionality: 'emotional', formality: 'formal', urgency: 'urgent' };
@@ -194,7 +194,7 @@ export default function SelvesPage() {
           {rewardedTopics.map(t => (
             <div key={t.topic} className="observation-umber mb-2 py-4 px-6">
               <p className="font-sans text-[14px] text-ink-700">{t.topic}</p>
-              <p className="font-sans text-[12px] text-ink-400">{t.postCount} posts &middot; consistently above-average engagement</p>
+              <p className="font-sans text-[12px] text-ink-400">{topicLine(t)}</p>
             </div>
           ))}
           <div className="mt-3"><ConfidenceDot level="interpretive" /></div>

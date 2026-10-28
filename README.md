@@ -17,7 +17,29 @@ Part of **The Govern the Human Project** by Risa Koyanagi.
 
 ## Result Export (gth-result/v1)
 
-`/results` has a "Download result (JSON)" button. It writes a counts-only `gth-result/v1` document (schema in the Govern the Human repository, `SCHEMA.md`): post count, date range, top topics, topics that were rewarded and rising, kept topics (the `/results` and `/kept` definitions), and topic diversity across quarters. Post text, phrases, self-descriptions, reflection answers and personality types are never included. The file is built in the browser (`src/lib/export/gth-result.ts`) and can be loaded into the Govern the Human Observatory.
+`/results` has a "Download result (JSON)" button. It writes a counts-only `gth-result/v1` document (schema in the Govern the Human repository, `SCHEMA.md`): post count, date range, top topics (with IPTC Media Topics ids), topics that were rewarded and rising, kept topics, topics that resisted reward, and topic diversity in the first and last six months. Every list uses the definitions below; the field names read by the Observatory (`engagement_vs_average`, `kept_without_encouragement`, `topic_range.diversity_*_quarter_bits`) are kept, and their meaning is written into the document's `definitions` block. Post text, phrases, self-descriptions, reflection answers and personality types are never included. The file is built in the browser (`src/lib/export/gth-result.ts`) and can be loaded into the Govern the Human Observatory.
+
+## Definitions
+
+Every page, the influence index and the export read their thresholds from `src/lib/analysis/definitions.ts`. `/methodology` prints the same table, a recovery test and a sensitivity table.
+
+| Term | Definition |
+|------|------------|
+| Topics | [IPTC Media Topics](https://cv.iptc.org/newscodes/mediatopic/) concepts (CC BY 4.0, release 2026-09-30), assigned from post text by SelfTrace's own keyword list in `src/lib/analysis/text/taxonomy.ts`. Multi-label; posts with no match are unclassified and left out of topic counts. |
+| Tone | From post text (`src/lib/analysis/text/derive.ts`): Hyland boosters vs hedges (assertiveness), VADER compound magnitude (emotionality, MIT-licensed lexicon), informal and urgency markers per 10 words. Vulnerability is not measured. |
+| Engagement | likes + 2 × shares |
+| Time-adjusted engagement | Post engagement ÷ median of its UTC month (quarter if the month has fewer than 10 posts). A topic's reward ratio is the median over its posts. |
+| Halves | Equal duration, split at the time midpoint; trends need ≥ 20 posts per half. |
+| Rewarded | Reward ratio ≥ 1.25 and ≥ 8 posts. |
+| Rising / falling | Share ratio ≥ 1.3 (≤ 1/1.3), change ≥ 2 points, bootstrap 95% interval excludes 0 (1000 resamples, fixed seed). |
+| Kept | ≥ 5 posts in each half, later share ≥ 90% of earlier, reward ratio < 1 in both halves. |
+| Resisted reward | Rewarded and stable or falling. |
+| Narrowed | Miller–Madow entropy of the last 6 months ≥ 25% below the first 6 months, bootstrap 95% interval below 0, ≥ 30 posts per window. |
+| Quarterly correlation | Time-adjusted engagement in quarter N vs topic share in N+1; quarters with < 5 topics or < 30 posts are left blank. |
+
+### Recovery test
+
+The demo generator keeps what it planted on each post (`post.planted`: topic label, engagement multiplier, tone, self-descriptions); the analysis only sees the text and engagement counts (`post.derived`). `src/lib/analysis/recovery.ts` compares the two, and `/methodology` shows the result for each demo profile: which planted topics map to which IPTC concepts, whether planted boosts come back as rewarded topics, whether the planted growth curve is kept out of "rewarded", whether the planted low-reward running-club stream is classed as kept, and how far text-derived tone and self-descriptions follow the planted ones. Where they do not, the page says so.
 
 ## Tech Stack
 
@@ -123,7 +145,7 @@ supabase/
 | **Drift** | Vocabulary and tone evolution |
 | **Shifted** | Before/after identity markers |
 | **Rewarded** | Engagement correlation — what the algorithm reinforced |
-| **Kept** | Content posted despite low engagement |
+| **Kept** | Topics that held their share with time-adjusted engagement below typical |
 | **Identity** | Self-description markers and shifts |
 | **Reinforcement** | Engagement vs. posting frequency correlation |
 | **Portrait** | Personal synthesis across all dimensions |

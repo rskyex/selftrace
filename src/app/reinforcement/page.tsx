@@ -11,6 +11,8 @@ import { GovernanceBlock } from '@/components/shared/GovernanceBlock';
 import { SectionDivider } from '@/components/shared/SectionDivider';
 import { ProfileSwitcher } from '@/components/shared/ProfileSwitcher';
 import { useData } from '@/lib/data/context';
+import { topicLine } from '@/lib/analysis/describe';
+import { isRewardedAndRising } from '@/lib/analysis/definitions';
 
 export default function ReinforcementPage() {
   const { activeProfile, analysis, isLoaded } = useData();
@@ -48,11 +50,9 @@ export default function ReinforcementPage() {
     );
   }
 
-  const avgEngagement = engagementSensitivity.value.reduce((s, t) => s + t.averageEngagement, 0) / engagementSensitivity.value.length;
-  const highEngTopics = engagementSensitivity.value.filter(t => t.frequencyTrend === 'increasing');
-  const counterPatterns = engagementSensitivity.value.filter(
-    t => t.averageEngagement < avgEngagement * 0.5 && t.frequencyTrend !== 'decreasing'
-  );
+  const highEngTopics = engagementSensitivity.value.filter(isRewardedAndRising);
+  const counterPatterns = engagementSensitivity.value.filter(t => t.kept);
+  const maxRatio = Math.max(...engagementSensitivity.value.map(t => t.rewardRatio), 1);
 
   return (
     <div>
@@ -87,8 +87,7 @@ export default function ReinforcementPage() {
 
         <div className="card p-5 space-y-2">
           {engagementSensitivity.value.map((topic) => {
-            const maxEng = Math.max(...engagementSensitivity.value.map(t => t.averageEngagement), 1);
-            const barWidth = (topic.averageEngagement / maxEng) * 100;
+            const barWidth = (topic.rewardRatio / maxRatio) * 100;
 
             return (
               <div key={topic.topic} className="flex items-center gap-3">
@@ -101,8 +100,8 @@ export default function ReinforcementPage() {
                     style={{ width: `${barWidth}%` }}
                   />
                 </div>
-                <span className="font-mono text-[11px] text-ink-400 w-10 text-right">
-                  {topic.averageEngagement}
+                <span className="font-mono text-[11px] text-ink-400 w-12 text-right" title="Median engagement ÷ typical engagement for the month">
+                  {topic.rewardRatio.toFixed(2)}×
                 </span>
                 <span className={`pill text-[10px] w-20 justify-center ${
                   topic.frequencyTrend === 'increasing' ? 'bg-accent-100 text-accent-700' :
@@ -122,22 +121,23 @@ export default function ReinforcementPage() {
         <SectionDivider />
 
         {/* Topics that grew with engagement */}
-        {highEngTopics.length > 0 && (
+        {(highEngTopics.length > 0 || counterPatterns.length > 0) && (
           <div className="grid md:grid-cols-2 gap-8 mb-12">
+            {highEngTopics.length > 0 && (
             <div>
               <h2 className="font-display text-[20px] text-ink-900 mb-2">
                 Topics that grew with attention
               </h2>
               <p className="text-[14px] text-ink-500 leading-relaxed mb-4">
-                These received above-average engagement and you posted about
-                them more over time.
+                These received more engagement than the typical post of the same
+                month, and took up a larger share of your posts over time.
               </p>
               <div className="space-y-2">
                 {highEngTopics.map(topic => (
                   <div key={topic.topic} className="card p-4">
                     <p className="text-[15px] font-medium text-ink-900">{topic.topic}</p>
                     <p className="text-[12px] text-ink-400 mt-1">
-                      {topic.postCount} posts &middot; avg engagement {topic.averageEngagement}
+                      {topicLine(topic)}
                     </p>
                   </div>
                 ))}
@@ -146,6 +146,7 @@ export default function ReinforcementPage() {
                 <EpistemicBadge status="inferred" />
               </div>
             </div>
+            )}
 
             {/* Counter-patterns */}
             {counterPatterns.length > 0 && (
@@ -154,15 +155,16 @@ export default function ReinforcementPage() {
                   Topics you kept without reward
                 </h2>
                 <p className="text-[14px] text-ink-500 leading-relaxed mb-4">
-                  These persisted despite low engagement — interests or values
-                  that the engagement metric didn&apos;t capture.
+                  These held their share of your posts while engagement stayed below the
+                  month&apos;s typical level — interests or values that the engagement metric
+                  didn&apos;t capture.
                 </p>
                 <div className="space-y-2">
                   {counterPatterns.map(topic => (
                     <div key={topic.topic} className="card p-4 bg-sage-100/30 border-sage-200">
                       <p className="text-[15px] font-medium text-ink-900">{topic.topic}</p>
                       <p className="text-[12px] text-ink-400 mt-1">
-                        {topic.postCount} posts &middot; low engagement &middot; persisted
+                        {topicLine(topic)}
                       </p>
                     </div>
                   ))}

@@ -6,6 +6,8 @@ import { AreaChart } from '@/components/shared/AreaChart';
 import { ConfidenceDot } from '@/components/shared/ConfidenceDot';
 import { ProfileSwitcher } from '@/components/shared/ProfileSwitcher';
 import { useData } from '@/lib/data/context';
+import { topicLine } from '@/lib/analysis/describe';
+import { isRewardedAndRising } from '@/lib/analysis/definitions';
 
 export default function WhatStuckPage() {
   const { activeProfile, analysis, isLoaded } = useData();
@@ -21,9 +23,8 @@ export default function WhatStuckPage() {
   }
 
   const { engagementSensitivity, reinforcementCorrelation, narrativeRepetition, memoryEvents } = analysis;
-  const avgEng = engagementSensitivity ? engagementSensitivity.value.reduce((s, t) => s + t.averageEngagement, 0) / engagementSensitivity.value.length : 0;
-  const reinforced = engagementSensitivity?.value.filter(t => t.frequencyTrend === 'increasing' && t.averageEngagement > avgEng).sort((a, b) => b.averageEngagement - a.averageEngagement) ?? [];
-  const persistent = engagementSensitivity?.value.filter(t => t.averageEngagement < avgEng * 0.5 && t.frequencyTrend !== 'decreasing') ?? [];
+  const reinforced = engagementSensitivity?.value.filter(isRewardedAndRising) ?? [];
+  const persistent = engagementSensitivity?.value.filter(t => t.kept) ?? [];
 
   const echoes = useMemo(() => {
     const m = new Map<string, typeof memoryEvents.value>();
@@ -43,13 +44,13 @@ export default function WhatStuckPage() {
         <section className="mb-16">
           <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 mb-2">Patterns that got rewarded</h2>
           <p className="text-[15px] text-ink-400 mb-6">
-            These got more engagement than average, and you posted about them more over time.
+            These got more engagement than the typical post of the same month, and took up a larger share of your posts over time.
             That doesn&apos;t prove the attention caused it. But the pattern is there.
           </p>
           {reinforced.map(t => (
             <div key={t.topic} className="observation mb-3">
               <h3>{t.topic}</h3>
-              <p className="font-sans text-[13px]">{t.postCount} posts &middot; above-average response &middot; frequency increased</p>
+              <p className="font-sans text-[13px]">{topicLine(t)}</p>
             </div>
           ))}
           <ConfidenceDot level="interpretive" />
@@ -61,13 +62,13 @@ export default function WhatStuckPage() {
         <section className="mb-16">
           <h2 className="font-display text-[22px] md:text-[24px] text-ink-900 mb-2">What you kept without reward</h2>
           <p className="text-[15px] text-ink-400 mb-6">
-            Below-average engagement, but you kept posting. That persistence suggests
+            Engagement below the month&apos;s typical level in both halves, but you kept posting. That persistence suggests
             something meaningful — interests the engagement metric doesn&apos;t capture.
           </p>
           {persistent.map(t => (
             <div key={t.topic} className="observation-sage mb-3">
               <h3>{t.topic}</h3>
-              <p className="font-sans text-[13px]">{t.postCount} posts &middot; low engagement &middot; you kept going</p>
+              <p className="font-sans text-[13px]">{topicLine(t)}</p>
             </div>
           ))}
           <ConfidenceDot level="counted" />
@@ -118,7 +119,7 @@ export default function WhatStuckPage() {
             Did topics that got more attention one quarter show up more the next?
             This is our least certain analysis.
           </p>
-          <AreaChart data={reinforcementCorrelation.value} confidence="interpretive" color="trace" caption="Engagement-frequency correlation by quarter" />
+          <AreaChart data={reinforcementCorrelation.value} confidence="interpretive" color="trace" caption="Correlation of time-adjusted engagement in one quarter with topic share in the next (blank where too few posts)" />
         </section>
       )}
 
